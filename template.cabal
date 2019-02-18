@@ -1,0 +1,63 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 4b217fa23ee3237ddf1df61b048c92d45eccd8ac84c6e6cd30082009205944bd
+
+name:           template
+version:        1.0.0
+homepage:       https://github.com/jappeace/template#readme
+bug-reports:    https://github.com/jappeace/template/issues
+author:         Jappie Klooster
+maintainer:     jappieklooster@hotmail.com
+copyright:      2019 Jappie Klooster
+license:        MIT
+build-type:     Simple
+extra-source-files:
+    Readme.md
+
+source-repository head
+  type: git
+  location: https://github.com/jappeace/template
+
+library
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_template
+  hs-source-dirs:
+      src
+  ghc-options: -Werror -Wall -Wcompat -Wincomplete-uni-patterns -Widentities -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable exe
+  main-is: exe.hs
+  other-modules:
+      Paths_template
+  hs-source-dirs:
+      app
+  ghc-options: -Werror -Wall -Wcompat -Wincomplete-uni-patterns -Widentities -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , template
+  default-language: Haskell2010
+
+test-suite unit
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      TestSpec
+      Paths_template
+  hs-source-dirs:
+      test
+  ghc-options: -Werror -Wall -Wcompat -Wincomplete-uni-patterns -Widentities -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , hspec
+    , hspec-core
+    , template
+  default-language: Haskell2010
