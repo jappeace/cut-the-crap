@@ -1,4 +1,4 @@
-{ mkDerivation, base, hpack, hspec, hspec-core, stdenv }:
+{ mkDerivation, base, hpack, stdenv }:
 mkDerivation {
   pname = "template";
   version = "1.0.0";
@@ -8,7 +8,6 @@ mkDerivation {
   libraryHaskellDepends = [ base ];
   libraryToolDepends = [ hpack ];
   executableHaskellDepends = [ base ];
-  testHaskellDepends = [ base hspec hspec-core ];
   preConfigure = "hpack";
   homepage = "https://github.com/jappeace/template#readme";
   license = stdenv.lib.licenses.mit;

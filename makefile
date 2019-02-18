@@ -1,10 +1,6 @@
 OPTIMIZATION=-O0
 build: update-cabal
 	cabal new-build all -j --ghc-options $(OPTIMIZATION)
-	make test OPTIMIZATION=$(OPTIMIZATION)
-
-test:
-	cabal new-test all -j --ghc-options $(OPTIMIZATION)
 
 haddock:
 	cabal new-haddock all

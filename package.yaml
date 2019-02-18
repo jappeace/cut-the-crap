@@ -31,12 +31,3 @@ executables:
     source-dirs:         app
     dependencies:
     - template
-
-tests:
-  unit:
-    main:                Spec.hs
-    source-dirs:         test
-    dependencies:
-    - template
-    - hspec
-    - hspec-core
