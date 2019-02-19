@@ -10,14 +10,12 @@ extra-source-files:
 - Readme.md
 
 ghc-options:
-    - -Werror
     - -Wall
     - -Wcompat
     - -Wincomplete-uni-patterns
+    - -Wredundant-constraints
+    - -Wincomplete-record-updates
     - -Widentities
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
 
 dependencies:
 - base >= 4.7 && < 5
@@ -31,3 +29,7 @@ executables:
     source-dirs:         app
     dependencies:
     - template
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
