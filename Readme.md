@@ -1,10 +1,12 @@
 # Haskell project template
 
-Project template for nixos, can't use stack cause nixos
-reasons.
+Use cabal within a nix shell.
+
+similar to: https://github.com/monadfix/nix-cabal
+except I use a makefile and a seperate filewatch script.
 
 Comes with:
 + a poor mans' file watch.
 + a nix shell.
-+ A couple of make commands.
-+ filled in directories.
++ A couple of handy make commands.
++ Starting haskell files
