@@ -14,15 +14,21 @@
 }:
 let 
     build = pkgs.haskellPackages.callPackage ./default.nix { };
+    buildInputs = [
+        pkgs.haskellPackages.hpack
+        pkgs.haskellPackages.hspec-discover
+        pkgs.cabal-install
+        pkgs.ghc
+        pkgs.cabal2nix
+    ] ++ build.buildInputs;
 in 
-pkgs.stdenv.mkDerivation {
-  name = "db-field";
-  buildInputs = [
-    pkgs.haskellPackages.hpack
-    pkgs.haskellPackages.hspec-discover
-    pkgs.cabal-install
-    pkgs.ghc
-    pkgs.cabal2nix
-  ] ++ build.buildInputs;
+pkgs.mkShell {
+  name = "template";
+  inherit buildInputs;
+  # allow cabal to discover native inputs
+  shellHook = ''
+       export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath buildInputs}:$LD_LIBRARY_PATH
+       export LANG=en_US.UTF-8
+  '';
     
 }

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 69ef6a9f35c2155f0d767c71d9e23d788718b29f7c428a05066e2f8f6aca29fe
+-- hash: babc361199ac4f4de248b3868eb433e66e29b78dd764221a216e404f7a0b9519
 
 name:           template
 version:        1.0.0
@@ -14,9 +14,11 @@ author:         Jappie Klooster
 maintainer:     jappieklooster@hotmail.com
 copyright:      2019 Jappie Klooster
 license:        MIT
+license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     Readme.md
+    LICENSE
 
 source-repository head
   type: git
@@ -29,7 +31,7 @@ library
       Paths_template
   hs-source-dirs:
       src
-  ghc-options: -Werror -Wall -Wcompat -Wincomplete-uni-patterns -Widentities -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
   build-depends:
       base >=4.7 && <5
   default-language: Haskell2010
@@ -40,7 +42,7 @@ executable exe
       Paths_template
   hs-source-dirs:
       app
-  ghc-options: -Werror -Wall -Wcompat -Wincomplete-uni-patterns -Widentities -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , template
