@@ -8,6 +8,7 @@ copyright:           "2019 Jappie Klooster"
 
 extra-source-files:
 - Readme.md
+- LICENSE
 
 ghc-options:
     - -Wall
