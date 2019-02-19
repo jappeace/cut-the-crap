@@ -4,8 +4,6 @@ build: update-cabal
 
 haddock:
 	cabal new-haddock all
-run:
-	make run-in-shell RUN="cabal run"
 
 file-watch: clean
 	scripts/watch.sh
@@ -25,3 +23,6 @@ clean:
 	rm -fR dist dist-*
 
 .PHONY: test
+
+sdist: update-cabal
+	cabal new-sdist
