@@ -2,5 +2,7 @@ module Lib
   ( libF
   ) where
 
-libF :: IO ()
-libF = print "hello, world"
+import           Control.Monad.IO.Class
+
+libF :: MonadIO m => m ()
+libF = liftIO $ print "hello, world"
