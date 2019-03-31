@@ -10,3 +10,9 @@ Comes with:
 + a nix shell.
 + A couple of handy make commands.
 + Starting haskell files
+
+
+## TODO
+
++ build tools as input of the nix shell (Nobody seems to do this, but it allows a pure shell, and reducing the change of works on my machine)
++ Move towards steel overseer for platform independence
