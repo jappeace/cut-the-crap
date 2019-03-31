@@ -1,5 +1,5 @@
 OPTIMIZATION=-O0
-build: update-cabal
+build: 
 	cabal new-build all -j --ghc-options $(OPTIMIZATION)
 
 haddock:
@@ -17,7 +17,7 @@ enter:
 
 RUN=""
 run-in-shell:
-	nix-shell --cores 0 -j 8 --pure --run "$(RUN)"
+	nix-shell --cores 0 -j 8 --run "$(RUN)"
 
 clean:
 	rm -fR dist dist-*
