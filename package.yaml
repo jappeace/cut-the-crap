@@ -47,7 +47,6 @@ default-extensions:
 
 dependencies:
 - base >= 4.7 && < 5
-- servant
 
 library:
   source-dirs: src
