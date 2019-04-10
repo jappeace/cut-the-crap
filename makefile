@@ -24,5 +24,5 @@ clean:
 
 .PHONY: test
 
-sdist: update-cabal
-	cabal new-sdist
+sdist:
+	make run-in-shell RUN="cabal sdist"
