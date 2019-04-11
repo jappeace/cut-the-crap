@@ -9,7 +9,9 @@
       sha256 = "1w1dg9ankgi59r2mh0jilccz5c4gv30a6q1k6kv2sn8vfjazwp9k";
     };
   in
-  import pinnedPkgs {}
+  import pinnedPkgs {
+    config.allowUnfree = true; # took me to long to figure out
+  }
  )
 }:
 let 
