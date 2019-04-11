@@ -9,6 +9,5 @@ mkDerivation {
   libraryToolDepends = [ hpack ];
   executableHaskellDepends = [ base ];
   preConfigure = "hpack";
-  homepage = "https://github.com/jappeace/template#readme";
   license = stdenv.lib.licenses.mit;
 }

@@ -2,13 +2,11 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fff2b3816e6a55dedb7070ff4ebb98947f58154468d1555c5cb5e91e5d2b74b4
+-- hash: fd2c111eabe5e21f40a712f6e46d2be7171bef81625110f57508d5bd73a1eb4a
 
 cabal-version:  >= 1.10
 name:           template
 version:        1.0.0
-homepage:       https://github.com/jappeace/template#readme
-bug-reports:    https://github.com/jappeace/template/issues
 author:         Jappie Klooster
 maintainer:     jappieklooster@hotmail.com
 copyright:      2019 Jappie Klooster
@@ -18,10 +16,6 @@ build-type:     Simple
 extra-source-files:
     LICENSE
     Readme.md
-
-source-repository head
-  type: git
-  location: https://github.com/jappeace/template
 
 library
   exposed-modules:
