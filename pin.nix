@@ -3,9 +3,9 @@ hostPkgs = import <nixpkgs> {};
 pinnedPkgs = hostPkgs.fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs-channels";
-    # nixos-unstable as of 18.02.2019
-    rev = "36f316007494c388df1fec434c1e658542e3c3cc";
-    sha256 = "1w1dg9ankgi59r2mh0jilccz5c4gv30a6q1k6kv2sn8vfjazwp9k";
+    # nixos-unstable as of 15.06.2019
+    rev = "1601f559e89ba71091faa26888711d4dd24c2d4d";
+    sha256 = "0iayyz9617mz6424spwbi9qvmcl8hiql42czxg8mi4ycq4p1k0dx";
 };
 in
 import pinnedPkgs {
