@@ -6,13 +6,9 @@ similar to: https://github.com/monadfix/nix-cabal
 except I use a makefile and a seperate filewatch script.
 
 Comes with:
-+ a poor mans' file watch.
-+ a nix shell.
++ GHCID for [file watch](https://jappieklooster.nl/ghcid-for-multi-package-projects.html)
++ a nix shell, meaning somewhat platform independence.
+  + which is pinned by default
 + A couple of handy make commands.
-+ Starting haskell files
-
-
-## TODO
-
-+ build tools as input of the nix shell (Nobody seems to do this, but it allows a pure shell, and reducing the change of works on my machine)
-+ Move towards steel overseer for platform independence
++ Starting haskell files, assuming we put practically all code in library
++ Working HSpec
