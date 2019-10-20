@@ -1,10 +1,11 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fd2c111eabe5e21f40a712f6e46d2be7171bef81625110f57508d5bd73a1eb4a
+-- hash: 81867aee29120d917404d7445b640e5c3ac778c1b0cad70885953f1d0900726c
 
-cabal-version:  >= 1.10
 name:           template
 version:        1.0.0
 author:         Jappie Klooster
@@ -14,8 +15,8 @@ license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
-    LICENSE
     Readme.md
+    LICENSE
 
 library
   exposed-modules:
@@ -41,4 +42,22 @@ executable exe
   build-depends:
       base >=4.7 && <5
     , template
+  default-language: Haskell2010
+
+test-suite unit
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Test.TestSpec
+      Lib
+      Paths_template
+  hs-source-dirs:
+      test
+      src
+  default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
+  ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
+  build-depends:
+      base >=4.7 && <5
+    , hspec
+    , hspec-core
   default-language: Haskell2010

@@ -1,4 +1,4 @@
-{ mkDerivation, base, hpack, stdenv }:
+{ mkDerivation, base, hpack, hspec, hspec-core, stdenv }:
 mkDerivation {
   pname = "template";
   version = "1.0.0";
@@ -8,6 +8,7 @@ mkDerivation {
   libraryHaskellDepends = [ base ];
   libraryToolDepends = [ hpack ];
   executableHaskellDepends = [ base ];
+  testHaskellDepends = [ base hspec hspec-core ];
   preConfigure = "hpack";
   license = stdenv.lib.licenses.mit;
 }

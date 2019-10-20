@@ -60,3 +60,14 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+
+tests:
+  unit:
+    main:                Spec.hs
+    source-dirs:
+    - test
+    # including extra source dirs allows ghcid to watch
+    - src 
+    dependencies:
+    - hspec
+    - hspec-core

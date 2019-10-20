@@ -5,4 +5,4 @@ module Lib
 import           Control.Monad.IO.Class
 
 libF :: MonadIO m => m ()
-libF = liftIO $ print "hello, world"
+libF = liftIO $ putStrLn "hello, world"

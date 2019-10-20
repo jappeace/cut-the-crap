@@ -5,8 +5,8 @@ build:
 haddock:
 	cabal new-haddock all
 
-file-watch: clean
-	scripts/watch.sh
+ghcid: clean
+	nix-shell --run "ghcid -s \"import Main\" -c \"make update-cabal && cabal new-repl\" -T \"main\" test:unit"
 
 update-cabal:
 	hpack --force ./

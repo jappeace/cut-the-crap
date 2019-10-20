@@ -1,5 +1,8 @@
 { pkgs ? import ./pin.nix }:
 let 
-    build = pkgs.haskellPackages.callPackage ./default.nix { };
+    origBuild = pkgs.haskellPackages.callPackage ./default.nix { };
+    wTools = pkgs.haskell.lib.overrideCabal origBuild (drv: {
+        libraryToolDepends = drv.libraryToolDepends ++ [ pkgs.ghcid ];
+    });
 in 
-build.env
+wTools.env

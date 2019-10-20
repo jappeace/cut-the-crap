@@ -3,3 +3,4 @@ network-uri-lenses.cabal
 .ghc.environment*
 dist*
 .#*
+result
