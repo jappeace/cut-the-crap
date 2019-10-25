@@ -1,5 +1,7 @@
-{ mkDerivation, base, generic-lens, hpack, hspec, hspec-core, lens
+{ mkDerivation, base, exceptions, generic-lens, gogol
+, gogol-youtube, hpack, hspec, hspec-core, lens
 , optparse-applicative, optparse-generic, stdenv, text, turtle
+, unliftio-core
 }:
 mkDerivation {
   pname = "template";
@@ -8,17 +10,18 @@ mkDerivation {
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
-    base generic-lens lens optparse-applicative optparse-generic text
-    turtle
+    base exceptions generic-lens gogol gogol-youtube lens
+    optparse-applicative optparse-generic text turtle unliftio-core
   ];
   libraryToolDepends = [ hpack ];
   executableHaskellDepends = [
-    base generic-lens lens optparse-applicative optparse-generic text
-    turtle
+    base exceptions generic-lens gogol gogol-youtube lens
+    optparse-applicative optparse-generic text turtle unliftio-core
   ];
   testHaskellDepends = [
-    base generic-lens hspec hspec-core lens optparse-applicative
-    optparse-generic text turtle
+    base exceptions generic-lens gogol gogol-youtube hspec hspec-core
+    lens optparse-applicative optparse-generic text turtle
+    unliftio-core
   ];
   preConfigure = "hpack";
   license = stdenv.lib.licenses.mit;

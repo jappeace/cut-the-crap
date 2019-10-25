@@ -1,3 +1,12 @@
+# ABANDONED
+
+Youtube has a quota of 10 000,
+which means you can only uplaod 4 vidoes with api's a day.
+
+
+I may come back to this some day to do automated editing.
+But abandoned for now
+
 # Stream too youtube
 
 Automatically edit video files and publishes them to youtube.

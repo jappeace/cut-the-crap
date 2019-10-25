@@ -6,7 +6,7 @@ haddock:
 	cabal new-haddock all
 
 ghcid: clean
-	nix-shell --run "make update-cabal"
+	nix-shell -p cabal2nix haskellPackages.hpack --run "make update-cabal"
 	nix-shell --run "ghcid -s \"import Main\" -c \"cabal new-repl\" -T \"main\" test:unit"
 
 update-cabal:

@@ -6,6 +6,7 @@ let
         pkgs.ghcid
         pkgs.cabal-install
         pkgs.ffmpeg
+        pkgs.pythonPackages.youtube-upload
         ];
     });
 in 

@@ -1,11 +1,10 @@
-cabal-version: 1.12
-
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: aa5c239128eee0d284197868e7a6b63d83e8f0dfbf2bc6c58112196d11f9d536
+-- hash: bab73c2f5fe146cea31b7a484a0f0be03e13250ed74aaffbfb782f9c2d0a96bf
 
+cabal-version:  >= 1.10
 name:           template
 version:        1.0.0
 author:         Jappie Klooster
@@ -15,8 +14,8 @@ license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
-    Readme.md
     LICENSE
+    Readme.md
 
 library
   exposed-modules:
@@ -31,12 +30,16 @@ library
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
   build-depends:
       base >=4.7 && <5
+    , exceptions
     , generic-lens
+    , gogol
+    , gogol-youtube
     , lens
     , optparse-applicative
     , optparse-generic
     , text
     , turtle
+    , unliftio-core
   default-language: Haskell2010
 
 executable exe
@@ -49,13 +52,17 @@ executable exe
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , exceptions
     , generic-lens
+    , gogol
+    , gogol-youtube
     , lens
     , optparse-applicative
     , optparse-generic
     , template
     , text
     , turtle
+    , unliftio-core
   default-language: Haskell2010
 
 test-suite unit
@@ -74,7 +81,10 @@ test-suite unit
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
   build-depends:
       base >=4.7 && <5
+    , exceptions
     , generic-lens
+    , gogol
+    , gogol-youtube
     , hspec
     , hspec-core
     , lens
@@ -82,4 +92,5 @@ test-suite unit
     , optparse-generic
     , text
     , turtle
+    , unliftio-core
   default-language: Haskell2010
