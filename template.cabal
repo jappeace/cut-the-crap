@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 81867aee29120d917404d7445b640e5c3ac778c1b0cad70885953f1d0900726c
+-- hash: aa5c239128eee0d284197868e7a6b63d83e8f0dfbf2bc6c58112196d11f9d536
 
 name:           template
 version:        1.0.0
@@ -20,7 +20,9 @@ extra-source-files:
 
 library
   exposed-modules:
-      Lib
+      Stream2YT.Lib
+      Stream2YT.Options
+      Stream2YT.SplitVideo
   other-modules:
       Paths_template
   hs-source-dirs:
@@ -29,6 +31,12 @@ library
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
   build-depends:
       base >=4.7 && <5
+    , generic-lens
+    , lens
+    , optparse-applicative
+    , optparse-generic
+    , text
+    , turtle
   default-language: Haskell2010
 
 executable exe
@@ -41,7 +49,13 @@ executable exe
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , generic-lens
+    , lens
+    , optparse-applicative
+    , optparse-generic
     , template
+    , text
+    , turtle
   default-language: Haskell2010
 
 test-suite unit
@@ -49,7 +63,9 @@ test-suite unit
   main-is: Spec.hs
   other-modules:
       Test.TestSpec
-      Lib
+      Stream2YT.Lib
+      Stream2YT.Options
+      Stream2YT.SplitVideo
       Paths_template
   hs-source-dirs:
       test
@@ -58,6 +74,12 @@ test-suite unit
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
   build-depends:
       base >=4.7 && <5
+    , generic-lens
     , hspec
     , hspec-core
+    , lens
+    , optparse-applicative
+    , optparse-generic
+    , text
+    , turtle
   default-language: Haskell2010

@@ -46,6 +46,12 @@ default-extensions:
 
 dependencies:
 - base >= 4.7 && < 5
+- optparse-applicative
+- optparse-generic
+- turtle
+- generic-lens
+- text
+- lens
 
 library:
   source-dirs: src
