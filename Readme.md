@@ -12,10 +12,7 @@ I still have to build youtube
 
 Youtube has a quota of 10 000,
 which means you can only uplaod 4 vidoes with api's a day.
-
-I may come back to this some day to do automated editing.
-I want to cut videos based upon audio being there or not.
-But abandoned for now.
+I have to try this before I can see if it works.
 
 # Stream too youtube
 
