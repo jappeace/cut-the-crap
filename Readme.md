@@ -1,4 +1,14 @@
-# ABANDONED
+This is an automatic video editing program and splitting
+program.
+At the moment video editing is done with jumpcut.
+Splitting is done with ffmpeg.
+
+In te futer I intend to add auto uploading and scheduling
+as well.
+
+
+# Youtube
+I still have to build youtube
 
 Youtube has a quota of 10 000,
 which means you can only uplaod 4 vidoes with api's a day.
