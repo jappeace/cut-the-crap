@@ -56,6 +56,7 @@ dependencies:
 - gogol
 - exceptions
 - unliftio-core
+- temporary
 
 library:
   source-dirs: src

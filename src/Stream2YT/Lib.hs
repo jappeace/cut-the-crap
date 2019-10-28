@@ -5,28 +5,29 @@ module Stream2YT.Lib
   ( main
   ) where
 
-import           Control.Lens
 import           Control.Monad.Catch
 import           Control.Monad.IO.Class
 import           Control.Monad.IO.Unlift
-import           Network.Google
-import           Network.Google.YouTube
 import           Options.Applicative
 import           Options.Generic
+import           Stream2YT.Jumpcutter
 import           Stream2YT.Options
 import           Stream2YT.SplitVideo
-import           System.IO               (stdout)
+import           System.IO.Temp
 import qualified Turtle                  as Sh
 
-main :: (MonadCatch m, MonadIO m, MonadUnliftIO m) => m ()
+main :: (MonadMask m, MonadUnliftIO m) => m ()
 main = do
-  -- Sh.sh . split =<< liftIO readSettings
-  lgr  <- newLogger Debug stdout
-  env  <- newEnv <&> (envLogger .~ lgr) .
-          (envScopes .~ youTubeUploadScope)
-  runResourceT $ runGoogle env $ send $ videosInsert "id" $
-    video & vStatus . _Just . vsPrivacyStatus ?~ Private
-  pure ()
+  set'' <- liftIO readSettings
+  withTempDirectory "/tmp" "streamedit" $ \temp -> do
+      Sh.sh $ jump temp set''
+      Sh.sh $ split temp set''
+  -- lgr  <- newLogger Debug stdout
+  -- env  <- newEnv <&> (envLogger .~ lgr) .
+  --         (envScopes .~ youTubeUploadScope)
+  -- runResourceT $ runGoogle env $ send $ videosInsert "id" $
+  --   video & vStatus . _Just . vsPrivacyStatus ?~ Private
+  -- pure ()
 
 readSettings :: IO (Options)
 readSettings =

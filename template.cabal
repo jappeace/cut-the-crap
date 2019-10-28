@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bab73c2f5fe146cea31b7a484a0f0be03e13250ed74aaffbfb782f9c2d0a96bf
+-- hash: e47e9003f7ad2c704db54972f9511113c6decd94575d3f10f815d7ef57d7ef52
 
 cabal-version:  >= 1.10
 name:           template
@@ -19,6 +19,7 @@ extra-source-files:
 
 library
   exposed-modules:
+      Stream2YT.Jumpcutter
       Stream2YT.Lib
       Stream2YT.Options
       Stream2YT.SplitVideo
@@ -37,6 +38,7 @@ library
     , lens
     , optparse-applicative
     , optparse-generic
+    , temporary
     , text
     , turtle
     , unliftio-core
@@ -60,6 +62,7 @@ executable exe
     , optparse-applicative
     , optparse-generic
     , template
+    , temporary
     , text
     , turtle
     , unliftio-core
@@ -70,6 +73,7 @@ test-suite unit
   main-is: Spec.hs
   other-modules:
       Test.TestSpec
+      Stream2YT.Jumpcutter
       Stream2YT.Lib
       Stream2YT.Options
       Stream2YT.SplitVideo
@@ -90,6 +94,7 @@ test-suite unit
     , lens
     , optparse-applicative
     , optparse-generic
+    , temporary
     , text
     , turtle
     , unliftio-core
