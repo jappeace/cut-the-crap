@@ -37,3 +37,19 @@ Where the publish date starts at $DATE and is incremented by $SEG_HOUR.
 
 In future I also want to do some auto editing such
 as cutting out segments where audio levels are below a treshold.
+
+
+# Resoures
+
+## I found a project that does it for me~
+https://github.com/carykh/jumpcutter
+
+## Matroska
+This is the container for a video. It has one or more audio tracks and a
+video track.
+We'll try using this first cause it's default in obs
+(I know atm nothing about codecs, I imagine this will change soon).
+
++ https://www.matroska.org/technical/specs/index.html
++ https://github.com/vi/HsMkv
+
