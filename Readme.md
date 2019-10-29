@@ -27,7 +27,7 @@ which is also mostly a wrapper around ffmpeg.
 
 > Wrapception is unix philosphy
 >
-> - Lumie
+> \- Lumie
 
 # TODO
 
