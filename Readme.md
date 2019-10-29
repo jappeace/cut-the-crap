@@ -67,6 +67,9 @@ This is a howto: https://towardsdatascience.com/how-to-start-with-kaldi-and-spee
 With that we can try to for example cut out keyboard clacking
 and cut out stop words like 'uhm'.
 
+We can also start doing subject detection with a transcription in place.
+And use the transcription to add subtitles to youtube.
+
 ## Youtube
 I still have to build youtube
 
