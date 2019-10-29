@@ -72,6 +72,9 @@ and youtube friendly music on youtube.
 
 # Resoures
 
+## FFMPEG
+Track manipulation: https://superuser.com/questions/639402/convert-specific-video-and-audio-track-only-with-ffmpeg
+
 ## Matroska
 This is the container for a video. It has one or more audio tracks and a
 video track.
