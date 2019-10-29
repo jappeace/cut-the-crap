@@ -28,6 +28,14 @@ This will make scheduling easier,
 that's a lot of clicking work at the moment.
 Where the publish date starts at $DATE and is incremented by $SEG_HOUR.
 
+# Use case
+I'm using this program to record my [stream](https://www.twitch.tv/jappiejappie)
+and upload it to my
+[youtube channel](https://www.youtube.com/channel/UCQxmXSQEYyCeBC6urMWRPVw).
+
+Feel free to use or modify this program however you like.
+Pull requests are appreciated.
+
 # Design
 This project is mostly a wrapper around ffmpeg and jumpcut,
 which is also mostly a wrapper around ffmpeg.
@@ -63,9 +71,6 @@ into the video, so we can play copyrighted music on stream
 and youtube friendly music on youtube.
 
 # Resoures
-
-## I found a project that does it for me~
-
 
 ## Matroska
 This is the container for a video. It has one or more audio tracks and a
