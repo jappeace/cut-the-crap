@@ -6,7 +6,8 @@ let
         pkgs.ghcid
         pkgs.cabal-install
         pkgs.ffmpeg
-        pkgs.pythonPackages.youtube-upload
+        pkgs.hlint
+        (import ./jumpcutter.nix)
         ];
     });
 in 
