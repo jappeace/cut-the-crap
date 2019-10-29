@@ -46,18 +46,6 @@ which is also mostly a wrapper around ffmpeg.
 
 # TODO
 
-In future I also want to do some auto editing such
-as cutting out segments where audio levels are below a treshold.
-
-
-## Youtube
-I still have to build youtube
-
-Youtube has a quota of 10 000,
-which means you can only uplaod 4 vidoes with api's a day.
-I have to try this before I can see if it works.
-
-
 ## Track hackery
 
 + It should be possible to specify one audio output as command track,
@@ -69,6 +57,20 @@ This way we get good music and interesting stream.
 Another idea is to remix an entirely different source of music
 into the video, so we can play copyrighted music on stream
 and youtube friendly music on youtube.
+
+
+## Speech recognition
+It should be rather easy to hook up for example http://kaldi-asr.org/doc/
+
+This is a howto: https://towardsdatascience.com/how-to-start-with-kaldi-and-speech-recognition-a9b7670ffff6
+
+## Youtube
+I still have to build youtube
+
+Youtube has a quota of 10 000,
+which means you can only uplaod 4 vidoes with api's a day.
+I have to try this before I can see if it works.
+
 
 # Resoures
 
