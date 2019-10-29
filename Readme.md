@@ -32,6 +32,18 @@ In future I also want to do some auto editing such
 as cutting out segments where audio levels are below a treshold.
 
 
+### Track hackery
+
++ It should be possible to specify one audio output as command track,
+  eg it will be possible to use that to detect interesting parts.
++ Another track would be background and won't be accelerated at all.
+  In the end it just get's cut of how far it is.
+
+This way we get good music and interesting stream.
+Another idea is to remix an entirely different source of music
+into the video, so we can play copyrighted music on stream
+and youtube friendly music on youtube.
+
 # Resoures
 
 ## I found a project that does it for me~
