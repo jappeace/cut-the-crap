@@ -21,13 +21,15 @@ jump tmp opt' =
                  , "--temp_folder"
                  , tmp ^. packed <> "/special"
                  , "--frame_margin"
-                 , "4"
+                 , opt' ^. frame_margin . to show . packed
                  , "--sounded_speed"
-                 , "1.0"
-                 -- , "--silent_speed"
-                 -- "10"
+                 , opt' ^. sound_speed . to show . packed
+                 , "--silent_speed"
+                 , opt' ^. silent_speed . to show . packed
                  , "--output_file"
                  , (tmp ^. packed) <> outName
+                 , "--silent_threshold"
+                 , opt' ^. silent_treshold . to show . packed
                  ] $ pure mempty
 
 
