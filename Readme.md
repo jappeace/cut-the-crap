@@ -3,12 +3,12 @@ program.
 At the moment video editing is done with [jumpcut](https://github.com/carykh/jumpcutter).
 Splitting is done with ffmpeg.
 
-In te futer I intend to add auto uploading and scheduling
+In te future I intend to add auto uploading and scheduling
 as well.
 
 Youtube has different requirements from streams then twitch does.
 We for example want to make the videos be chopped up into
-small segments and schedules them into a future.
+small segments.
 
 Runs:
 
@@ -16,9 +16,16 @@ Runs:
 ffmpeg -i $IN_FILE.mp4 -c copy -map 0 -segment_time 00:$SEG_SIZE:00 -f segment -reset_timestamps 1 $OUT_FILE-%03d.mp4
 ```
 
-And then per segment an uploader:
-https://github.com/tokland/youtube-upload
+We also should cut out boring parts.
+Jumpcut has solved that problem partly and this program
+leverages that.
+This may be imporved later with track hackery for more precise
+cutting.
 
+The next priority will be automated uplaoding, possibly with:
+https://github.com/tokland/youtube-upload
+This will make scheduling easier,
+that's a lot of clicking work at the moment.
 Where the publish date starts at $DATE and is incremented by $SEG_HOUR.
 
 # Design
