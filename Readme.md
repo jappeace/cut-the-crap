@@ -80,8 +80,11 @@ I have to try this before I can see if it works.
 
 # Resoures
 
+
 ## FFMPEG
 Track manipulation: https://superuser.com/questions/639402/convert-specific-video-and-audio-track-only-with-ffmpeg
+
+Silence detection and cutting: https://stackoverflow.com/questions/36074224/how-to-split-video-or-audio-by-silent-parts/36077309#36077309
 
 ## Matroska
 This is the container for a video. It has one or more audio tracks and a
