@@ -64,6 +64,9 @@ It should be rather easy to hook up for example http://kaldi-asr.org/doc/
 
 This is a howto: https://towardsdatascience.com/how-to-start-with-kaldi-and-speech-recognition-a9b7670ffff6
 
+With that we can try to for example cut out keyboard clacking
+and cut out stop words like 'uhm'.
+
 ## Youtube
 I still have to build youtube
 
