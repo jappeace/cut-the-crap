@@ -17,7 +17,7 @@ split tmp opt' = do
                  , "-map"
                  , "0"
                  , "-segment_time"
-                 , "00:" <> (opt' ^. seg_size . packed) <> ":00"
+                 , "00:" <> (opt' ^. seg_size . to show . packed) <> ":00"
                  , "-f"
                  , "segment"
                  , "-reset_timestamps"

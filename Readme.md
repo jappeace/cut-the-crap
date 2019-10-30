@@ -48,18 +48,6 @@ which is also mostly a wrapper around ffmpeg.
 
 # TODO
 
-In future I also want to do some auto editing such
-as cutting out segments where audio levels are below a treshold.
-
-
-## Youtube
-I still have to build youtube
-
-Youtube has a quota of 10 000,
-which means you can only uplaod 4 vidoes with api's a day.
-I have to try this before I can see if it works.
-
-
 ## Track hackery
 
 + It should be possible to specify one audio output as command track,
@@ -72,7 +60,33 @@ Another idea is to remix an entirely different source of music
 into the video, so we can play copyrighted music on stream
 and youtube friendly music on youtube.
 
+
+## Speech recognition
+It should be rather easy to hook up for example http://kaldi-asr.org/doc/
+
+This is a howto: https://towardsdatascience.com/how-to-start-with-kaldi-and-speech-recognition-a9b7670ffff6
+
+With that we can try to for example cut out keyboard clacking
+and cut out stop words like 'uhm'.
+
+We can also start doing subject detection with a transcription in place.
+And use the transcription to add subtitles to youtube.
+
+## Youtube
+I still have to build youtube
+
+Youtube has a quota of 10 000,
+which means you can only uplaod 4 vidoes with api's a day.
+I have to try this before I can see if it works.
+
+
 # Resoures
+
+
+## FFMPEG
+Track manipulation: https://superuser.com/questions/639402/convert-specific-video-and-audio-track-only-with-ffmpeg
+
+Silence detection and cutting: https://stackoverflow.com/questions/36074224/how-to-split-video-or-audio-by-silent-parts/36077309#36077309
 
 ## Matroska
 This is the container for a video. It has one or more audio tracks and a
