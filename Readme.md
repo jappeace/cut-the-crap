@@ -20,6 +20,29 @@ and upload it to my
 Feel free to use or modify this program however you like.
 Pull requests are appreciated.
 
+## Why not to extend jumpcutter directly?
+I wish to build out this idea more to essentially
+make all streams look like human edited youtube videos.
+Although I'm familiar with python,
+I'm much more productive in haskell,
+therefore I chose to integrate with,
+and eventually replace jumpcutter.
+On stream we've assesed most of the functionality is basically
+ffmpeg.
+Haskell also opens up the ability to do direct native ffmpeg
+integration.
+
+One glaring limitation I've  encountered for jumpcutter is that
+it can't handle larger video files (2 hour 30 mintus +).
+Scipy throws an exception complaining the wav is to big.
+Currently I'm just splitting bigger videos with ffmpeg by doing:
+
+```shell
+ffmpeg -i input.mp4 -c copy -map 0 -segment_time 02:30:00 -f segment -reset_timestamps 1 output%03d.mp4
+```
+
+It also appears like jumpcutter is unmaintained.
+
 # Design
 This project is mostly a wrapper around ffmpeg and jumpcut,
 which is also mostly a wrapper around ffmpeg.
