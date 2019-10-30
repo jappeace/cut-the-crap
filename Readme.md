@@ -1,3 +1,5 @@
+> Bless This Mess
+
 This is an automatic video editing program and splitting
 program.
 At the moment video editing is done with [jumpcut](https://github.com/carykh/jumpcutter).
