@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds     #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Stream2YT.Options
+module Cut.Options
   ( Options,
     in_vid, out_file, seg_size, silent_treshold, silent_speed, sound_speed, frame_margin
   ) where

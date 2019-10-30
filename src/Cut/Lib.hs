@@ -1,18 +1,18 @@
 {-# LANGUAGE DataKinds     #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Stream2YT.Lib
+module Cut.Lib
   ( main
   ) where
 
 import           Control.Monad.Catch
 import           Control.Monad.IO.Class
 import           Control.Monad.IO.Unlift
+import           Cut.Jumpcutter
+import           Cut.Options
+import           Cut.SplitVideo
 import           Options.Applicative
 import           Options.Generic
-import           Stream2YT.Jumpcutter
-import           Stream2YT.Options
-import           Stream2YT.SplitVideo
 import           System.IO.Temp
 import qualified Turtle                  as Sh
 
@@ -34,5 +34,5 @@ readSettings =
   customExecParser (prefs showHelpOnError) $
   info
     parseRecord
-    (fullDesc <> Options.Applicative.header "Webservice" <>
-     progDesc "Run the API")
+    (fullDesc <> Options.Applicative.header "Cut the crap" <>
+     progDesc "Automated video editing, can cut out silences")
