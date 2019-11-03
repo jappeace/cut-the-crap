@@ -1,3 +1,5 @@
+[![Jappiejappie](https://img.shields.io/badge/twitch.tv-jappiejappie-purple?logo=twitch&style=for-the-badge)](https://www.twitch.tv/jappiejappie)
+
 This is an automatic video editing program and splitting
 program.
 At the moment video editing is done with [jumpcut](https://github.com/carykh/jumpcutter).
