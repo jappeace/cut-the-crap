@@ -52,8 +52,6 @@ dependencies:
 - generic-lens
 - text
 - lens
-- gogol-youtube
-- gogol
 - exceptions
 - unliftio-core
 - temporary

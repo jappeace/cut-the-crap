@@ -1,12 +1,12 @@
-module Stream2YT.SplitVideo
+module Cut.SplitVideo
   ( split
   ) where
 
 import           Control.Lens
+import           Cut.Jumpcutter
+import           Cut.Options
 import           Data.Text.Lens
-import           Stream2YT.Jumpcutter
-import           Stream2YT.Options
-import           Turtle               hiding (FilePath)
+import           Turtle         hiding (FilePath)
 
 split :: FilePath -> Options -> Shell ()
 split tmp opt' = do

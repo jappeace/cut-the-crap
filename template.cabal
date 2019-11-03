@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e47e9003f7ad2c704db54972f9511113c6decd94575d3f10f815d7ef57d7ef52
+-- hash: a3ea2d9b8eab2eb8e90e1419c9d8a83ef3f693d0ecaa075df2d1279eb23cbed6
 
 cabal-version:  >= 1.10
 name:           template
@@ -19,10 +19,10 @@ extra-source-files:
 
 library
   exposed-modules:
-      Stream2YT.Jumpcutter
-      Stream2YT.Lib
-      Stream2YT.Options
-      Stream2YT.SplitVideo
+      Cut.Jumpcutter
+      Cut.Lib
+      Cut.Options
+      Cut.SplitVideo
   other-modules:
       Paths_template
   hs-source-dirs:
@@ -33,8 +33,6 @@ library
       base >=4.7 && <5
     , exceptions
     , generic-lens
-    , gogol
-    , gogol-youtube
     , lens
     , optparse-applicative
     , optparse-generic
@@ -56,8 +54,6 @@ executable exe
       base >=4.7 && <5
     , exceptions
     , generic-lens
-    , gogol
-    , gogol-youtube
     , lens
     , optparse-applicative
     , optparse-generic
@@ -73,10 +69,10 @@ test-suite unit
   main-is: Spec.hs
   other-modules:
       Test.TestSpec
-      Stream2YT.Jumpcutter
-      Stream2YT.Lib
-      Stream2YT.Options
-      Stream2YT.SplitVideo
+      Cut.Jumpcutter
+      Cut.Lib
+      Cut.Options
+      Cut.SplitVideo
       Paths_template
   hs-source-dirs:
       test
@@ -87,8 +83,6 @@ test-suite unit
       base >=4.7 && <5
     , exceptions
     , generic-lens
-    , gogol
-    , gogol-youtube
     , hspec
     , hspec-core
     , lens

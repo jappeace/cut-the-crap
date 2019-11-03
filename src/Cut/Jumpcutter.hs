@@ -1,12 +1,12 @@
-module Stream2YT.Jumpcutter
+module Cut.Jumpcutter
   ( jump, outName
   ) where
 
 import           Control.Lens
-import qualified Data.Text         as T
+import           Cut.Options
+import qualified Data.Text      as T
 import           Data.Text.Lens
-import           Stream2YT.Options
-import           Turtle            hiding (FilePath)
+import           Turtle         hiding (FilePath)
 
 --    ./jumpcutter
 --  --input_file /tmp/place-input004.mp4
