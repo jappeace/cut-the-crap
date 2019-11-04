@@ -55,6 +55,7 @@ dependencies:
 - exceptions
 - unliftio-core
 - temporary
+- foldl
 
 library:
   source-dirs: src

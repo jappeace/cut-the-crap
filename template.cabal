@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a3ea2d9b8eab2eb8e90e1419c9d8a83ef3f693d0ecaa075df2d1279eb23cbed6
+-- hash: 2e12823797f93cccdd21920377a68c1e97b05528506989ab742d5715455adccd
 
 cabal-version:  >= 1.10
 name:           template
@@ -19,7 +19,6 @@ extra-source-files:
 
 library
   exposed-modules:
-      Cut.Jumpcutter
       Cut.Lib
       Cut.Options
       Cut.SplitVideo
@@ -32,6 +31,7 @@ library
   build-depends:
       base >=4.7 && <5
     , exceptions
+    , foldl
     , generic-lens
     , lens
     , optparse-applicative
@@ -53,6 +53,7 @@ executable exe
   build-depends:
       base >=4.7 && <5
     , exceptions
+    , foldl
     , generic-lens
     , lens
     , optparse-applicative
@@ -69,7 +70,6 @@ test-suite unit
   main-is: Spec.hs
   other-modules:
       Test.TestSpec
-      Cut.Jumpcutter
       Cut.Lib
       Cut.Options
       Cut.SplitVideo
@@ -82,6 +82,7 @@ test-suite unit
   build-depends:
       base >=4.7 && <5
     , exceptions
+    , foldl
     , generic-lens
     , hspec
     , hspec-core

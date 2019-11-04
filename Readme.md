@@ -67,7 +67,6 @@ Another idea is to remix an entirely different source of music
 into the video, so we can play copyrighted music on stream
 and youtube friendly music on youtube.
 
-
 ## Speech recognition
 It should be rather easy to hook up for example http://kaldi-asr.org/doc/
 
@@ -118,3 +117,22 @@ We'll try using this first cause it's default in obs
 + https://www.matroska.org/technical/specs/index.html
 + https://github.com/vi/HsMkv
 
+# Plan of approach
+
+1. Figure out how to rip out the music from stream
+
+Select the right track with map:
+ffmpeg -i ~/streams/towards-automated-video-editing.mkv -map 0:1 towards-automated-music.mp3
+
+
+2. Experiment w/ Merge two streams together
+
+ffmpeg -i ~/streams/towards-automated-video-editing.mkv -ss 0 -t 120 -i ~/US_Army_Blues_-_04_-_Not_On_The_Bus.mp3 -ss 0 -t 120 -map 0:0 -map 1:0 towards.mkv
+
+3. Do the detection of silence on a stream
+
+ffmpeg -i "/home/jappie/streams/towards-automated-video-editing.mkv" -map 0:2 -filter:a silencedetect=noise=-30dB:d=0.5 -f null - 2> vol.txt
+
+4. Merge silences w/ music
+
+.. TODO
