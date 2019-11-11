@@ -101,6 +101,19 @@ I have to try this before I can see if it works.
 Track manipulation: https://superuser.com/questions/639402/convert-specific-video-and-audio-track-only-with-ffmpeg
 Silence detection and cutting: https://stackoverflow.com/questions/36074224/how-to-split-video-or-audio-by-silent-parts/36077309#36077309
 
+
+### Combine streams
+```shell
+ffmpeg -i ./raster-uren-3-full.mp4 -i ~/raster-vids/silent.mp3 -filter_complex "[0:a][1:a]amerge=inputs=2[a]" -map 0:v -map "[a]" -c:v copy -c:a mp3 -ac 2 -shortest ./raster-music.mp4
+```
+
+https://stackoverflow.com/questions/12938581/ffmpeg-mux-video-and-audio-from-another-video-mapping-issue/12943003#12943003
+
+### Loudness
+```shell
+ffmpeg -i ~/raster-vids/Birds_in_Flight.mp3 -filter:a "volume=0.05" ~/raster-vids/silent.mp3
+```
+https://www.maketecheasier.com/normalize-music-files-with-ffmpeg/
 ## Native bindings
 Using native bindings instead of the cli interface can result
 in a much more efficient program as we then can stream everything.
@@ -117,4 +130,5 @@ We'll try using this first cause it's default in obs
 
 + https://www.matroska.org/technical/specs/index.html
 + https://github.com/vi/HsMkv
+
 
