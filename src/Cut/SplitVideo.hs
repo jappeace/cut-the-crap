@@ -9,7 +9,7 @@ import           Turtle         hiding (FilePath)
 
 split :: FilePath -> Options -> Shell ()
 split tmp opt' = do
-  cp (fromText $ (tmp ^. packed) <> outName) (fromText (opt' ^. out_file . packed <> "-full.mp4"))
+  cp (fromText $ (tmp ^. packed)) (fromText (opt' ^. out_file . packed <> "-full.mp4"))
   procs "ffmpeg" ["-i"
                  , (tmp ^. packed)
                  , "-c"

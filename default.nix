@@ -22,6 +22,6 @@ mkDerivation {
     optparse-applicative optparse-generic temporary text turtle
     unliftio-core
   ];
-  preConfigure = "hpack";
+  prePatch = "hpack";
   license = stdenv.lib.licenses.mit;
 }

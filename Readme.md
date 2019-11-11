@@ -130,6 +130,7 @@ We'll try using this first cause it's default in obs
 + https://www.matroska.org/technical/specs/index.html
 + https://github.com/vi/HsMkv
 
+<<<<<<< variant A
 # Plan of approach
 
 1. Figure out how to rip out the music from stream
@@ -149,3 +150,7 @@ ffmpeg -i "/home/jappie/streams/towards-automated-video-editing.mkv" -map 0:2 -f
 4. Merge silences w/ music
 
 .. TODO
+>>>>>>> variant B
+
+####### Ancestor
+======= end
