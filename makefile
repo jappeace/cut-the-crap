@@ -7,7 +7,7 @@ haddock:
 
 ghcid: clean
 	nix-shell -p cabal2nix haskellPackages.hpack --run "make update-cabal"
-	nix-shell --run "ghcid -s \"import Main\" -c \"cabal new-repl\" -T \"main\" test:unit"
+	nix-shell --run "ghcid -s \"import Main\" -c \"cabal new-repl\" -T \"main\" --run test:unit"
 
 update-cabal:
 	hpack --force ./
@@ -19,6 +19,16 @@ enter:
 RUN=""
 run-in-shell:
 	nix-shell --cores 0 -j 8 --run "$(RUN)"
+
+run_:
+	cabal new-run exe -- \
+		--inFile "out.mkv" \
+		--outFile "edited" \
+		--voiceTrack 1 \
+		--musicPath "onepiece.mp3"
+
+run:
+	nix-shell --run "make run_"
 
 clean:
 	rm -fR dist dist-*

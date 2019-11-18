@@ -26,7 +26,7 @@ split tmp opt' = do
                  ] $ pure mempty
 
 detect :: Options -> Shell (Either Line Line)
-detect opt' = 
+detect opt' =
   inprocWithErr "ffmpeg" ["-i"
                  , opt' ^. in_file . packed
                  , "-map"

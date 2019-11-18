@@ -56,6 +56,7 @@ dependencies:
 - unliftio-core
 - temporary
 - foldl
+- regex-tdfa
 
 library:
   source-dirs: src
