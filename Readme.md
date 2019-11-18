@@ -96,6 +96,9 @@ which means you can only uplaod 4 vidoes with api's a day.
 I have to try this before I can see if it works.
 
 # Resoures
+```shell
+ffmpeg -i input.mkv -filter_complex "[0:a]silencedetect=n=-90dB:d=0.3[outa]" -map [outa] -f s16le -y /dev/null |& F='-aq 70 -v warning' perl -ne 'INIT { $ss=0; $se=0; } if (/silence_start: (\S+)/) { $ss=$1; $ctr+=1; printf "ffmpeg -nostdin -i input.mkv -ss %f -t %f $ENV{F} -y %03d.mkv\n", $se, ($ss-$se), $ctr; } if (/silence_end: (\S+)/) { $se=$1; } END { printf "ffmpeg -nostdin -i input.mkv -ss %f $ENV{F} -y %03d.mkv\n", $se, $ctr+1; }' | bash -x
+```
 ## FFMPEG
 Track manipulation: https://superuser.com/questions/639402/convert-specific-video-and-audio-track-only-with-ffmpeg
 Silence detection and cutting: https://stackoverflow.com/questions/36074224/how-to-split-video-or-audio-by-silent-parts/36077309#36077309
@@ -149,3 +152,7 @@ ffmpeg -i "/home/jappie/streams/towards-automated-video-editing.mkv" -map 0:2 -f
 4. Merge silences w/ music
 
 .. TODO
+
+
+## Concatting videos
+https://ffmpeg.org/faq.html#How-can-I-join-video-files_003f 

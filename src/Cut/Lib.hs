@@ -11,6 +11,7 @@ import           Control.Lens
 import           Control.Monad.Catch
 import           Control.Monad.IO.Class
 import           Control.Monad.IO.Unlift
+import           Cut.CutVideo
 import           Cut.Options
 import           Cut.SplitVideo
 import           Data.Bifunctor
@@ -23,17 +24,11 @@ import           System.IO.Temp
 import           Text.Regex.TDFA         hiding (empty)
 import qualified Turtle                  as Sh
 
-data SilentDetect = SilentDetect
-  { silence_start    :: Double
-  , silence_end      :: Double
-  , silence_duration :: Double
-  } deriving Show
-
-parse :: (Sh.Line, Sh.Line) -> SilentDetect
-parse x = SilentDetect {
-   silence_start    = getStart $ fst x
-  , silence_end      = getEnd $ snd x
-  , silence_duration = getDuration $ snd x
+parse :: (Sh.Line, Sh.Line) -> Interval Silent
+parse x = Interval {
+   interval_start    = getStart $ fst x
+  , interval_end      = getEnd $ snd x
+  , interval_duration = getDuration $ snd x
   }
 
 getStart :: Sh.Line -> Double
@@ -86,7 +81,14 @@ entryPoint = do
       parsed = parse <$> linedUp
 
   liftIO $ print parsed
+  liftIO $ print $ detectSound parsed
 
+  withTempDirectory "/tmp" "streamedit" $ \temp -> do
+      liftIO $ (edit set'' temp $ detectSound parsed)
+      res <- Sh.fold (Sh.ls $ Sh.decodeString temp) Fl.list
+      Sh.cptree (Sh.decodeString temp) (Sh.decodeString "/tmp/tomp")
+      Sh.sh (combine set'' res)
+  pure ()
   -- withTempDirectory "/tmp" "streamedit" $ \temp -> do
   --     Sh.sh $ split temp set''
 
