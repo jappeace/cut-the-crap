@@ -4,3 +4,4 @@ network-uri-lenses.cabal
 dist*
 .#*
 result
+TAGS

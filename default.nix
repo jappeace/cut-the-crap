@@ -9,6 +9,6 @@ mkDerivation {
   libraryToolDepends = [ hpack ];
   executableHaskellDepends = [ base ];
   testHaskellDepends = [ base hspec hspec-core ];
-  preConfigure = "hpack";
+  prePatch = "hpack";
   license = stdenv.lib.licenses.mit;
 }
