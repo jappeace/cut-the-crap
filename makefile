@@ -32,7 +32,7 @@ run_:
 	cabal new-run exe  --ghc-options $(OPTIMIZATION) -- \
 		--inFile "out.mkv" \
 		--outFile "edited.mkv" \
-		--voiceTrack 1 \
+		--voiceTrack 2 \
 		--musicPath "onepiece.mp3"
 
 
