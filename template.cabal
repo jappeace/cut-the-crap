@@ -1,10 +1,11 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a3ea2d9b8eab2eb8e90e1419c9d8a83ef3f693d0ecaa075df2d1279eb23cbed6
+-- hash: dce20fceb3999fd2894ece638254ca732e19b8079bf1885eca15ac160b0b469e
 
-cabal-version:  >= 1.10
 name:           template
 version:        1.0.0
 author:         Jappie Klooster
@@ -14,8 +15,8 @@ license:        MIT
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
-    LICENSE
     Readme.md
+    LICENSE
 
 library
   exposed-modules:
