@@ -117,7 +117,20 @@ https://stackoverflow.com/questions/12938581/ffmpeg-mux-video-and-audio-from-ano
 ffmpeg -i ~/raster-vids/Birds_in_Flight.mp3 -filter:a "volume=0.05" ~/raster-vids/silent.mp3
 ```
 https://www.maketecheasier.com/normalize-music-files-with-ffmpeg/
-## Native bindings
+
+### Concatting videos
+https://ffmpeg.org/faq.html#How-can-I-join-video-files_003f 
+
+https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
+
+
+### Filter
+There is a silence remove:
+https://ffmpeg.org/ffmpeg-filters.html#silenceremove
+
+It maybe worth investigating.
+
+### Native bindings
 Using native bindings instead of the cli interface can result
 in a much more efficient program as we then can stream everything.
 It's a lot harder to do though.
@@ -155,7 +168,3 @@ ffmpeg -i "/home/jappie/streams/towards-automated-video-editing.mkv" -map 0:2 -f
 .. TODO
 
 
-## Concatting videos
-https://ffmpeg.org/faq.html#How-can-I-join-video-files_003f 
-
-https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
