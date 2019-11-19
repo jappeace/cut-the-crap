@@ -11,6 +11,9 @@ hpack:
 ghcid: clean hpack etags
 	nix-shell --run "ghcid -s \"import Main\" -c \"cabal new-repl\" -T \"main\" test:unit"
 
+ghci:
+	nix-shell --run "cabal new-repl test:unit"
+
 etags:
 	nix-shell --run "hasktags  -e ./src"
 
@@ -42,3 +45,10 @@ clean:
 
 sdist:
 	make run-in-shell RUN="cabal sdist"
+
+run_:
+	cabal new-run exe --ghc-options $(OPTIMIZATION) -- \
+	    # whatever option to haskell program
+
+run:
+	nix-shell --run "make run_"
