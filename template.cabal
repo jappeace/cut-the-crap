@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 73537512e8384edf9337712f703bb37e9db4834a5c501016cf92299a3f6e0b36
+-- hash: a6274bf9c22f27f3c38f79053decb5e822b3d230f744fe53cf602f677177af74
 
 name:           template
 version:        1.0.0
@@ -20,6 +20,7 @@ extra-source-files:
 
 library
   exposed-modules:
+      Cut.Analyze
       Cut.CutVideo
       Cut.Ffmpeg
       Cut.Lib
@@ -76,6 +77,7 @@ test-suite unit
   other-modules:
       Test.MatchLineSpec
       Test.TestSpec
+      Cut.Analyze
       Cut.CutVideo
       Cut.Ffmpeg
       Cut.Lib
