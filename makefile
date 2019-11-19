@@ -5,8 +5,10 @@ build:
 haddock:
 	cabal new-haddock all
 
-ghcid: clean etags
-	nix-shell -p cabal2nix haskellPackages.hpack --run "make update-cabal"
+hpack:
+	nix-shell ./hpack-shell.nix --run "make update-cabal"
+
+ghcid: clean hpack etags
 	nix-shell --run "ghcid -s \"import Main\" -c \"cabal new-repl\" -T \"main\" test:unit"
 
 etags:
