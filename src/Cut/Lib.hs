@@ -3,7 +3,7 @@
 {-# OPTIONS_GHC -w #-}
 
 module Cut.Lib
-  ( entryPoint, getStart , getEnd , getDuration
+  ( entryPoint, getStart , getEnd , getDuration, combineDir
   ) where
 
 import qualified Control.Foldl           as Fl
@@ -80,14 +80,10 @@ entryPoint = do
         else empty
       parsed = parse <$> linedUp
 
-  liftIO $ print parsed
-  liftIO $ print $ detectSound parsed
-
   withTempDirectory "/tmp" "streamedit" $ \temp -> do
       liftIO $ (edit set'' temp $ detectSound parsed)
-      res <- Sh.fold (Sh.ls $ Sh.decodeString temp) Fl.list
       Sh.cptree (Sh.decodeString temp) (Sh.decodeString "/tmp/tomp")
-      Sh.sh (combine set'' res)
+      liftIO $ combineDir set'' temp
   pure ()
   -- withTempDirectory "/tmp" "streamedit" $ \temp -> do
   --     Sh.sh $ split temp set''
@@ -98,6 +94,11 @@ entryPoint = do
   -- runResourceT $ runGoogle env $ send $ videosInsert "id" $
   --   video & vStatus . _Just . vsPrivacyStatus ?~ Private
   -- pure ()
+
+combineDir :: Options -> FilePath -> IO ()
+combineDir set'' temp = do
+      res <- Sh.fold (Sh.ls $ Sh.decodeString temp) Fl.list
+      Sh.sh (combine set'' res)
 
 readSettings :: IO (Options)
 readSettings =
