@@ -157,3 +157,5 @@ ffmpeg -i "/home/jappie/streams/towards-automated-video-editing.mkv" -map 0:2 -f
 
 ## Concatting videos
 https://ffmpeg.org/faq.html#How-can-I-join-video-files_003f 
+
+https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg

@@ -1,24 +1,10 @@
-<<<<<<< variant A
-cabal-version: 1.12
-
--- This file has been generated from package.yaml by hpack version 0.32.0.
->>>>>>> variant B
 cabal-version: 1.12
 
 -- This file has been generated from package.yaml by hpack version 0.33.0.
-####### Ancestor
--- This file has been generated from package.yaml by hpack version 0.28.2.
-======= end
 --
 -- see: https://github.com/sol/hpack
 --
-<<<<<<< variant A
--- hash: ef8e4732cc4c0f8ef4913b20627ce0c27edd59bdf399743d6fb6e6eb47236ec5
->>>>>>> variant B
--- hash: dce20fceb3999fd2894ece638254ca732e19b8079bf1885eca15ac160b0b469e
-####### Ancestor
--- hash: a3ea2d9b8eab2eb8e90e1419c9d8a83ef3f693d0ecaa075df2d1279eb23cbed6
-======= end
+-- hash: 73537512e8384edf9337712f703bb37e9db4834a5c501016cf92299a3f6e0b36
 
 name:           template
 version:        1.0.0
@@ -35,6 +21,7 @@ extra-source-files:
 library
   exposed-modules:
       Cut.CutVideo
+      Cut.Ffmpeg
       Cut.Lib
       Cut.Options
       Cut.SplitVideo
@@ -90,6 +77,7 @@ test-suite unit
       Test.MatchLineSpec
       Test.TestSpec
       Cut.CutVideo
+      Cut.Ffmpeg
       Cut.Lib
       Cut.Options
       Cut.SplitVideo

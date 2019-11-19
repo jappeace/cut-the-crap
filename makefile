@@ -29,26 +29,20 @@ run-in-shell:
 	nix-shell --cores 0 -j 8 --run "$(RUN)"
 
 run_:
-	cabal new-run exe -- \
+	cabal new-run exe  --ghc-options $(OPTIMIZATION) -- \
 		--inFile "out.mkv" \
-		--outFile "edited" \
+		--outFile "edited.mkv" \
 		--voiceTrack 1 \
 		--musicPath "onepiece.mp3"
 
-run:
+
+run: hpack 
 	nix-shell --run "make run_"
 
 clean:
 	rm -fR dist dist-*
 
-.PHONY: test
+.PHONY: test run_
 
 sdist:
 	make run-in-shell RUN="cabal sdist"
-
-run_:
-	cabal new-run exe --ghc-options $(OPTIMIZATION) -- \
-	    # whatever option to haskell program
-
-run:
-	nix-shell --run "make run_"

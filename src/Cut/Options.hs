@@ -8,7 +8,7 @@ module Cut.Options
   , out_file
   , seg_size
   , silent_treshold
-  , frame_margin
+  , detect_margin
   , voice_track
   , music_path
   , simpleOptions
@@ -24,7 +24,7 @@ simpleOptions = Options
   , outFile = halp # "out.mkv"
   , segmentSize = halp . _Just # def_seg_size
   , silentTreshold = halp . _Just # def_silent
-  , frameMargin = halp . _Just # def_margin
+  , detectMargin = halp . _Just # def_margin
   , voiceTrack = halp . _Just # 2
   , musicPath = halp # Nothing
   }
@@ -35,7 +35,7 @@ data Options = Options
   , outFile :: FilePath <?> "The output name without format"
   , segmentSize :: (Maybe Int) <?> "The size of video segments in minutes"
   , silentTreshold :: (Maybe Float) <?> "The treshold for determining intersting sections"
-  , frameMargin :: (Maybe Int) <?> "Margin in frames around interesting sections"
+  , detectMargin :: (Maybe Double) <?> "Margin seconds around detection"
   , voiceTrack :: (Maybe Int) <?> "The track to detect audio upon"
   , musicPath :: (Maybe FilePath) <?> "The music track"
   } deriving (Show, Generic)
@@ -52,8 +52,8 @@ out_file = field @"outFile" . halp
 def_seg_size :: Int
 def_seg_size = 20
 
-def_margin :: Int
-def_margin = 1
+def_margin :: Double
+def_margin = 0.1
 
 def_silent :: Float
 def_silent = 0.3
@@ -64,8 +64,8 @@ def_voice = 2
 seg_size :: Lens' Options Int
 seg_size = field @"segmentSize" . halp . non def_seg_size
 
-frame_margin :: Lens' Options Int
-frame_margin = field @"frameMargin" . halp . non def_margin
+detect_margin :: Lens' Options Double
+detect_margin = field @"detectMargin" . halp . non def_margin
 
 silent_treshold :: Lens' Options Float
 silent_treshold = field @"silentTreshold" . halp . non def_silent

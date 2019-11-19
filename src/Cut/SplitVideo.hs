@@ -1,16 +1,18 @@
 module Cut.SplitVideo
-  ( split, detect
+  ( split
   ) where
 
 import           Control.Lens
+import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Text.Lens
 import           Turtle         hiding (FilePath)
 
+-- | Splits a video into segments
 split :: FilePath -> Options -> Shell ()
 split tmp opt' = do
   cp (fromText $ (tmp ^. packed)) (fromText (opt' ^. out_file . packed <> "-full.mp4"))
-  procs "ffmpeg" ["-i"
+  void $ ffmpeg ["-i"
                  , (tmp ^. packed)
                  , "-c"
                  , "copy"
@@ -23,17 +25,4 @@ split tmp opt' = do
                  , "-reset_timestamps"
                  , "1"
                  , opt' ^. out_file . packed <> "%03d.mp4"
-                 ] $ pure mempty
-
-detect :: Options -> Shell (Either Line Line)
-detect opt' =
-  inprocWithErr "ffmpeg" ["-i"
-                 , opt' ^. in_file . packed
-                 , "-map"
-                 , "0:" <> opt' ^. voice_track . to show . packed
-                 , "-filter:a"
-                 , "silencedetect=noise=-30dB:d=0.5"
-                 , "-f"
-                 , "null"
-                 , "-"
-                 ] $ pure mempty
+                 ]

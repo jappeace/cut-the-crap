@@ -5,7 +5,6 @@ module Cut.CutVideo
   , Interval(..)
   , Silent
   , Sound
-  , detectSound
   , combine
   )
 where
@@ -13,40 +12,14 @@ where
 import qualified Control.Foldl       as Fl
 import           Control.Lens
 import           Control.Monad.Catch
+import           Cut.Analyze
+import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Foldable
 import qualified Data.Text           as Text
 import           Data.Text.Lens
 import           Turtle              hiding (FilePath)
 import qualified Turtle              as T
-
-data Silent
-data Sound
-
-data Interval e = Interval
-  { interval_start    :: Double
-  , interval_end      :: Double
-  , interval_duration :: Double
-  } deriving Show
-
-detectSound :: [Interval Silent] -> [Interval Sound]
-detectSound = filter ((0 <) . interval_end) . reverse . snd . foldl'
-  (flip compare')
-  ((Interval 0 0 0, []))
-
-compare'
-  :: Interval Silent
-  -> (Interval Silent, [Interval Sound])
-  -> (Interval Silent, [Interval Sound])
-compare' x' y = (x', soundedInterval : snd y)
- where
-  soundedInterval = Interval { interval_start    = interval_end $ fst y
-                             , interval_end      = interval_start x'
-                             , interval_duration = soundEnd - soundStart - 0.02
-                             }
-  soundEnd   = interval_start x'
-  soundStart = interval_end $ fst y
-
 
 toArgs :: Options -> FilePath -> Interval Sound -> [Text]
 toArgs opt' tmp inter =
@@ -60,16 +33,19 @@ toArgs opt' tmp inter =
   , Text.pack tmp
     <> "/"
     <> opt' ^. out_file .  packed
-    <> start
     <> "-"
-    <> duration
-    <> ".mpg"
-  , "-qscale:v"
-  , "1"
+    <> fname
+    <> ".mkv"
+  , "-c"
+  , "copy"
+  -- , "-qscale:v"
+  -- , "1"
   ]
  where
-  duration = Text.pack $ show $ interval_duration inter
   start    = Text.pack $ show $ interval_start inter
+  duration = Text.pack $ show $ interval_duration inter
+
+  fname = Text.pack $ show $ truncate $ interval_start inter * 100
 
 edit :: Options -> FilePath -> [Interval Sound] -> IO ()
 edit opt' tempDir intervals = do
@@ -77,7 +53,7 @@ edit opt' tempDir intervals = do
   traverse_
       (\args -> do
         liftIO $ print args
-        out <- catch (T.fold (inprocWithErr "ffmpeg" args $ pure mempty) Fl.list) $ \exec -> do
+        out <- catch (T.fold (ffmpeg args) Fl.list) $ \exec -> do
           liftIO (print ("expection during edit: ", exec :: SomeException, args))
           pure [Left "expection"]
         liftIO $ print ("finisehd with ", out)
@@ -87,19 +63,19 @@ edit opt' tempDir intervals = do
 
   liftIO $ putStrLn "donee"
 
-combine :: Options -> [T.FilePath] -> Shell ()
+combine :: Options -> FilePath -> Shell ()
 combine opt' tempfiles = do
-  liftIO $ print ("arguments", args, tempfiles)
-  output' <- inprocWithErr
-        "ffmpeg"
-        args
-    $ pure mempty
+  output' <- ffmpeg args
   liftIO $ print ("output", output')
- where
-  paths = encodeString <$> tempfiles
-  expr  = drop 1 $ foldr (\y x' -> x' <> "|" <> y) "" paths
+ where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   args = [ "-y"
+         , "-f"
+         , "concat"
+         , "-safe"
+         , "0"
         , "-i"
-        , "concat:" <> (Text.pack $ expr)
-        , opt' ^. out_file . packed <> ".mp4"
+        , Text.pack tempfiles
+        , "-c"
+        , "copy"
+        , opt' ^. out_file . packed
         ]

@@ -2,7 +2,7 @@ module Test.MatchLineSpec
   ( spec
   ) where
 
-import           Cut.Lib
+import           Cut.Analyze
 import           Test.Hspec
 
 spec :: Spec
