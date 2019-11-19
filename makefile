@@ -11,6 +11,9 @@ hpack:
 ghcid: clean hpack etags
 	nix-shell --run "ghcid -s \"import Main\" -c \"cabal new-repl\" -T \"main\" test:unit"
 
+ghci:
+	nix-shell --run "cabal new-repl test:unit"
+
 etags:
 	nix-shell --run "hasktags  -e ./src"
 
