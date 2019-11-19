@@ -8,7 +8,6 @@ let
         pkgs.haskellPackages.hasktags
         pkgs.ffmpeg
         pkgs.hlint
-        (import ./jumpcutter.nix)
         ];
     });
 in 
