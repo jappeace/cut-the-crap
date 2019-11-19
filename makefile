@@ -32,3 +32,10 @@ clean:
 
 sdist:
 	make run-in-shell RUN="cabal sdist"
+
+run_:
+	cabal new-run exe --ghc-options $(OPTIMIZATION) -- \
+	    # whatever option to haskell program
+
+run:
+	nix-shell --run "make run_"
