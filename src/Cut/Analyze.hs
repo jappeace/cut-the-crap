@@ -67,7 +67,11 @@ detectShell opt' =
                  , "-map"
                  , "0:" <> opt' ^. voice_track . to show . packed
                  , "-filter:a"
-                 , "silencedetect=noise=-30dB:d=0.5"
+                 -- , "silencedetect=noise=-30dB:d=0.5"
+                 , "silencedetect=noise=" <>
+                    (opt' ^. silent_treshold . to floatToText)
+                   <> ":d=" <>
+                    (opt' ^. silent_duration . to floatToText)
                  , "-f"
                  , "null"
                  , "-"

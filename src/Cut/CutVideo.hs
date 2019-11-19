@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wno-type-defaults #-}
 
 module Cut.CutVideo
-  ( edit
+  ( extract
   , Interval(..)
   , Silent
   , Sound
@@ -42,25 +42,21 @@ toArgs opt' tmp inter =
   -- , "1"
   ]
  where
-  start    = Text.pack $ show $ interval_start inter
-  duration = Text.pack $ show $ interval_duration inter
+  start    = floatToText $ interval_start inter
+  duration = floatToText $ interval_duration inter
 
   fname = Text.pack $ show $ truncate $ interval_start inter * 100
 
-edit :: Options -> FilePath -> [Interval Sound] -> IO ()
-edit opt' tempDir intervals = do
-  liftIO $ print intervals
+extract :: Options -> FilePath -> [Interval Sound] -> IO ()
+extract opt' tempDir intervals = do
   traverse_
       (\args -> do
-        liftIO $ print args
-        out <- catch (T.fold (ffmpeg args) Fl.list) $ \exec -> do
+        void $ catch (T.fold (ffmpeg args) Fl.list) $ \exec -> do
           liftIO (print ("expection during edit: ", exec :: SomeException, args))
           pure [Left "expection"]
-        liftIO $ print ("finisehd with ", out)
       )
     $   toArgs opt' tempDir
     <$> intervals
-
   liftIO $ putStrLn "donee"
 
 combine :: Options -> FilePath -> Shell ()

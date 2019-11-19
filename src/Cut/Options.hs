@@ -11,6 +11,7 @@ module Cut.Options
   , detect_margin
   , voice_track
   , music_path
+  , silent_duration
   , simpleOptions
   ) where
 
@@ -27,14 +28,15 @@ simpleOptions = Options
   , detectMargin = halp . _Just # def_margin
   , voiceTrack = halp . _Just # 2
   , musicPath = halp # Nothing
+  , silentDuration = halp . _Just # def_duration
   }
-
 
 data Options = Options
   { inFile :: FilePath <?> "The input video"
   , outFile :: FilePath <?> "The output name without format"
   , segmentSize :: (Maybe Int) <?> "The size of video segments in minutes"
-  , silentTreshold :: (Maybe Float) <?> "The treshold for determining intersting sections"
+  , silentTreshold :: (Maybe Double) <?> "The treshold for determining intersting sections, closer to zero is detects more audio (n: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
+  , silentDuration :: (Maybe Double) <?> "The duration before soemthing can be considered a silence (d: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
   , detectMargin :: (Maybe Double) <?> "Margin seconds around detection"
   , voiceTrack :: (Maybe Int) <?> "The track to detect audio upon"
   , musicPath :: (Maybe FilePath) <?> "The music track"
@@ -55,8 +57,11 @@ def_seg_size = 20
 def_margin :: Double
 def_margin = 0.1
 
-def_silent :: Float
-def_silent = 0.3
+def_silent :: Double
+def_silent = 0.0001
+
+def_duration :: Double
+def_duration = 0.5
 
 def_voice :: Int
 def_voice = 2
@@ -67,8 +72,11 @@ seg_size = field @"segmentSize" . halp . non def_seg_size
 detect_margin :: Lens' Options Double
 detect_margin = field @"detectMargin" . halp . non def_margin
 
-silent_treshold :: Lens' Options Float
+silent_treshold :: Lens' Options Double
 silent_treshold = field @"silentTreshold" . halp . non def_silent
+
+silent_duration :: Lens' Options Double
+silent_duration = field @"silentDuration" . halp . non def_duration
 
 voice_track :: Lens' Options Int
 voice_track = field @"voiceTrack" . halp . non def_voice

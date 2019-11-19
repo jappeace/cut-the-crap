@@ -24,7 +24,7 @@ import qualified Data.Text.IO            as Text
 import           Options.Applicative
 import           Options.Generic
 import           System.IO.Temp
-import           Text.Regex.TDFA         hiding (empty)
+import           Text.Regex.TDFA         hiding (empty, extract)
 import qualified Turtle                  as Sh
 
 
@@ -45,7 +45,7 @@ main = do
   parsed <- detect set''
 
   withTempDirectory "/tmp" "streamedit" $ \temp -> do
-      liftIO $ (edit set'' temp parsed)
+      liftIO $ (extract set'' temp parsed)
       Sh.testdir "/tmp/tomp" >>= flip when (Sh.rmtree "/tmp/tomp")
       Sh.cptree (Sh.decodeString temp) "/tmp/tomp"
       liftIO $ combineDir set'' temp
@@ -64,11 +64,9 @@ combineDir :: Options -> FilePath -> IO ()
 combineDir set'' temp = do
       res <- Sh.fold (Sh.ls $ Sh.decodeString temp) Fl.list
       let paths :: Text
-          paths = Text.unlines $ reverse $ Text.pack . (flip (<>) "'") . ("file '" <>) . Sh.encodeString <$> res
+          paths = Text.unlines $ Text.pack . (flip (<>) "'") . ("file '" <>) . Sh.encodeString <$> res
 
-      Text.putStrLn paths
-
-      Sh.writeTextFile (Sh.decodeString inputsPath)  paths
+      Sh.writeTextFile (Sh.decodeString inputsPath) paths
       Sh.sh (combine set'' inputsPath)
       where
         inputsPath = temp <> "/" <> "input.txt"
@@ -79,4 +77,4 @@ readSettings =
   info
     parseRecord
     (fullDesc <> Options.Applicative.header "Cut the crap" <>
-     progDesc "Automated video editing, can cut out silences")
+     progDesc "Automated video extracting, can cut out silences")
