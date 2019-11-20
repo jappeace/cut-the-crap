@@ -6,8 +6,8 @@
 This is an automatic video editing program and splitting
 program.
 This was inspired by [jumpcutter](https://github.com/carykh/jumpcutter),
-but we can get better quality results by specifying a seperate micorphone track,
-and use ffmpeg more efficiently for faster results. 
+but we can get better quality results by specifying a seperate micorphone track.
+Using ffmpeg more efficiently also produces faster results. 
 
 Youtube has different requirements from streams then twitch does.
 We want to cut out boring parts.
