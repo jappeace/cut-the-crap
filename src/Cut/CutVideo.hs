@@ -21,8 +21,8 @@ import           Data.Text.Lens
 import           Turtle              hiding (FilePath)
 import qualified Turtle              as T
 
-toArgs :: Options -> FilePath -> Interval Sound -> [Text]
-toArgs opt' tmp inter =
+toArgs :: Options -> FilePath -> Interval Sound -> (Interval Sound, [Text])
+toArgs opt' tmp inter = (inter, -- keep ter interval for debugging
   [ "-y"
   , "-ss"
   , start
@@ -40,7 +40,7 @@ toArgs opt' tmp inter =
   , "copy"
   -- , "-qscale:v"
   -- , "1"
-  ]
+  ])
  where
   start    = floatToText $ interval_start inter
   duration = floatToText $ interval_duration inter
@@ -50,9 +50,9 @@ toArgs opt' tmp inter =
 extract :: Options -> FilePath -> [Interval Sound] -> IO ()
 extract opt' tempDir intervals = do
   traverse_
-      (\args -> do
+      (\(inter, args) -> do
         void $ catch (T.fold (ffmpeg args) Fl.list) $ \exec -> do
-          liftIO (print ("expection during edit: ", exec :: SomeException, args))
+          liftIO (print ("expection during edit: ", exec :: SomeException, args, inter))
           pure [Left "expection"]
       )
     $   toArgs opt' tempDir

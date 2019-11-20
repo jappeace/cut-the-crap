@@ -55,13 +55,13 @@ def_seg_size :: Int
 def_seg_size = 20
 
 def_margin :: Double
-def_margin = 0.1
+def_margin = 0.05
 
 def_silent :: Double
 def_silent = 0.0001
 
 def_duration :: Double
-def_duration = 0.5
+def_duration = 0.25
 
 def_voice :: Int
 def_voice = 2
