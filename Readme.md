@@ -5,15 +5,17 @@
 
 This is an automatic video editing program and splitting
 program.
-At the moment video editing is done with [jumpcut](https://github.com/carykh/jumpcutter).
-Splitting is done with ffmpeg.
+This was inspired by [jumpcutter](https://github.com/carykh/jumpcutter),
+but we can get better quality results by specifying a seperate micorphone track,
+and use ffmpeg more efficiently for faster results. 
 
 Youtube has different requirements from streams then twitch does.
-We for example want to make the videos be chopped up into
-small segments.
-We also should cut out boring parts.
+We want to cut out boring parts.
 Jumpcut has solved that problem partly and this program
-leverages that.
+builds on top of that idea.
+At the moment we use ffmpeg for silence detection, 
+then we do some maths to figure out which segments are sounded,
+which is combined into the output video.
 
 # Use case
 I'm using this program to record my [stream](https://www.twitch.tv/jappiejappie)
@@ -27,7 +29,7 @@ Pull requests are appreciated.
 I wish to build out this idea more to essentially
 make all streams look like human edited youtube videos.
 Although I'm familiar with python,
-I'm much more productive in haskell,
+I (am or feel) more productive in haskell,
 therefore I chose to integrate with,
 and eventually replace jumpcutter.
 On stream we've assesed most of the functionality is basically
@@ -35,31 +37,28 @@ ffmpeg.
 Haskell also opens up the ability to do direct native ffmpeg
 integration.
 
-One glaring limitation I've  encountered for jumpcutter is that
+One glaring limitation I've encountered with jumpcutter is that
 it can't handle larger video files (2 hour 30 mintus +).
 Scipy throws an exception complaining the wav is to big.
-Currently I'm just splitting bigger videos with ffmpeg by doing:
-
-```shell
-ffmpeg -i input.mp4 -c copy -map 0 -segment_time 02:30:00 -f segment -reset_timestamps 1 output%03d.mp4
-```
+Since this program doesn't use scipy it doesn't have that issue.
 
 It also appears like jumpcutter is unmaintained.
 
 # Design
-This project is mostly a wrapper around ffmpeg and jumpcut,
-which is also mostly a wrapper around ffmpeg.
+This project is mostly a wrapper around ffmpeg.
+We use haskell for shell programing.
 
-> Wrapception is unix philosphy
->
-> \- Lumie
-
-# TODO
+# DONE
 
 ## Track hackery
 
 + It should be possible to specify one audio output as command track,
   eg it will be possible to use that to detect interesting parts.
+
+# TODO
+
+## Track hackery
+
 + Another track would be background and won't be accelerated at all.
   In the end it just get's cut of how far it is.
 
