@@ -6,10 +6,14 @@
 Cut the crap is an automatic video editing program for streamers.
 It can cut out uninteresting parts by detecting silences.
 This was inspired by [jumpcutter](https://github.com/carykh/jumpcutter),
-where this program gets better quality results
-by specifying a seperate micorphone track.
+where this program can get better quality results
+by using an (optional) dedicated microphone track.
+This prevents cutting of [quieter consonants](https://youtu.be/DQ8orIurGxw?t=675)
+for example.
 Using ffmpeg more efficiently also produces faster results and
-is less error prone.
+is less error prone [^arbitrary-size].
+
+[^arbitrary-size]: I support video lengths of aribtrary size whereas jumpcutter had issues with videos longer than 3 hours, I do quite often stream longer than that.
 
 Youtube has different requirements from streams then twitch does.
 We want to cut out boring parts.
