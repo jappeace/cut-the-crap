@@ -11,9 +11,7 @@ by using an (optional) dedicated microphone track.
 This prevents cutting of [quieter consonants](https://youtu.be/DQ8orIurGxw?t=675)
 for example.
 Using ffmpeg more efficiently also produces faster results and
-is less error prone [^arbitrary-size].
-
-[^arbitrary-size]: I support video lengths of aribtrary size whereas jumpcutter had issues with videos longer than 3 hours, I do quite often stream longer than that.
+is less error prone.
 
 Youtube has different requirements from streams then twitch does.
 We want to cut out boring parts.
