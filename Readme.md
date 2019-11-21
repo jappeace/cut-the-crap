@@ -3,11 +3,13 @@
 
 > Bless This Mess
 
-This is an automatic video editing program and splitting
-program.
+Cut the crap is an automatic video editing program for streamers.
+It can cut out uninteresting parts by detecting silences.
 This was inspired by [jumpcutter](https://github.com/carykh/jumpcutter),
-but we can get better quality results by specifying a seperate micorphone track.
-Using ffmpeg more efficiently also produces faster results. 
+where this program gets better quality results
+by specifying a seperate micorphone track.
+Using ffmpeg more efficiently also produces faster results and
+is less error prone.
 
 Youtube has different requirements from streams then twitch does.
 We want to cut out boring parts.
@@ -16,6 +18,9 @@ builds on top of that idea.
 At the moment we use ffmpeg for silence detection, 
 then we do some maths to figure out which segments are sounded,
 which is combined into the output video.
+
+In the future we will add support for a music track
+which will not be chopped up.
 
 # Use case
 I'm using this program to record my [stream](https://www.twitch.tv/jappiejappie)
