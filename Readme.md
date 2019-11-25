@@ -4,6 +4,8 @@
 
 # Haskell project template
 
+![Build status](https://img.shields.io/travis/jappeace/haskell-template-project?style=for-the-badge)
+
 Using cabal within a nix shell.
 If you like nix this is a good way of doing haskell dev.
 
