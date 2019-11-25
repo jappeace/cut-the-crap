@@ -19,7 +19,7 @@ etags:
 
 update-cabal:
 	hpack --force ./
-	cabal2nix ./ > default.nix
+	cabal2nix ./ > dependencies.nix
 
 enter:
 	nix-shell --cores 0 -j 8 --pure
