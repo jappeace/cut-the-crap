@@ -1,6 +1,6 @@
 [![Jappiejappie](https://img.shields.io/badge/twitch.tv-jappiejappie-purple?logo=twitch&style=for-the-badge)](https://www.twitch.tv/jappiejappie)
 [![Jappiejappie](https://img.shields.io/badge/youtube-jappieklooster-red?logo=youtube&style=for-the-badge)](https://www.youtube.com/channel/UCQxmXSQEYyCeBC6urMWRPVw)
-![Build status](https://img.shields.io/travis/jappeace/cut-the-crap?style=for-the-badge)
+[![Build status](https://img.shields.io/travis/jappeace/cut-the-crap?style=for-the-badge)](https://travis-ci.org/jappeace/cut-the-crap/builds/)
 
 > Bless This Mess
 
