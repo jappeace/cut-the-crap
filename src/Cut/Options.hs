@@ -10,7 +10,7 @@ module Cut.Options
   , silent_treshold
   , detect_margin
   , voice_track
-  , music_path
+  , music_track
   , silent_duration
   , simpleOptions
   ) where
@@ -27,19 +27,19 @@ simpleOptions = Options
   , silentTreshold = halp . _Just # def_silent
   , detectMargin = halp . _Just # def_margin
   , voiceTrack = halp . _Just # 2
-  , musicPath = halp # Nothing
+  , musicTrack = halp # Nothing
   , silentDuration = halp . _Just # def_duration
   }
 
 data Options = Options
   { inFile :: FilePath <?> "The input video"
   , outFile :: FilePath <?> "The output name without format"
-  , segmentSize :: (Maybe Int) <?> "The size of video segments in minutes"
-  , silentTreshold :: (Maybe Double) <?> "The treshold for determining intersting sections, closer to zero is detects more audio (n: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
-  , silentDuration :: (Maybe Double) <?> "The duration before soemthing can be considered a silence (d: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
-  , detectMargin :: (Maybe Double) <?> "Margin seconds around detection"
-  , voiceTrack :: (Maybe Int) <?> "The track to detect audio upon"
-  , musicPath :: (Maybe FilePath) <?> "The music track"
+  , segmentSize :: Maybe Int <?> "The size of video segments in minutes"
+  , silentTreshold :: Maybe Double <?> "The treshold for determining intersting sections, closer to zero is detects more audio (n: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
+  , silentDuration :: Maybe Double <?> "The duration before soemthing can be considered a silence (d: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
+  , detectMargin :: Maybe Double <?> "Margin seconds around detection"
+  , voiceTrack :: Maybe Int <?> "The track to detect audio upon"
+  , musicTrack :: Maybe Int <?> "The track to detect audio upon"
   } deriving (Show, Generic)
 
 halp :: Iso' (a <?> b) a
@@ -81,7 +81,7 @@ silent_duration = field @"silentDuration" . halp . non def_duration
 voice_track :: Lens' Options Int
 voice_track = field @"voiceTrack" . halp . non def_voice
 
-music_path :: Lens' Options (Maybe FilePath)
-music_path = field @"musicPath" . halp
+music_track :: Lens' Options (Maybe Int)
+music_track = field @"musicTrack" . halp
 
 instance ParseRecord Options

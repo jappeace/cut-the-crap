@@ -6,6 +6,7 @@ module Cut.CutVideo
   , Silent
   , Sound
   , combine
+  , combineOutput
   )
 where
 
@@ -50,7 +51,7 @@ toArgs opt' tmp inter = (inter, -- keep ter interval for debugging
 extract :: Options -> FilePath -> [Interval Sound] -> IO ()
 extract opt' tempDir intervals = do
   traverse_
-      (\(inter, args) -> do
+      (\(inter, args) ->
         void $ catch (T.fold (ffmpeg args) Fl.list) $ \exec -> do
           liftIO (print ("expection during edit: ", exec :: SomeException, args, inter))
           pure [Left "expection"]
@@ -59,8 +60,11 @@ extract opt' tempDir intervals = do
     <$> intervals
   liftIO $ putStrLn "donee"
 
-combine :: Options -> FilePath -> Shell ()
-combine opt' tempfiles = do
+combineOutput :: FilePath
+combineOutput = "combined-output.mkv"
+
+combine :: FilePath -> Shell ()
+combine tempfiles = do
   output' <- ffmpeg args
   liftIO $ print ("output", output')
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
@@ -70,8 +74,8 @@ combine opt' tempfiles = do
          , "-safe"
          , "0"
         , "-i"
-        , Text.pack tempfiles
+        , Text.pack (tempfiles  <> "/input.txt")
         , "-c"
         , "copy"
-        , opt' ^. out_file . packed
+        , Text.pack $ tempfiles <> "/" <> combineOutput
         ]
