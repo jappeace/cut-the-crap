@@ -60,14 +60,11 @@ We use haskell for shell programing.
 # DONE
 
 ## Track hackery
-
 + It should be possible to specify one audio output as command track,
   eg it will be possible to use that to detect interesting parts.
+  
 
-# TODO
-
-## Track hackery
-
+### Seperate music track
 + Another track would be background and won't be accelerated at all.
   In the end it just get's cut of how far it is.
 
@@ -75,6 +72,8 @@ This way we get good music and interesting stream.
 Another idea is to remix an entirely different source of music
 into the video, so we can play copyrighted music on stream
 and youtube friendly music on youtube.
+
+# TODO
 
 ## Speech recognition
 It should be rather easy to hook up for example http://kaldi-asr.org/doc/
