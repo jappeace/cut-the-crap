@@ -83,8 +83,7 @@ getMusic opt' tempfiles = do
       void $ Sh.sh $ ffmpeg $ args x
       Sh.sh $ combineMusic tempfiles
       pure $ Text.pack (tempfiles <> "/" <> withMusicFile)
-  print "done"
-  Sh.cp (Sh.decodeString combinedFile) (Sh.decodeString $ flip mappend "combined.mkv" $ opt' ^. out_file)
+  putStrLn "done get music"
   Sh.cp (Sh.decodeString $ Text.unpack res) (opt' ^. out_file . to Sh.decodeString)
   pure ()
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
