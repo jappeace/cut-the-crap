@@ -57,6 +57,11 @@ It also appears like jumpcutter is unmaintained.
 This project is mostly a wrapper around ffmpeg.
 We use haskell for shell programing.
 
+The [turtle](http://hackage.haskell.org/package/turtle) library was chosen in support of shell programming,
+but has recently fallen under critiscism because it combines shell programming with streaming.
+This includes various un-expected behaviors when using the Shell monad (it behaves like a list).
+We may replace that in a future stream.
+
 # DONE
 
 ## Track hackery
