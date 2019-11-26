@@ -45,15 +45,6 @@ main = do
       extract set'' temp parsed
       combineDir set'' temp
       getMusic set'' temp
-  -- withTempDirectory "/tmp" "streamedit" $ \temp -> do
-  --     Sh.sh $ split temp set''
-
-  -- lgr  <- newLogger Debug stdout
-  -- env  <- newEnv <&> (envLogger .~ lgr) .
-  --         (envScopes .~ youTubeUploadScope)
-  -- runResourceT $ runGoogle env $ send $ videosInsert "id" $
-  --   video & vStatus . _Just . vsPrivacyStatus ?~ Private
-  -- pure ()
 
 combineDir :: Options -> FilePath -> IO ()
 combineDir set'' temp = do
