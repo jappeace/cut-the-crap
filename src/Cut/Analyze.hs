@@ -33,7 +33,7 @@ detect opts = do
       linedUp = do
         elems <- imap (\i a -> (i, a)) $ zip (take (length lines' - 1) lines') (drop 1 lines')
         if even (fst elems) then
-          pure $ (bimap (fromLeft mempty) (fromLeft mempty) $ snd elems)
+          pure (bimap (fromLeft mempty) (fromLeft mempty) $ snd elems)
         else empty
       parsed = parse <$> linedUp
   pure $ detectSound opts parsed

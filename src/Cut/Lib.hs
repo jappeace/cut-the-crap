@@ -35,25 +35,31 @@ entryPoint = catch main $ \exec ->
 
 main :: (MonadMask m, MonadUnliftIO m) => m ()
 main = do
-  set'' <- liftIO readSettings
+  options <- liftIO readSettings
   liftIO $ putStr "started with options: "
-  liftIO $ print set''
+  liftIO $ print options
 
-  parsed <- detect set''
+  parsed <- detect options
+  case options ^. work_dir of
+    Nothing -> withTempDirectory "/tmp" "streamedit" $ liftIO . runEdit options parsed
+    Just x -> liftIO $ runEdit options parsed x
 
-  withTempDirectory "/tmp" "streamedit" $ \temp -> liftIO $ do
-      extract set'' temp parsed
-      combineDir set'' temp
-      getMusic set'' temp
+runEdit :: Options -> [Interval Sound] -> FilePath ->  IO ()
+runEdit options parsed temp = do
+      extract options temp parsed
+      combineDir options temp
+      getMusic options temp
 
 combineDir :: Options -> FilePath -> IO ()
-combineDir set'' temp = do
+combineDir options temp = do
       res <- Sh.fold (Sh.ls $ Sh.decodeString temp) Fl.list
       let paths :: Text
           paths = Text.unlines $ Text.pack . flip (<>) "'" . ("file '" <>) . Sh.encodeString <$> res
 
       Sh.writeTextFile (Sh.decodeString $ temp <> "/input.txt") paths
       Sh.sh (combine temp)
+
+
 
 readSettings :: IO Options
 readSettings =
@@ -64,7 +70,7 @@ readSettings =
      progDesc "Automated video extracting, can cut out silences")
 
 musicFile :: FilePath
-musicFile = "sssssdddd.mp3"
+musicFile = "music.mp3"
 
 withMusicFile :: FilePath
 withMusicFile = "combined.mkv"
@@ -72,15 +78,17 @@ withMusicFile = "combined.mkv"
 getMusic :: Options -> FilePath -> IO ()
 getMusic opt' tempfiles = do
   res <- case opt' ^. music_track of
-    Nothing -> pure $ Text.pack $ tempfiles <> "/" <> combineOutput
+    Nothing -> pure $ Text.pack combinedFile
     Just x  -> do
       void $ Sh.sh $ ffmpeg $ args x
       Sh.sh $ combineMusic tempfiles
       pure $ Text.pack (tempfiles <> "/" <> withMusicFile)
   print "done"
+  Sh.cp (Sh.decodeString combinedFile) (Sh.decodeString $ flip mappend "combined.mkv" $ opt' ^. out_file)
   Sh.cp (Sh.decodeString $ Text.unpack res) (opt' ^. out_file . to Sh.decodeString)
   pure ()
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
+  combinedFile = tempfiles <> "/" <> combineOutput
   args x' = [
          "-i"
         , opt' ^. in_file . packed

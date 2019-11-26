@@ -28,18 +28,24 @@ RUN=""
 run-in-shell:
 	nix-shell --cores 0 -j 8 --run "$(RUN)"
 
-run_:
+WORK="/tmp/cut-the-crap"
+clean-work-dir:
+	rm -fR $(WORK)
+	mkdir -p $(WORK)
+
+run_: clean-work-dir
 	cabal new-run exe  --ghc-options $(OPTIMIZATION) -- \
-		--inFile "out.mkv" \
-		--outFile "edited.mkv" \
+		--inFile ./input.mkv \
+		--outFile out.mkv \
 		--voiceTrack 2 \
-		--musicPath "onepiece.mp3"
+		--musicTrack 3 \
+		--workDir $(WORK)
 
 
 run: hpack 
 	nix-shell --run "make run_"
 
-clean:
+clean: clean-work-dir
 	rm -fR dist dist-*
 
 .PHONY: test run_

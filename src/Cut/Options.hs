@@ -12,6 +12,7 @@ module Cut.Options
   , voice_track
   , music_track
   , silent_duration
+  , work_dir
   , simpleOptions
   ) where
 
@@ -29,6 +30,7 @@ simpleOptions = Options
   , voiceTrack = halp . _Just # 2
   , musicTrack = halp # Nothing
   , silentDuration = halp . _Just # def_duration
+  , workDir = halp # Nothing
   }
 
 data Options = Options
@@ -40,6 +42,7 @@ data Options = Options
   , detectMargin :: Maybe Double <?> "Margin seconds around detection"
   , voiceTrack :: Maybe Int <?> "The track to detect audio upon"
   , musicTrack :: Maybe Int <?> "The track to detect audio upon"
+  , workDir :: Maybe FilePath <?> "If specified will use this as temporty directory to store intermeidate files in, good for debugging. Needs to be absolute"
   } deriving (Show, Generic)
 
 halp :: Iso' (a <?> b) a
@@ -83,5 +86,8 @@ voice_track = field @"voiceTrack" . halp . non def_voice
 
 music_track :: Lens' Options (Maybe Int)
 music_track = field @"musicTrack" . halp
+
+work_dir :: Lens' Options (Maybe FilePath)
+work_dir = field @"workDir" . halp
 
 instance ParseRecord Options
