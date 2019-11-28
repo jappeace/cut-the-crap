@@ -1,8 +1,11 @@
 module Lib
   ( libF
-  ) where
+  )
+where
 
 import           Control.Monad.IO.Class
 
 libF :: MonadIO m => m ()
-libF = liftIO $ putStrLn "hello, world"
+libF = liftIO $
+        putStrLn
+  "hello, world"
