@@ -7,7 +7,7 @@ import           Control.Lens
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Text.Lens
-import           Turtle         hiding (FilePath)
+import           Turtle                  hiding ( FilePath )
 
 -- | Splits a video into segments
 split :: FilePath -> Options -> Shell ()
