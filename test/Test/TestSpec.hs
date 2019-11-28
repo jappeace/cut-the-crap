@@ -1,6 +1,7 @@
 module Test.TestSpec
   ( spec
-  ) where
+  )
+where
 
 import           Test.Hspec
 
@@ -9,5 +10,7 @@ one = 1
 
 spec :: Spec
 spec =
-  describe "The sanity of our test setup" $
-    it "should satisfy equality" $ one `shouldBe` 1
+  describe "The sanity of our test setup"
+    $          it "should satisfy equality"
+    $          one
+    `shouldBe` 1
