@@ -8,6 +8,6 @@ one :: Int
 one = 1
 
 spec :: Spec
-spec = do
-  describe "The sanity of our test setup" $ do
+spec =
+  describe "The sanity of our test setup" $
     it "should satisfy equality" $ one `shouldBe` 1
