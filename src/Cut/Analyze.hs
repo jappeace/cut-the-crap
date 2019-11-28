@@ -43,7 +43,7 @@ detectSound :: Options -> [Interval Silent] -> [Interval Sound]
 detectSound opts = filter ((0 <) . interval_duration) -- TODO figure out why these durations get recorded as < 0
   . reverse . snd . foldl'
   (flip (compare' opts))
-  ((Interval 0 0 0, []))
+  (Interval 0 0 0, [])
 
 compare'
   :: Options -> Interval Silent
