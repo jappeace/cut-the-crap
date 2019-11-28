@@ -7,5 +7,6 @@ pkgs.mkShell{
         pkgs.hlint
         pkgs.haskellPackages.brittany
         pkgs.findutils
+        pkgs.fd
     ];
 }
