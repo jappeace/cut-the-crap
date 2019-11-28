@@ -7,7 +7,7 @@ import           Control.Lens
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Text.Lens
-import           Turtle                  hiding ( FilePath )
+import           Turtle         hiding (FilePath)
 
 -- | Splits a video into segments
 split :: FilePath -> Options -> Shell ()
@@ -16,7 +16,7 @@ split tmp opt' = do
      (fromText (opt' ^. out_file . packed <> "-full.mp4"))
   void $ ffmpeg
     [ "-i"
-    , (tmp ^. packed)
+    , tmp ^. packed
     , "-c"
     , "copy"
     , "-map"
