@@ -14,24 +14,24 @@ module Cut.Options
   , silent_duration
   , work_dir
   , simpleOptions
-  ) where
+  )
+where
 
 import           Control.Lens
 import           Data.Generics.Product.Fields
 import           Options.Generic
 
 simpleOptions :: Options
-simpleOptions = Options
-  { inFile = halp # "in.mkv"
-  , outFile = halp # "out.mkv"
-  , segmentSize = halp . _Just # def_seg_size
-  , silentTreshold = halp . _Just # def_silent
-  , detectMargin = halp . _Just # def_margin
-  , voiceTrack = halp . _Just # 2
-  , musicTrack = halp # Nothing
-  , silentDuration = halp . _Just # def_duration
-  , workDir = halp # Nothing
-  }
+simpleOptions = Options { inFile         = halp # "in.mkv"
+                        , outFile        = halp # "out.mkv"
+                        , segmentSize    = halp . _Just # def_seg_size
+                        , silentTreshold = halp . _Just # def_silent
+                        , detectMargin   = halp . _Just # def_margin
+                        , voiceTrack     = halp . _Just # 2
+                        , musicTrack     = halp # Nothing
+                        , silentDuration = halp . _Just # def_duration
+                        , workDir        = halp # Nothing
+                        }
 
 data Options = Options
   { inFile :: FilePath <?> "The input video"

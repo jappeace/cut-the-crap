@@ -1,10 +1,12 @@
 module Cut.Ffmpeg
-  ( ffmpeg, floatToText
-  ) where
+  ( ffmpeg
+  , floatToText
+  )
+where
 
-import qualified Data.Text as Text
+import qualified Data.Text                     as Text
 import           Numeric
-import           Turtle    hiding (FilePath)
+import           Turtle                  hiding ( FilePath )
 
 -- | Wrap ffmpeg for convenience and logging
 ffmpeg :: [Text] -> Shell (Either Line Line)
