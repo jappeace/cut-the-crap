@@ -10,7 +10,9 @@ Using cabal within a nix shell.
 If you like nix this is a good way of doing haskell dev.
 
 similar to: https://github.com/monadfix/nix-cabal
-except I use a makefile and ghcid.
+except this has a makefile and ghcid.
+We also make aggressive use of [pinning](https://nixos.wiki/wiki/FAQ/Pinning_Nixpkgs)
+to have consistency.
 
 Comes with:
 + [GHCID](https://jappieklooster.nl/ghcid-for-multi-package-projects.html)

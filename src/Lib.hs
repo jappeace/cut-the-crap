@@ -1,6 +1,7 @@
 module Lib
   ( libF
-  ) where
+  )
+where
 
 import           Control.Monad.IO.Class
 
