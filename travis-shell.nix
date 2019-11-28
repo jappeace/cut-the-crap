@@ -3,7 +3,6 @@
 pkgs.mkShell{
     buildInputs = [
         pkgs.hlint
-        pkgs.cachix
         pkgs.haskellPackages.brittany
     ];
 }

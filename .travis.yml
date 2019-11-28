@@ -21,4 +21,5 @@ before_install:
 # reproducible nix builds makes this re-useable
 before_script:
   - sudo mkdir -p /etc/nix && echo 'sandbox = true' | sudo tee -a /etc/nix/nix.conf
-  - if [ -n "$CACHIX_SIGNING_KEY" ]; then (nix-shell ./travis-shell.nix --run "cachix push jappie --watch-store" &); else echo "no cachix key found"; fi
+  - nix-env -iA cachix -f https://cachix.org/api/v1/install
+  - if [ -n "$CACHIX_SIGNING_KEY" ]; then (cachix push jappie --watch-store &); else echo "no cachix key found"; fi
