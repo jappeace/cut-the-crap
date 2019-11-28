@@ -1,0 +1,26 @@
+conf_forward:
+  options_ghc:
+    # trivial
+    - -XEmptyCase
+    - -XFlexibleContexts
+    - -XFlexibleInstances
+    - -XInstanceSigs
+    - -XMultiParamTypeClasses
+    # only activated once used
+    - -XLambdaCase
+    - -XMultiWayIf
+    - -XNamedFieldPuns
+    - -XTupleSections
+    # no cost deriving power
+    - -XDeriveFoldable
+    - -XDeriveFunctor
+    - -XDeriveGeneric
+    - -XDeriveLift
+    - -XDeriveTraversable
+    - -XDerivingStrategies
+    - -XGeneralizedNewtypeDeriving
+    - -XStandaloneDeriving
+    # used everywhere anyway
+    - -XOverloadedStrings
+    # ehh syntax
+    - -XTypeApplications

@@ -3,8 +3,7 @@ language: nix
 script:
   - cat /etc/nix/nix.conf # had some issues with this, kindoff important so always cat this is good
   - nix-shell ./travis-shell.nix --run "hlint ."
-  - nix-shell ./travis-shell.nix --run "find ./src/ -type f -name '*.hs' -print | xargs brittany -c"
-  - nix-shell ./travis-shell.nix --run "find ./app/ -type f -name '*.hs' -print | xargs brittany -c"
+  - nix-shell ./travis-shell.nix --run "find ./. -type f -name '*.hs' -print | xargs brittany -c"
   - nix-build
   - echo "Wait 4 cachix"
   - sleep 10
