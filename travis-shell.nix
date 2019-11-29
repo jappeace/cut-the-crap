@@ -8,5 +8,6 @@ pkgs.mkShell{
         pkgs.haskellPackages.brittany
         pkgs.findutils
         pkgs.fd
+        pkgs.haskellPackages.apply-refact
     ];
 }
