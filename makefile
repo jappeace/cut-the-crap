@@ -52,3 +52,9 @@ clean: clean-work-dir
 
 sdist:
 	make run-in-shell RUN="cabal sdist"
+
+brittany_:
+	$(shell set -x; for i in `fd hs`; do brittany --write-mode=inplace $$i; done)
+
+brittany:
+	nix-shell ./travis-shell.nix --run "make brittany_"

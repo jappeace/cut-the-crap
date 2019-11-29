@@ -10,26 +10,29 @@ module Cut.CutVideo
   )
 where
 
-import qualified Control.Foldl       as Fl
+import qualified Control.Foldl                 as Fl
 import           Control.Lens
 import           Control.Monad.Catch
 import           Cut.Analyze
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Foldable
-import qualified Data.Text           as Text
+import qualified Data.Text                     as Text
 import           Data.Text.Lens
-import           Turtle              hiding (FilePath, has, options)
-import qualified Turtle              as T
+import           Turtle                  hiding ( FilePath
+                                                , has
+                                                , options
+                                                )
+import qualified Turtle                        as T
 
 specifyTracks :: Options -> [Text]
 specifyTracks options = if has (music_track . _Just) options
   then -- note that using copy breaks timing eg: ["-c:v", "copy", "-c:a", "copy"]
-        [ "-map"
-         , "0:0"
-         , "-map"  -- then copy only the voice track
-         , "0:" <> options ^. voice_track . to show . packed
-         ]
+    [ "-map"
+    , "0:0"
+    , "-map"  -- then copy only the voice track
+    , "0:" <> options ^. voice_track . to show . packed
+    ]
   else []
 
 toArgs :: Options -> FilePath -> Interval Sound -> (Interval Sound, [Text])
