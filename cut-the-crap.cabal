@@ -4,9 +4,9 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a6274bf9c22f27f3c38f79053decb5e822b3d230f744fe53cf602f677177af74
+-- hash: f32fe25796dae086e6fe5f601fccefba78815935d288bfee4af914fc24113ec6
 
-name:           template
+name:           cut-the-crap
 version:        1.0.0
 author:         Jappie Klooster
 maintainer:     jappieklooster@hotmail.com
@@ -27,7 +27,7 @@ library
       Cut.Options
       Cut.SplitVideo
   other-modules:
-      Paths_template
+      Paths_cut_the_crap
   hs-source-dirs:
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
@@ -50,7 +50,7 @@ library
 executable exe
   main-is: exe.hs
   other-modules:
-      Paths_template
+      Paths_cut_the_crap
   hs-source-dirs:
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
@@ -83,7 +83,7 @@ test-suite unit
       Cut.Lib
       Cut.Options
       Cut.SplitVideo
-      Paths_template
+      Paths_cut_the_crap
   hs-source-dirs:
       test
       src
