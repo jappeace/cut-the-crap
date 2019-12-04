@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f32fe25796dae086e6fe5f601fccefba78815935d288bfee4af914fc24113ec6
+-- hash: c27c89d71ce25613d9c8bab5f2a26b9d3476b18793d9faf54b98aed80735227a
 
 name:           cut-the-crap
 version:        1.0.0
@@ -57,6 +57,7 @@ executable exe
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , cut-the-crap
     , exceptions
     , foldl
     , generic-lens
@@ -64,7 +65,6 @@ executable exe
     , optparse-applicative
     , optparse-generic
     , regex-tdfa
-    , template
     , temporary
     , text
     , turtle
