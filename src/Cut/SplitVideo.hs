@@ -8,7 +8,7 @@ import           Control.Monad
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Text.Lens
-import           Shelly         hiding (FilePath)
+import           Shelly                  hiding ( FilePath )
 
 -- | Splits a video into segments
 split :: FilePath -> Options -> Sh ()

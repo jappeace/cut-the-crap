@@ -4,8 +4,8 @@ module Cut.Ffmpeg
   )
 where
 
-import           Data.Text (Text)
-import qualified Data.Text as Text
+import           Data.Text                      ( Text )
+import qualified Data.Text                     as Text
 import           Numeric
 import           Shelly
 

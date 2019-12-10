@@ -20,14 +20,16 @@ import           Cut.Options
 import           Cut.SplitVideo
 import           Data.Bifunctor
 import           Data.Either
-import qualified Data.Text               as Text
-import qualified Data.Text.IO            as Text
+import qualified Data.Text                     as Text
+import qualified Data.Text.IO                  as Text
 import           Data.Text.Lens
 import           Options.Applicative
 import           Options.Generic
-import           Shelly                  hiding (FilePath)
+import           Shelly                  hiding ( FilePath )
 import           System.IO.Temp
-import           Text.Regex.TDFA         hiding (empty, extract)
+import           Text.Regex.TDFA         hiding ( empty
+                                                , extract
+                                                )
 
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
 entryPoint = catch main
@@ -53,13 +55,9 @@ runEdit options parsed temp = do
 
 combineDir :: Options -> FilePath -> Sh ()
 combineDir options temp = do
-  res <- (lsT $ fromText $ Text.pack temp)
+  res <- lsT $ fromText $ Text.pack temp
   let paths :: Text
-      paths =
-        Text.unlines
-          $  flip (<>) "'"
-          .   ("file '" <>)
-          <$> res
+      paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
   writefile (fromText $ Text.pack $ temp <> "/input.txt") paths
   combine temp
 
@@ -85,8 +83,7 @@ getMusic opt' tempfiles = do
       shelly $ combineMusic tempfiles
       pure $ Text.pack (tempfiles <> "/" <> withMusicFile)
   putStrLn "done get music"
-  shelly $ cp (fromText res)
-        (opt' ^. out_file . packed . to fromText)
+  shelly $ cp (fromText res) (opt' ^. out_file . packed . to fromText)
   pure ()
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   combinedFile = tempfiles <> "/" <> combineOutput

@@ -40,9 +40,8 @@ detect :: (MonadMask m, MonadUnliftIO m) => Options -> m [Interval Sound]
 detect opts = do
   lines'' <- shelly $ detectShell opts
   let linesRes = do
-        line <-  lines''
-        if takeOnlyLines line then
-          pure $ Right line else pure $ Left line
+        line <- lines''
+        if takeOnlyLines line then pure $ Right line else pure $ Left line
       lines' = linesRes ^.. traversed . _Right
 
   liftIO $ putStrLn "-----------------------------------------"
@@ -54,11 +53,11 @@ detect opts = do
   liftIO $ putStrLn "-----------------------------------------"
   liftIO $ Text.putStrLn $ Text.unlines (linesRes ^.. traversed . _Left)
 
-  let linedUp = align lines'
-      withZiped = zipped lines'
-      izipped = izip withZiped
-      parsed = parse <$> linedUp
-      fancyResult = detectSound opts parsed
+  let linedUp        = align lines'
+      withZiped      = zipped lines'
+      izipped        = izip withZiped
+      parsed         = parse <$> linedUp
+      fancyResult    = detectSound opts parsed
       negativeResult = find ((0 >) . interval_duration) fancyResult
 
   liftIO $ putStrLn "-----------------------------------------"
@@ -71,33 +70,31 @@ detect opts = do
   liftIO $ putStrLn "-----------------------------------------"
   liftIO $ traverse_ print izipped
 
-  if isJust negativeResult  then do
-    liftIO $ traverse_ print fancyResult
-    liftIO $ print negativeResult
-    error "Found negative durations"
-  else pure fancyResult
+  if isJust negativeResult
+    then do
+      liftIO $ traverse_ print fancyResult
+      liftIO $ print negativeResult
+      error "Found negative durations"
+    else pure fancyResult
 
 takeOnlyLines :: Text -> Bool
 takeOnlyLines matchWith = matches
-  where
+ where
   silenceRegex :: String
   silenceRegex = ".*silencedetect.*"
   matches :: Bool
   matches = (Text.unpack matchWith) =~ silenceRegex
 
 zipped :: [Text] -> [(Text, Text)]
-zipped [] = mempty
-zipped (_ : []) = []
-zipped (one : two : rem') =
-  (one, two) : zipped rem'
+zipped []                 = mempty
+zipped (_         : []  ) = []
+zipped (one : two : rem') = (one, two) : zipped rem'
 
 izip :: [(Text, Text)] -> [(Int, (Text, Text))]
 izip = imap (\i a -> (i, a))
 
 withEven :: (Int, (Text, Text)) -> [(Text, Text)]
-withEven elems = if even (fst elems)
-          then pure (snd elems)
-          else mempty
+withEven elems = if even (fst elems) then pure (snd elems) else mempty
 
 align :: [Text] -> [(Text, Text)]
 align = izip . zipped >=> withEven
@@ -105,9 +102,7 @@ align = izip . zipped >=> withEven
 detectSound :: Options -> [Interval Silent] -> [Interval Sound]
 detectSound opts =
   --  -- TODO figure out why these durations get recorded as < 0
-    reverse
-    . snd
-    . foldl' (flip (compare' opts)) (Interval 0 0 0 "" "", [])
+  reverse . snd . foldl' (flip (compare' opts)) (Interval 0 0 0 "" "", [])
 
 compare'
   :: Options
@@ -117,11 +112,14 @@ compare'
 compare' opts current prev = (current, soundedInterval : snd prev)
  where
   soundedInterval = Interval
-    { interval_start    = interval_end $ fst prev
-    , interval_end      = interval_start current - margin
-    , interval_duration = (soundEnd - soundStart) + margin
-    , interval_input_start = interval_input_start (fst prev)  <> "," <> interval_input_end (fst prev)
-    , interval_input_end = interval_input_start current <> ","  <> interval_input_end current
+    { interval_start       = interval_end $ fst prev
+    , interval_end         = interval_start current - margin
+    , interval_duration    = (soundEnd - soundStart) + margin
+    , interval_input_start =
+      interval_input_start (fst prev) <> "," <> interval_input_end (fst prev)
+    , interval_input_end   = interval_input_start current
+                             <> ","
+                             <> interval_input_end current
     }
   soundEnd   = interval_start current
   soundStart = interval_end $ fst prev
@@ -147,11 +145,11 @@ detectShell opt' = ffmpeg
   ]
 
 parse :: (Text, Text) -> Interval Silent
-parse xx = Interval { interval_start    = getStart $ fst xx
-                    , interval_end      = getEnd $ snd xx
-                    , interval_duration = getDuration $ snd xx
+parse xx = Interval { interval_start       = getStart $ fst xx
+                    , interval_end         = getEnd $ snd xx
+                    , interval_duration    = getDuration $ snd xx
                     , interval_input_start = fst xx
-                    , interval_input_end = snd xx
+                    , interval_input_end   = snd xx
                     }
 
 getStart :: Text -> Double
