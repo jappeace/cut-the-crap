@@ -6,73 +6,125 @@ module Cut.Analyze
   , getStart
   , getEnd
   , getDuration
+  , takeOnlyLines
   )
 where
 
 import           Control.Lens
+import           Control.Monad
 import           Control.Monad.Catch
 import           Control.Monad.IO.Unlift
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Foldable
+import           Data.Maybe
 import           Data.Text               (Text)
 import qualified Data.Text               as Text
+import qualified Data.Text.IO            as Text
 import           Data.Text.Lens
-import           Shelly
+import           Shelly                  hiding (find)
 import           Text.Regex.TDFA         hiding (empty)
 
 data Silent
 data Sound
 
 data Interval e = Interval
-  { interval_start    :: Double
-  , interval_end      :: Double
-  , interval_duration :: Double
+  { interval_start       :: Double
+  , interval_end         :: Double
+  , interval_duration    :: Double
+  , interval_input_start :: Text
+  , interval_input_end   :: Text
   } deriving Show
 
 detect :: (MonadMask m, MonadUnliftIO m) => Options -> m [Interval Sound]
 detect opts = do
-  lines' <- shelly $ filter
-      ( ("[silencedetect" ==)
-      . Text.take (Text.length "[silencedetect")
-      ) <$> detectShell opts
+  lines'' <- shelly $ detectShell opts
+  let linesRes = do
+        line <-  lines''
+        if takeOnlyLines line then
+          pure $ Right line else pure $ Left line
+      lines' = linesRes ^.. traversed . _Right
 
-  liftIO $ putStrLn $  unlines $ show <$> lines'
-  let
-      linedUp = align lines'
+  liftIO $ putStrLn "-----------------------------------------"
+  liftIO $ putStrLn "-----------------actual lines-----------------"
+  liftIO $ putStrLn "-----------------------------------------"
+  liftIO $ Text.putStrLn $ Text.unlines lines'
+  liftIO $ putStrLn "-----------------------------------------"
+  liftIO $ putStrLn "-----------------filtered lines-----------------"
+  liftIO $ putStrLn "-----------------------------------------"
+  liftIO $ Text.putStrLn $ Text.unlines (linesRes ^.. traversed . _Left)
+
+  let linedUp = align lines'
+      withZiped = zipped lines'
+      izipped = izip withZiped
       parsed = parse <$> linedUp
-  liftIO $ print linedUp
-  pure $ detectSound opts parsed
+      fancyResult = detectSound opts parsed
+      negativeResult = find ((0 >) . interval_duration) fancyResult
+
+  liftIO $ putStrLn "-----------------------------------------"
+  liftIO $ putStrLn "-----------------withZipped-----------------"
+  liftIO $ putStrLn "-----------------------------------------"
+  liftIO $ traverse_ print withZiped
+
+  liftIO $ putStrLn "-----------------------------------------"
+  liftIO $ putStrLn "-----------------zipped-----------------"
+  liftIO $ putStrLn "-----------------------------------------"
+  liftIO $ traverse_ print izipped
+
+  if isJust negativeResult  then do
+    liftIO $ traverse_ print fancyResult
+    liftIO $ print negativeResult
+    error "Found negative durations"
+  else pure fancyResult
+
+takeOnlyLines :: Text -> Bool
+takeOnlyLines matchWith = matches
+  where
+  silenceRegex :: String
+  silenceRegex = ".*silencedetect.*"
+  matches :: Bool
+  matches = (Text.unpack matchWith) =~ silenceRegex
+
+zipped :: [Text] -> [(Text, Text)]
+zipped [] = mempty
+zipped (_ : []) = []
+zipped (one : two : rem') =
+  (one, two) : zipped rem'
+
+izip :: [(Text, Text)] -> [(Int, (Text, Text))]
+izip = imap (\i a -> (i, a))
+
+withEven :: (Int, (Text, Text)) -> [(Text, Text)]
+withEven elems = if even (fst elems)
+          then pure (snd elems)
+          else mempty
 
 align :: [Text] -> [(Text, Text)]
-align lines' = do
-        elems <- imap (\i a -> (i, a))
-          $ zip (take (length lines' - 1) lines') (drop 1 lines')
-        if even (fst elems)
-          then pure (bimap mempty mempty $ snd elems)
-          else mempty
+align = izip . zipped >=> withEven
 
 detectSound :: Options -> [Interval Silent] -> [Interval Sound]
 detectSound opts =
-  -- filter ((0 <) . interval_duration) -- TODO figure out why these durations get recorded as < 0
+  --  -- TODO figure out why these durations get recorded as < 0
     reverse
     . snd
-    . foldl' (flip (compare' opts)) (Interval 0 0 0, [])
+    . foldl' (flip (compare' opts)) (Interval 0 0 0 "" "", [])
 
 compare'
   :: Options
   -> Interval Silent
   -> (Interval Silent, [Interval Sound])
   -> (Interval Silent, [Interval Sound])
-compare' opts x' y = (x', soundedInterval : snd y)
+compare' opts current prev = (current, soundedInterval : snd prev)
  where
   soundedInterval = Interval
-    { interval_start    = interval_end $ fst y
-    , interval_end      = interval_start x' - margin
+    { interval_start    = interval_end $ fst prev
+    , interval_end      = interval_start current - margin
     , interval_duration = (soundEnd - soundStart) + margin
+    , interval_input_start = interval_input_start (fst prev)  <> "," <> interval_input_end (fst prev)
+    , interval_input_end = interval_input_start current <> ","  <> interval_input_end current
     }
-  soundEnd   = interval_start x'
-  soundStart = interval_end $ fst y
+  soundEnd   = interval_start current
+  soundStart = interval_end $ fst prev
 
   margin     = opts ^. detect_margin
 
@@ -94,16 +146,16 @@ detectShell opt' = ffmpeg
   , "-"
   ]
 
-
-
 parse :: (Text, Text) -> Interval Silent
 parse xx = Interval { interval_start    = getStart $ fst xx
                     , interval_end      = getEnd $ snd xx
                     , interval_duration = getDuration $ snd xx
+                    , interval_input_start = fst xx
+                    , interval_input_end = snd xx
                     }
 
 getStart :: Text -> Double
-getStart line = read $ matches ^. _3
+getStart line = read $ takeWhile (/= '\'') $ matches ^. _3
  where
   str = Text.unpack line
   matches :: (String, String, String)
@@ -116,7 +168,7 @@ pipe :: String
 pipe = " \\| "
 
 getDuration :: Text -> Double
-getDuration line = read $ match2 ^. _1
+getDuration line = read $ takeWhile (/= '\'') $ match2 ^. _1
  where
   str = Text.unpack line
   match1 :: (String, String, String)
