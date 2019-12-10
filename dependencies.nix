@@ -1,6 +1,7 @@
-{ mkDerivation, base, exceptions, foldl, generic-lens, hpack, hspec
+{ mkDerivation, base, exceptions, generic-lens, hpack, hspec
 , hspec-core, lens, optparse-applicative, optparse-generic
-, regex-tdfa, stdenv, temporary, text, turtle, unliftio-core
+, regex-tdfa, shelly, stdenv, system-filepath, temporary, text
+, unliftio-core
 }:
 mkDerivation {
   pname = "cut-the-crap";
@@ -9,18 +10,20 @@ mkDerivation {
   isLibrary = true;
   isExecutable = true;
   libraryHaskellDepends = [
-    base exceptions foldl generic-lens lens optparse-applicative
-    optparse-generic regex-tdfa temporary text turtle unliftio-core
+    base exceptions generic-lens lens optparse-applicative
+    optparse-generic regex-tdfa shelly system-filepath temporary text
+    unliftio-core
   ];
   libraryToolDepends = [ hpack ];
   executableHaskellDepends = [
-    base exceptions foldl generic-lens lens optparse-applicative
-    optparse-generic regex-tdfa temporary text turtle unliftio-core
+    base exceptions generic-lens lens optparse-applicative
+    optparse-generic regex-tdfa shelly system-filepath temporary text
+    unliftio-core
   ];
   testHaskellDepends = [
-    base exceptions foldl generic-lens hspec hspec-core lens
-    optparse-applicative optparse-generic regex-tdfa temporary text
-    turtle unliftio-core
+    base exceptions generic-lens hspec hspec-core lens
+    optparse-applicative optparse-generic regex-tdfa shelly
+    system-filepath temporary text unliftio-core
   ];
   prePatch = "hpack";
   license = stdenv.lib.licenses.mit;

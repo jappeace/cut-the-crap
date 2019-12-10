@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c27c89d71ce25613d9c8bab5f2a26b9d3476b18793d9faf54b98aed80735227a
+-- hash: b264e1acbecf996e54b81c51a4b9e2329579be29b697bffd083c318b38c5fd4c
 
 name:           cut-the-crap
 version:        1.0.0
@@ -35,15 +35,15 @@ library
   build-depends:
       base >=4.7 && <5
     , exceptions
-    , foldl
     , generic-lens
     , lens
     , optparse-applicative
     , optparse-generic
     , regex-tdfa
+    , shelly
+    , system-filepath
     , temporary
     , text
-    , turtle
     , unliftio-core
   default-language: Haskell2010
 
@@ -59,15 +59,15 @@ executable exe
       base >=4.7 && <5
     , cut-the-crap
     , exceptions
-    , foldl
     , generic-lens
     , lens
     , optparse-applicative
     , optparse-generic
     , regex-tdfa
+    , shelly
+    , system-filepath
     , temporary
     , text
-    , turtle
     , unliftio-core
   default-language: Haskell2010
 
@@ -92,7 +92,6 @@ test-suite unit
   build-depends:
       base >=4.7 && <5
     , exceptions
-    , foldl
     , generic-lens
     , hspec
     , hspec-core
@@ -100,8 +99,9 @@ test-suite unit
     , optparse-applicative
     , optparse-generic
     , regex-tdfa
+    , shelly
+    , system-filepath
     , temporary
     , text
-    , turtle
     , unliftio-core
   default-language: Haskell2010

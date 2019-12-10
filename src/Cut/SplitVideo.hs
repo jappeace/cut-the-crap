@@ -4,13 +4,14 @@ module Cut.SplitVideo
 where
 
 import           Control.Lens
+import           Control.Monad
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Text.Lens
-import           Turtle                  hiding ( FilePath )
+import           Shelly                  hiding ( FilePath )
 
 -- | Splits a video into segments
-split :: FilePath -> Options -> Shell ()
+split :: FilePath -> Options -> Sh ()
 split tmp opt' = do
   cp (fromText (tmp ^. packed))
      (fromText (opt' ^. out_file . packed <> "-full.mp4"))
