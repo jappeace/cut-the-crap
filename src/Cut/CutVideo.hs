@@ -10,20 +10,17 @@ module Cut.CutVideo
   )
 where
 
-import qualified Control.Foldl                 as Fl
 import           Control.Lens
+import           Control.Monad
 import           Control.Monad.Catch
 import           Cut.Analyze
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Foldable
-import qualified Data.Text                     as Text
+import           Data.Text           (Text)
+import qualified Data.Text           as Text
 import           Data.Text.Lens
-import           Turtle                  hiding ( FilePath
-                                                , has
-                                                , options
-                                                )
-import qualified Turtle                        as T
+import           Shelly              hiding (FilePath)
 
 specifyTracks :: Options -> [Text]
 specifyTracks options = if has (music_track . _Just) options
@@ -59,13 +56,14 @@ toArgs options tmp inter =
 extract :: Options -> FilePath -> [Interval Sound] -> IO ()
 extract options tempDir intervals = do
   traverse_
-      (\(inter, args) -> void $ catch (T.fold (ffmpeg args) Fl.list) $ \exec ->
+      (\(inter, args) -> void $ catch
+        (shelly $ ffmpeg args) $ \exec ->
         do
           liftIO
             (print
               ("expection during edit: ", exec :: SomeException, args, inter)
             )
-          pure [Left "expection"]
+          pure ["expection"]
       )
     $   toArgs options tempDir
     <$> intervals
@@ -74,7 +72,7 @@ extract options tempDir intervals = do
 combineOutput :: FilePath
 combineOutput = "combined-output.mkv"
 
-combine :: FilePath -> Shell ()
+combine :: FilePath -> Sh ()
 combine tempfiles = do
   output' <- ffmpeg args
   liftIO $ print ("output", output')

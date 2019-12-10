@@ -48,15 +48,15 @@ dependencies:
 - base >= 4.7 && < 5
 - optparse-applicative
 - optparse-generic
-- turtle
 - generic-lens
+- shelly
 - text
 - lens
 - exceptions
 - unliftio-core
 - temporary
-- foldl
 - regex-tdfa
+- system-filepath
 
 library:
   source-dirs: src

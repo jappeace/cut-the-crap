@@ -8,7 +8,6 @@ module Cut.Lib
   )
 where
 
-import qualified Control.Foldl                 as Fl
 import           Control.Lens
 import           Control.Monad
 import           Control.Monad.Catch
@@ -21,17 +20,14 @@ import           Cut.Options
 import           Cut.SplitVideo
 import           Data.Bifunctor
 import           Data.Either
-import qualified Data.Text                     as Text
-import qualified Data.Text.IO                  as Text
+import qualified Data.Text               as Text
+import qualified Data.Text.IO            as Text
 import           Data.Text.Lens
 import           Options.Applicative
 import           Options.Generic
+import           Shelly                  hiding (FilePath)
 import           System.IO.Temp
-import           Text.Regex.TDFA         hiding ( empty
-                                                , extract
-                                                )
-import qualified Turtle                        as Sh
-
+import           Text.Regex.TDFA         hiding (empty, extract)
 
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
 entryPoint = catch main
@@ -52,25 +48,20 @@ main = do
 runEdit :: Options -> [Interval Sound] -> FilePath -> IO ()
 runEdit options parsed temp = do
   extract options temp parsed
-  combineDir options temp
+  shelly $ combineDir options temp
   getMusic options temp
 
-combineDir :: Options -> FilePath -> IO ()
+combineDir :: Options -> FilePath -> Sh ()
 combineDir options temp = do
-  res <- Sh.fold (Sh.ls $ Sh.decodeString temp) Fl.list
+  res <- (lsT $ fromText $ Text.pack temp)
   let paths :: Text
       paths =
         Text.unlines
-          $   Text.pack
-          .   flip (<>) "'"
+          $  flip (<>) "'"
           .   ("file '" <>)
-          .   Sh.encodeString
           <$> res
-
-  Sh.writeTextFile (Sh.decodeString $ temp <> "/input.txt") paths
-  Sh.sh (combine temp)
-
-
+  writefile (fromText $ Text.pack $ temp <> "/input.txt") paths
+  combine temp
 
 readSettings :: IO Options
 readSettings = customExecParser (prefs showHelpOnError) $ info
@@ -90,12 +81,12 @@ getMusic opt' tempfiles = do
   res <- case opt' ^. music_track of
     Nothing -> pure $ Text.pack combinedFile
     Just x  -> do
-      void $ Sh.sh $ ffmpeg $ args x
-      Sh.sh $ combineMusic tempfiles
+      shelly $ ffmpeg $ args x
+      shelly $ combineMusic tempfiles
       pure $ Text.pack (tempfiles <> "/" <> withMusicFile)
   putStrLn "done get music"
-  Sh.cp (Sh.decodeString $ Text.unpack res)
-        (opt' ^. out_file . to Sh.decodeString)
+  shelly $ cp (fromText res)
+        (opt' ^. out_file . packed . to fromText)
   pure ()
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   combinedFile = tempfiles <> "/" <> combineOutput
@@ -107,7 +98,7 @@ getMusic opt' tempfiles = do
     , Text.pack (tempfiles <> "/" <> musicFile)
     ]
 
-combineMusic :: FilePath -> Sh.Shell ()
+combineMusic :: FilePath -> Sh ()
 combineMusic tempfiles = void $ ffmpeg args
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   args =

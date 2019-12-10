@@ -9,19 +9,17 @@ module Cut.Analyze
   )
 where
 
-import qualified Control.Foldl                 as Fl
 import           Control.Lens
 import           Control.Monad.Catch
 import           Control.Monad.IO.Unlift
 import           Cut.Ffmpeg
 import           Cut.Options
-import           Data.Either
 import           Data.Foldable
-import qualified Data.Text                     as Text
+import           Data.Text               (Text)
+import qualified Data.Text               as Text
 import           Data.Text.Lens
-import           Text.Regex.TDFA         hiding ( empty )
-import           Turtle                  hiding ( FilePath )
-import qualified Turtle                        as Sh
+import           Shelly
+import           Text.Regex.TDFA         hiding (empty)
 
 data Silent
 data Sound
@@ -34,30 +32,30 @@ data Interval e = Interval
 
 detect :: (MonadMask m, MonadUnliftIO m) => Options -> m [Interval Sound]
 detect opts = do
-  lines' <- Sh.fold (detectShell opts) $ Fl.prefilter
-    (either
+  lines' <- shelly $ filter
       ( ("[silencedetect" ==)
       . Text.take (Text.length "[silencedetect")
-      . Sh.lineToText
-      )
-      (const False)
-    )
-    Fl.list
-  let linedUp :: [(Sh.Line, Sh.Line)]
-      linedUp = do
+      ) <$> detectShell opts
+
+  liftIO $ putStrLn $  unlines $ show <$> lines'
+  let
+      linedUp = align lines'
+      parsed = parse <$> linedUp
+  liftIO $ print linedUp
+  pure $ detectSound opts parsed
+
+align :: [Text] -> [(Text, Text)]
+align lines' = do
         elems <- imap (\i a -> (i, a))
           $ zip (take (length lines' - 1) lines') (drop 1 lines')
         if even (fst elems)
-          then pure (bimap (fromLeft mempty) (fromLeft mempty) $ snd elems)
-          else empty
-      parsed = parse <$> linedUp
-  pure $ detectSound opts parsed
-
+          then pure (bimap mempty mempty $ snd elems)
+          else mempty
 
 detectSound :: Options -> [Interval Silent] -> [Interval Sound]
 detectSound opts =
-  filter ((0 <) . interval_duration) -- TODO figure out why these durations get recorded as < 0
-    . reverse
+  -- filter ((0 <) . interval_duration) -- TODO figure out why these durations get recorded as < 0
+    reverse
     . snd
     . foldl' (flip (compare' opts)) (Interval 0 0 0, [])
 
@@ -79,7 +77,7 @@ compare' opts x' y = (x', soundedInterval : snd y)
   margin     = opts ^. detect_margin
 
 
-detectShell :: Options -> Shell (Either Line Line)
+detectShell :: Options -> Sh [Text]
 detectShell opt' = ffmpeg
   [ "-i"
   , opt' ^. in_file . packed
@@ -98,16 +96,16 @@ detectShell opt' = ffmpeg
 
 
 
-parse :: (Sh.Line, Sh.Line) -> Interval Silent
+parse :: (Text, Text) -> Interval Silent
 parse xx = Interval { interval_start    = getStart $ fst xx
                     , interval_end      = getEnd $ snd xx
                     , interval_duration = getDuration $ snd xx
                     }
 
-getStart :: Sh.Line -> Double
+getStart :: Text -> Double
 getStart line = read $ matches ^. _3
  where
-  str = Text.unpack $ Sh.lineToText line
+  str = Text.unpack line
   matches :: (String, String, String)
   matches = str =~ startMatch
 
@@ -117,19 +115,19 @@ startMatch = "(.*)?: "
 pipe :: String
 pipe = " \\| "
 
-getDuration :: Sh.Line -> Double
+getDuration :: Text -> Double
 getDuration line = read $ match2 ^. _1
  where
-  str = Text.unpack $ Sh.lineToText line
+  str = Text.unpack line
   match1 :: (String, String, String)
   match1 = str =~ startMatch
   match2 :: (String, String, String)
   match2 = (match1 ^. _3) =~ pipe
 
-getEnd :: Sh.Line -> Double
+getEnd :: Text -> Double
 getEnd line = read $ match2 ^. _3
  where
-  str = Text.unpack $ Sh.lineToText line
+  str = Text.unpack line
   match1 :: (String, String, String)
   match1 = str =~ pipe
   match2 :: (String, String, String)

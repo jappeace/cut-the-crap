@@ -37,8 +37,7 @@ run_: clean-work-dir
 	cabal new-run exe  --ghc-options $(OPTIMIZATION) -- \
 		--inFile ./input.mkv \
 		--outFile out.mkv \
-		--voiceTrack 2 \
-		--musicTrack 3 \
+		--voiceTrack 1 \
 		--workDir $(WORK)
 
 
