@@ -83,11 +83,11 @@ takeOnlyLines matchWith = matches
   silenceRegex :: String
   silenceRegex = ".*silencedetect.*"
   matches :: Bool
-  matches = (Text.unpack matchWith) =~ silenceRegex
+  matches = Text.unpack matchWith =~ silenceRegex
 
 zipped :: [Text] -> [(Text, Text)]
 zipped []                 = mempty
-zipped (_         : []  ) = []
+zipped [_               ] = []
 zipped (one : two : rem') = (one, two) : zipped rem'
 
 izip :: [(Text, Text)] -> [(Int, (Text, Text))]
