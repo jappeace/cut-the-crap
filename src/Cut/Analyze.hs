@@ -18,12 +18,12 @@ import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Foldable
 import           Data.Maybe
-import           Data.Text                      ( Text )
-import qualified Data.Text                     as Text
-import qualified Data.Text.IO                  as Text
+import           Data.Text               (Text)
+import qualified Data.Text               as Text
+import qualified Data.Text.IO            as Text
 import           Data.Text.Lens
-import           Shelly                  hiding ( find )
-import           Text.Regex.TDFA         hiding ( empty )
+import           Shelly                  hiding (find)
+import           Text.Regex.TDFA         hiding (empty)
 
 data Silent
 data Sound
@@ -53,22 +53,21 @@ detect opts = do
   liftIO $ putStrLn "-----------------------------------------"
   liftIO $ Text.putStrLn $ Text.unlines (linesRes ^.. traversed . _Left)
 
-  let linedUp        = align lines'
-      withZiped      = zipped lines'
-      izipped        = izip withZiped
+  let
+      linedUp        = zipped lines'
       parsed         = parse <$> linedUp
       fancyResult    = detectSound opts parsed
       negativeResult = find ((0 >) . interval_duration) fancyResult
 
   liftIO $ putStrLn "-----------------------------------------"
-  liftIO $ putStrLn "-----------------withZipped-----------------"
+  liftIO $ putStrLn "-----------------lined up-----------------"
   liftIO $ putStrLn "-----------------------------------------"
-  liftIO $ traverse_ print withZiped
+  liftIO $ traverse_ print linedUp
 
   liftIO $ putStrLn "-----------------------------------------"
-  liftIO $ putStrLn "-----------------zipped-----------------"
+  liftIO $ putStrLn "-----------------parsed-----------------"
   liftIO $ putStrLn "-----------------------------------------"
-  liftIO $ traverse_ print izipped
+  liftIO $ traverse_ print parsed
 
   if isJust negativeResult
     then do
@@ -89,15 +88,6 @@ zipped :: [Text] -> [(Text, Text)]
 zipped []                 = mempty
 zipped [_               ] = []
 zipped (one : two : rem') = (one, two) : zipped rem'
-
-izip :: [(Text, Text)] -> [(Int, (Text, Text))]
-izip = imap (\i a -> (i, a))
-
-withEven :: (Int, (Text, Text)) -> [(Text, Text)]
-withEven elems = if even (fst elems) then pure (snd elems) else mempty
-
-align :: [Text] -> [(Text, Text)]
-align = izip . zipped >=> withEven
 
 detectSound :: Options -> [Interval Silent] -> [Interval Sound]
 detectSound opts =
