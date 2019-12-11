@@ -33,16 +33,18 @@ clean-work-dir:
 	rm -fR $(WORK)
 	mkdir -p $(WORK)
 
-run_: clean-work-dir
+runDebug: clean-work-dir
 	cabal new-run exe  --ghc-options $(OPTIMIZATION) -- \
 		--inFile ./input.mkv \
 		--outFile out.mkv \
 		--voiceTrack 1 \
 		--workDir $(WORK)
 
+runMusic: 
+	nix-shell --run "./run-music.sh ~/streams/"
 
 run: hpack 
-	nix-shell --run "make run_"
+	nix-shell --run "make runDebug"
 
 clean: clean-work-dir
 	rm -fR dist dist-*
@@ -57,3 +59,4 @@ brittany_:
 
 brittany:
 	nix-shell ./travis-shell.nix --run "make brittany_"
+
