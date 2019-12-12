@@ -9,7 +9,7 @@ for i in $files; do
     echo "Processing "$i;
     cabal new-run exe -- \
             --inFile $1/$i \
-            --outFile $i \
+            --outFile no-crap-$i \
             --voiceTrack 2 \
             --musicTrack 3;
 done;
