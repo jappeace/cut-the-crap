@@ -8,8 +8,8 @@ mkDerivation {
   version = "1.0.0";
   src = fetchgit {
     url = "https://github.com/jappeace/cut-the-crap";
-    sha256 = "0jznbk1lwlp97b54kdz7lvblal12lsxx9yxd4q2pdzvqdyfa2ipr";
-    rev = "dd083b02ef26f755449f615e29e9d0075ce743b3";
+    sha256 = "0hmbpd6rsn09gawam6sahdp79nv8480qg6wir5xhd4g494sq78an";
+    rev = "7882e7ec94d616f9b25cc121cfba088ed220f032";
     fetchSubmodules = true;
   };
   isLibrary = true;
