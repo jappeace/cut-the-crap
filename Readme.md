@@ -1,4 +1,4 @@
-![logo](https://github.com/jappeace/cut-the-crap/raw/logo/doc/crap.png)
+![logo](t doc/crap.png)
 
 [![Jappiejappie](https://img.shields.io/badge/twitch.tv-jappiejappie-purple?logo=twitch)](https://www.twitch.tv/jappiejappie)
 [![Jappiejappie](https://img.shields.io/badge/youtube-jappieklooster-red?logo=youtube)](https://www.youtube.com/channel/UCQxmXSQEYyCeBC6urMWRPVw)
