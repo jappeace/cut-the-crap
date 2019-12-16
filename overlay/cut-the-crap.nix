@@ -8,8 +8,8 @@
   version = "1.0.0";
   src = fetchgit {
     url = "https://github.com/jappeace/cut-the-crap";
-    sha256 = "1sqfd1fjr8y29i47ak6qnq2axbjqvbqgm8mjgapylfnzwrlwyd5h";
-    rev = "53d64d359f5973ce08bfcdf5f421a2d752b995ec";
+    sha256 = "1z4s0zan421q4722k32p0n33bsh7di1m6pbbdzqi7j87lfd9i7nk";
+    rev = "0ea8a0a0fd3e8d85f44337f13ef2445d22d1bf97";
     fetchSubmodules = true;
   };
   isLibrary = true;
