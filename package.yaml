@@ -62,7 +62,7 @@ library:
   source-dirs: src
 
 executables:
-  exe:
+  cut-the-crap:
     main:                exe.hs
     source-dirs:         app
     dependencies:

@@ -19,7 +19,8 @@ etags:
 
 update-cabal:
 	hpack --force ./
-	cabal2nix ./ > dependencies.nix
+	cabal2nix . > dependencies.nix
+	cabal2nix "https://github.com/jappeace/cut-the-crap" > overlay/cut-the-crap.nix
 
 enter:
 	nix-shell --cores 0 -j 8 --pure
