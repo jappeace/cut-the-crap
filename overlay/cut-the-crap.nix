@@ -1,7 +1,7 @@
 { mkDerivation, base, exceptions, fetchgit, generic-lens, hpack
 , hspec, hspec-core, lens, optparse-applicative, optparse-generic
 , regex-tdfa, shelly, stdenv, system-filepath, temporary, text
-, unliftio-core
+, unliftio-core, ffmpeg
 }:
 mkDerivation {
   pname = "cut-the-crap";
@@ -19,6 +19,7 @@ mkDerivation {
     optparse-generic regex-tdfa shelly system-filepath temporary text
     unliftio-core
   ];
+  buildDepends = [ffmpeg];
   libraryToolDepends = [ hpack ];
   executableHaskellDepends = [
     base exceptions generic-lens lens optparse-applicative
