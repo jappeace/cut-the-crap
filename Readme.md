@@ -1,3 +1,5 @@
+![logo](docs/crap.png)
+
 [![Jappiejappie](https://img.shields.io/badge/twitch.tv-jappiejappie-purple?logo=twitch)](https://www.twitch.tv/jappiejappie)
 [![Jappiejappie](https://img.shields.io/badge/youtube-jappieklooster-red?logo=youtube)](https://www.youtube.com/channel/UCQxmXSQEYyCeBC6urMWRPVw)
 [![Build status](https://img.shields.io/travis/jappeace/cut-the-crap)](https://travis-ci.org/jappeace/cut-the-crap/builds/)
