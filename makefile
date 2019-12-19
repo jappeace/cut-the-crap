@@ -34,7 +34,7 @@ clean-work-dir:
 	mkdir -p $(WORK)
 
 runDebug: clean-work-dir
-	cabal new-run exe  --ghc-options $(OPTIMIZATION) -- \
+	cabal new-run cut-the-crap --ghc-options $(OPTIMIZATION) -- \
 		--inFile ./input.mkv \
 		--outFile out.mkv \
 		--voiceTrack 1 \
