@@ -54,3 +54,16 @@ We'll try using this first cause it's default in obs
 
 + https://www.matroska.org/technical/specs/index.html
 + https://github.com/vi/HsMkv
+
+
+
+# Speech recognition
+It should be rather easy to hook up for example http://kaldi-asr.org/doc/
+
+This is a howto: https://towardsdatascience.com/how-to-start-with-kaldi-and-speech-recognition-a9b7670ffff6
+
+With that we can try to for example cut out keyboard clacking
+and cut out stop words like 'uhm'.
+
+We can also start doing subject detection with a transcription in place.
+And use the transcription to add subtitles to youtube.

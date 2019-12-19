@@ -55,6 +55,22 @@ Since this program doesn't use scipy it doesn't have that issue.
 
 It also appears like jumpcutter is unmaintained.
 
+# Features
+
+## Track based silence detection
+It is possible to specify one audio output as speech track.
+This will be used to for silence detection only.
+The result is very precize silence detection.
+
+## Seperate music track
+Another track would be background and won't be modified at all.
+In the end it just get's cut of how far it is.
+
+This way we get good music and interesting stream.
+Another idea is to remix an entirely different source of music
+into the video, so we can play copyrighted music on stream
+and youtube friendly music on youtube.
+
 # Design
 This project is mostly a wrapper around ffmpeg.
 We use haskell for shell programing.
@@ -66,49 +82,3 @@ want to do stream programming,
 creating several unexpected bugs.
 So we replaced it with shelly and noticabally reduced code complexity.
 Now it's truly a 'dumb' wrapper around ffmpeg.
-
-# DONE
-
-## Track hackery
-It is possible to specify one audio output as speech track.
-This will be used to for silence detection only.
-The result is very precize silence detection.
-
-### Seperate music track
-Another track would be background and won't be modified at all.
-In the end it just get's cut of how far it is.
-
-This way we get good music and interesting stream.
-Another idea is to remix an entirely different source of music
-into the video, so we can play copyrighted music on stream
-and youtube friendly music on youtube.
-
-# TODO
-
-## Speech recognition
-It should be rather easy to hook up for example http://kaldi-asr.org/doc/
-
-This is a howto: https://towardsdatascience.com/how-to-start-with-kaldi-and-speech-recognition-a9b7670ffff6
-
-With that we can try to for example cut out keyboard clacking
-and cut out stop words like 'uhm'.
-
-We can also start doing subject detection with a transcription in place.
-And use the transcription to add subtitles to youtube.
-
-## Youtube
-The next priority will be automated uploading, possibly with:
-https://github.com/tokland/youtube-upload
-This will make scheduling easier,
-that's a lot of clicking work at the moment.
-Where the publish date starts at $DATE and is incremented by $SEG_HOUR.
-
-I also looked at
-[gogol yooutube](http://hackage.haskell.org/package/gogol-youtube).
-But I couldn't figure out auth.
-Maybe we should use the servant type instead?
-
-Youtube has a [quota](https://developers.google.com/youtube/v3/getting-started#quota)
-of 10 000,
-which means you can only uplaod 4 vidoes with api's a day.
-I have to try this before I can see if it works.
