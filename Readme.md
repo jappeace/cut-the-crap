@@ -28,6 +28,18 @@ which is combined into the output video.
 In the future we will add support for a music track
 which will not be chopped up.
 
+# Install
+
+## Nix/Nixos
+
++ Apply [overlay](https://nixos.wiki/wiki/Overlays) found [here](https://github.com/jappeace/cut-the-crap/tree/master/overlay).
++ Run `nix-env -iA cut-the-crap` or add to systemPackages.
++ simply run `cut-the-crap` to display usage instructions.
+
+## Ubuntu/debian
+
+I'm thinking of making a ppa, this doesn't exist yet. #10 
+
 # Use case
 I'm using this program to record my [stream](https://www.twitch.tv/jappiejappie)
 and upload it to my
@@ -63,3 +75,24 @@ want to do stream programming,
 creating several unexpected bugs.
 So we replaced it with shelly and noticabally reduced code complexity.
 Now it's truly a 'dumb' wrapper around ffmpeg.
+
+## Why not to extend jumpcutter directly?
+I wish to build out this idea more to essentially
+make all streams look like human edited youtube videos.
+Although I'm familiar with python,
+I (am or feel) more productive in haskell,
+therefore I chose to integrate with,
+and eventually replace jumpcutter.
+On stream we've determined most of the functionality is basically
+ffmpeg.
+Haskell also opens up the ability to do direct native ffmpeg
+integration,
+where we use ffmpeg as a library instead of calling it as a CLI
+program.
+
+One glaring limitation I've encountered with jumpcutter is that
+it can't handle larger video files (2 hour 30 mintus +).
+Scipy throws an exception complaining the wav is to big.
+Since this program doesn't use scipy it doesn't have that issue.
+
+It also appears like jumpcutter is unmaintained.
