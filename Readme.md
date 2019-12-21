@@ -36,25 +36,6 @@ and upload it to my
 Feel free to use or modify this program however you like.
 Pull requests are appreciated.
 
-## Why not to extend jumpcutter directly?
-I wish to build out this idea more to essentially
-make all streams look like human edited youtube videos.
-Although I'm familiar with python,
-I (am or feel) more productive in haskell,
-therefore I chose to integrate with,
-and eventually replace jumpcutter.
-On stream we've assesed most of the functionality is basically
-ffmpeg.
-Haskell also opens up the ability to do direct native ffmpeg
-integration.
-
-One glaring limitation I've encountered with jumpcutter is that
-it can't handle larger video files (2 hour 30 mintus +).
-Scipy throws an exception complaining the wav is to big.
-Since this program doesn't use scipy it doesn't have that issue.
-
-It also appears like jumpcutter is unmaintained.
-
 # Features
 
 ## Track based silence detection
