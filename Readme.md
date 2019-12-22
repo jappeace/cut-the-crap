@@ -1,7 +1,7 @@
 ![logo](doc/logo.png)
 
 [![Jappiejappie](https://img.shields.io/badge/twitch.tv-jappiejappie-purple?logo=twitch)](https://www.twitch.tv/jappiejappie)
-[![Jappiejappie](https://img.shields.io/badge/youtube-jappieklooster-red?logo=youtube)](https://www.youtube.com/channel/UCQxmXSQEYyCeBC6urMWRPVw)
+[![Jappiejappie](https://img.shields.io/badge/Youtube-jappieklooster-red?logo=Youtube)](https://www.Youtube.com/channel/UCQxmXSQEYyCeBC6urMWRPVw)
 [![Build status](https://img.shields.io/travis/jappeace/cut-the-crap)](https://travis-ci.org/jappeace/cut-the-crap/builds/)
 [![Jappiejappie](https://img.shields.io/badge/discord-jappiejappie-black?logo=discord)](https://discord.gg/Hp4agqy)
 
@@ -38,12 +38,45 @@ which will not be chopped up.
 
 ## Ubuntu/debian
 
-I'm thinking of making a ppa, this doesn't exist yet. #10 
+I'm thinking of making a PPA, this doesn't exist yet. #10 
+
+# Usage notes
+
+## Noise gate
+Make sure to record with a noise gate on your microphone.
+This will cut out background buzzing and allow you to use a more aggressive
+threshold on noise detection.
+
+## OBS tracks
+
+Setup OBS so that you record the microphone and the desktop audio
+on [separate tracks](https://obsproject.com/forum/resources/obs-studio-high-quality-recording-and-multiple-audio-tracks.221/).
+In my own setup I have track 1 for combining all audio, track 2 for just the microphone and track 3 for desktop audio.
+Then I can use:
+
+```shell
+    cut-the-crap --inputFile ./recordFromObs.mkv --outputFile ./someOut.mkv --voiceTrack 2 --musicTrack 3
+```
+
+So we throw away track 1, we use track 2 for silence detection, and track 3 get's mixed in after cutting is complete.
+If you don't want music being mixed back into the result,
+for example for further editing,
+you can also leave that argument out.
+I did this for example to mix back in the music of the original file later.
 
 # Use case
 I'm using this program to record my [stream](https://www.twitch.tv/jappiejappie)
 and upload it to my
-[youtube channel](https://www.youtube.com/channel/UCQxmXSQEYyCeBC6urMWRPVw).
+[Youtube channel](https://www.Youtube.com/channel/UCQxmXSQEYyCeBC6urMWRPVw).
+
+The concrete result is that your audience retention percentage will go up since the videos
+will be shorter, and more engaging.
+Sometimes on stream I have intro screens for example which completely get removed,
+and other times I'm simply thinking.
+Reducing videos by 30% is not uncommon in my case, which means by default
+30% more retention.
+You could even decide to edit after that which means you have to spend less time
+on cutting out silences and more time on making it look cool.
 
 Feel free to use or modify this program however you like.
 Pull requests are appreciated.
@@ -53,20 +86,20 @@ Pull requests are appreciated.
 ## Track based silence detection
 It is possible to specify one audio output as speech track.
 This will be used to for silence detection only.
-The result is very precize silence detection.
+The result is very precise silence detection.
 
-## Seperate music track
+## Separate music track
 Another track would be background and won't be modified at all.
 In the end it just get's cut of how far it is.
 
 This way we get good music and interesting stream.
 Another idea is to remix an entirely different source of music
 into the video, so we can play copyrighted music on stream
-and youtube friendly music on youtube.
+and Youtube friendly music on Youtube.
 
 # Design
 This project is mostly a wrapper around ffmpeg.
-We use haskell for shell programing.
+We use Haskell for shell programming.
 
 The [shelly](http://hackage.haskell.org/package/shelly) library was chosen in support of shell programming.
 Originally we used [turtle](http://hackage.haskell.org/package/turtle),
@@ -78,7 +111,7 @@ Now it's truly a 'dumb' wrapper around ffmpeg.
 
 ## Why not to extend jumpcutter directly?
 I wish to build out this idea more to essentially
-make all streams look like human edited youtube videos.
+make all streams look like human edited Youtube videos.
 Although I'm familiar with python,
 I (am or feel) more productive in haskell,
 therefore I chose to integrate with,
@@ -91,7 +124,7 @@ where we use ffmpeg as a library instead of calling it as a CLI
 program.
 
 One glaring limitation I've encountered with jumpcutter is that
-it can't handle larger video files (2 hour 30 mintus +).
+it can't handle larger video files (2 hour 30 minutes +).
 Scipy throws an exception complaining the wav is to big.
 Since this program doesn't use scipy it doesn't have that issue.
 
