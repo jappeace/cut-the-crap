@@ -23,14 +23,12 @@ import           Data.Text.Lens
 import           Shelly                  hiding ( FilePath )
 
 specifyTracks :: Options -> [Text]
-specifyTracks options = if has (music_track . _Just) options
-  then -- note that using copy breaks timing eg: ["-c:v", "copy", "-c:a", "copy"]
-    [ "-map"
-    , "0:0"
-    , "-map"  -- then copy only the voice track
-    , "0:" <> options ^. voice_track . to show . packed
-    ]
-  else []
+specifyTracks options =
+  [ "-map"
+  , "0:0"
+  , "-map"  -- then copy only the voice track
+  , "0:" <> options ^. voice_track . to show . packed
+  ]
 
 toArgs :: Options -> FilePath -> Interval Sound -> (Interval Sound, [Text])
 toArgs options tmp inter =
