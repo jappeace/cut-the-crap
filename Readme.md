@@ -40,6 +40,7 @@ Download the .deb file from the release page.
 Install with:
 
 ```shell
+apt install ffmpeg
 dpkg -i ./cut-the-crap_1.0.0_amd64.deb 
 ```
 
