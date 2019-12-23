@@ -2,6 +2,7 @@ Package: cut-the-crap
 Version: 1.0.0
 Architecture: amd64
 Maintainer: jappeace
+Depends: ffmpeg
 Installed-Size: 6
 Section: video
 Priority: optional
