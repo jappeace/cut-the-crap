@@ -60,3 +60,7 @@ brittany_:
 brittany:
 	nix-shell ./travis-shell.nix --run "make brittany_"
 
+
+ubuntu-release:
+	docker build -t ubuntu-release scripts
+	docker run -v ~/projects/cut-the-crap:/home/jappie -t ubuntu-release

@@ -1,6 +1,7 @@
 name:                cut-the-crap
 version:             1.0.0
 license:             MIT
+synopsis:            Cut the crap is an automatic video editing program for streamers. It can cut out uninteresting parts by detecting silences. 
 author:              "Jappie Klooster"
 maintainer:          "jappieklooster@hotmail.com"
 copyright:           "2019 Jappie Klooster"
