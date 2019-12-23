@@ -8,3 +8,9 @@ result
 *.mp3
 *.mkv
 TAGS
+.bash_history
+.cabal
+.stack
+
+ppa/bin
+cut-the-crap_1.0.0_amd64.deb

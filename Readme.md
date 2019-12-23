@@ -31,15 +31,22 @@ which will not be chopped up.
 # Install
 
 ## Nix/Nixos
-
 + Apply [overlay](https://nixos.wiki/wiki/Overlays) found [here](https://github.com/jappeace/cut-the-crap/tree/master/overlay).
 + Run `nix-env -iA cut-the-crap` or add to systemPackages.
 + simply run `cut-the-crap` to display usage instructions.
 
-## Ubuntu/debian
+## Ubuntu
+Download the .deb file from the release page.
+Install with:
 
-I'm thinking of making a PPA, this doesn't exist yet. #10 
+```shell
+dpkg -i ./cut-the-crap_1.0.0_amd64.deb 
+```
 
+Execute with:
+```shell
+cut-the-crap
+```
 # Usage notes
 
 ## Noise gate

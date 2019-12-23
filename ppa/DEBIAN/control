@@ -1,0 +1,11 @@
+Package: cut-the-crap
+Version: 1.0.0
+Architecture: amd64
+Maintainer: jappeace
+Installed-Size: 6
+Section: video
+Priority: optional
+Homepage: https://github.com/jappeace/cut-the-crap
+Description: Cut the crap is an automatic video editing
+    program for streamers.
+    It can cut out uninteresting parts by detecting silences. 
