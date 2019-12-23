@@ -67,7 +67,7 @@ def_duration :: Double
 def_duration = 0.25
 
 def_voice :: Int
-def_voice = 2
+def_voice = 1
 
 seg_size :: Lens' Options Int
 seg_size = field @"segmentSize" . halp . non def_seg_size
