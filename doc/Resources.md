@@ -58,6 +58,17 @@ We'll try using this first cause it's default in obs
 
 
 # Speech recognition
+
+## CMU
+This program allows us to link against a library that will use a model.
+The models are pre-trained.
+
+https://cmusphinx.github.io/wiki/tutorialpocketsphinx/#decoding-a-file-stream
+
+### Models
+https://sourceforge.net/projects/cmusphinx/files/Acoustic%20and%20Language%20Models/
+
+## Kaldi
 It should be rather easy to hook up for example http://kaldi-asr.org/doc/
 
 This is a howto: https://towardsdatascience.com/how-to-start-with-kaldi-and-speech-recognition-a9b7670ffff6
