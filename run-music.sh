@@ -10,6 +10,6 @@ for i in $files; do
     cabal new-run cut-the-crap -- \
             --inFile $1/$i \
             --outFile no-crap-$i \
-            --voiceTrack 2 \
-            --musicTrack 3;
+            --voiceTrack 2;
+            # --musicTrack 3;
 done;
