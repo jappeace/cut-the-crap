@@ -26,5 +26,6 @@ mkDerivation {
     system-filepath temporary text unliftio-core
   ];
   prePatch = "hpack";
+  description = "Cuts out uninteresting parts of videos by detecting silences";
   license = stdenv.lib.licenses.mit;
 }
