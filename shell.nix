@@ -10,7 +10,7 @@ let
         pkgs.haskellPackages.hasktags
         pkgs.ffmpeg
         pkgs.hlint
-        pkgs.pocketsphinx
+        # pkgs.pocketsphinx
         ];
     });
 in 
