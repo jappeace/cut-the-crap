@@ -64,3 +64,11 @@ brittany:
 ubuntu-release:
 	docker build -t ubuntu-release scripts
 	docker run -v ~/projects/cut-the-crap:/home/jappie -t ubuntu-release
+
+MODEL=$(shell pkg-config --variable=modeldir pocketsphinx)
+sphinx:
+	gcc -o run-sphinx.bin main.c \
+	    -DMODELDIR="\"$(MODEL)\"" \
+	    $(shell pkg-config --cflags --libs pocketsphinx sphinxbase)
+
+.PHONY: sphinx
