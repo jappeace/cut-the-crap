@@ -20,7 +20,8 @@ int main(int argc, char *argv[])
 	return -1;
     }
 
-    FILE* fh = fopen("goforward.raw", "rb");
+    // If you want to create your own version of it: it needs to be a single-channel (monaural), little-endian, unheadered 16-bit signed PCM audio file sampled at 16000 Hz.
+    FILE* fh = fopen("heyo.raw", "rb");
     if (fh == NULL) {
 	fprintf(stderr, "Unable to open input file goforward.raw\n");
 	return -1;
