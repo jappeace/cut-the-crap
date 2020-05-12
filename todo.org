@@ -1,0 +1,33 @@
+
+* TODO Filter out background noices that aren't speech
+** DONE recognise any speech with an opensource library
+   api no allowed (costs money, we're poor)
+
+** DONE audio from video available to libary
+   (because wrong format right now, we need RAWW)
+   ffmpeg -> audio (mp3) -> RAW 
+   
+ffmpeg -y -i ./shitty-recording.mkv -map 0:0 -map 0:2 ./shitty-recording.mp3 
+ffmpeg -y -i ./shitty-recording.mp3 -f s16le -acodec pcm_s16le -filter:a aresample=resampler=soxr:osr=16000 -ac 1 ./shitty-recording.raw
+
+
+** TODO Getting timestamps out of RAW and make available
+   
+   Make C function to accept a file, and spit out a list of (TIMERANGE, word) for example: `(8982, 9022) are`
+   ... MAGICK FFI happens (Haskell --> C --> Haskell)
+   Put that result into SRT format (haskell)
+
+20, 30 HELLO
+34, 50 WORLD -> WOBLD
+
+** TODO connection between c/haskell (somehow)
+   FFI (if we can do it!)
+
+** Worries / woes
+   
+*** mp3 -> RAW - will time align
+Detection may be possible by generating SRT files (and thus subtitles)
+
+
+*** Does it doe sentences? How will it handle large audio files
+I'm affraind this thing can only do small audio files.
