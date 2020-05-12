@@ -18,6 +18,7 @@ etags:
 	nix-shell --run "hasktags  -e ./src"
 
 update-cabal:
+	cat package.yaml.template | sed s,REPLACED_MODEL,"$(MODEL)",g > package.yaml
 	hpack --force ./
 	cabal2nix . > dependencies.nix
 
@@ -59,7 +60,6 @@ brittany_:
 
 brittany:
 	nix-shell ./travis-shell.nix --run "make brittany_"
-
 
 ubuntu-release:
 	docker build -t ubuntu-release scripts

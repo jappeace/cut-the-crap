@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 080b14b4ca581bc972d8d8ae8b9ef84e51078211786c6c8657e2c39a77628fb6
+-- hash: e50a4aaa2f3f58185fb527c51c96ea516067617ab58535283ed62c233df1cba0
 
 name:           cut-the-crap
 version:        1.0.0
@@ -25,6 +25,7 @@ library
   exposed-modules:
       Cut.Analyze
       Cut.CutVideo
+      Cut.FFI
       Cut.Ffmpeg
       Cut.Lib
       Cut.Options
@@ -35,6 +36,12 @@ library
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
+  cc-options: -DMODELDIR=""
+  c-sources:
+      main.c
+  pkgconfig-depends:
+      pocketsphinx
+    , sphinxbase
   build-depends:
       base >=4.7 && <5
     , exceptions
@@ -58,6 +65,12 @@ executable cut-the-crap
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
+  cc-options: -DMODELDIR=""
+  c-sources:
+      main.c
+  pkgconfig-depends:
+      pocketsphinx
+    , sphinxbase
   build-depends:
       base >=4.7 && <5
     , cut-the-crap
@@ -82,6 +95,7 @@ test-suite unit
       Test.TestSpec
       Cut.Analyze
       Cut.CutVideo
+      Cut.FFI
       Cut.Ffmpeg
       Cut.Lib
       Cut.Options
@@ -92,6 +106,12 @@ test-suite unit
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
+  cc-options: -DMODELDIR=""
+  c-sources:
+      main.c
+  pkgconfig-depends:
+      pocketsphinx
+    , sphinxbase
   build-depends:
       base >=4.7 && <5
     , exceptions

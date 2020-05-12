@@ -13,8 +13,11 @@ ffmpeg -y -i ./shitty-recording.mp3 -f s16le -acodec pcm_s16le -filter:a aresamp
 
 ** TODO Getting timestamps out of RAW and make available
    
-   Make C function to accept a file, and spit out a list of (TIMERANGE, word) for example: `(8982, 9022) are`
+*** DONE   Make C function to accept a file, and spit out a list of (TIMERANGE, word) for example: `(8982, 9022) are`
+
+
    ... MAGICK FFI happens (Haskell --> C --> Haskell)
+     We did tool parts for this.
    Put that result into SRT format (haskell)
 
 20, 30 HELLO
