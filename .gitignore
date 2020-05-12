@@ -14,3 +14,7 @@ TAGS
 
 ppa/bin
 cut-the-crap_1.0.0_amd64.deb
+
+*.wav
+*.raw
+*.bin
