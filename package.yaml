@@ -95,7 +95,7 @@ tests:
     - hspec-core
 
 c-sources: main.c
-cc-options: MODEL
+cc-options: -DMODELDIR=""
 pkg-config-dependencies: 
   - pocketsphinx
   - sphinxbase

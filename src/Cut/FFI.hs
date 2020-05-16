@@ -13,7 +13,6 @@ import           Foreign.Storable
 --                  FAILED_CREATE_RECOGNIZER |
 --                  FAILED_UNABLE_INPUTFILE
 
-
 data DetectResult
   deriving (Storable)
 

@@ -8,6 +8,7 @@ let
         pkgs.ghcid 
         pkgs.cabal-install
         pkgs.haskellPackages.hasktags
+        pkgs.haskellPackages.c2hs
         pkgs.ffmpeg
         pkgs.hlint
         pkgs.pocketsphinx
