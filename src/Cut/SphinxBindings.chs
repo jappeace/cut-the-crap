@@ -1,3 +1,5 @@
+module Cut.SphinxBindings where
+  
 import Control.Monad (liftM, when)
 import Foreign
 import Foreign.C

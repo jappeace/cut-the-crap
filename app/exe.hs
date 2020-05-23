@@ -1,8 +1,8 @@
 module Main where
 
-import qualified Cut.Lib as Lib
-import 
+import qualified Cut.Lib            as Lib
+import           Cut.SphinxBindings
 
 main :: IO ()
-main =
-  detect_words "ebic words"
+main = error "compiles mostly"
+  -- detect_words "heyo.raw"
