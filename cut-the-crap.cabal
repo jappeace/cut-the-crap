@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e50a4aaa2f3f58185fb527c51c96ea516067617ab58535283ed62c233df1cba0
+-- hash: ffdc6e23cc8a3d2faf21453260e1c243d1bb4ac41607e66f9bbb57c3cb02c7ff
 
 name:           cut-the-crap
 version:        1.0.0
@@ -25,10 +25,10 @@ library
   exposed-modules:
       Cut.Analyze
       Cut.CutVideo
-      Cut.FFI
       Cut.Ffmpeg
       Cut.Lib
       Cut.Options
+      Cut.SphinxBindings
       Cut.SplitVideo
   other-modules:
       Paths_cut_the_crap
@@ -36,9 +36,11 @@ library
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR=""
+  cc-options: -DMODELDIR="/nix/store/rxldywdwy8a53yy9lwhrz8z7iqvh3lld-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  include-dirs:
+      includes
   c-sources:
-      main.c
+      includes/main.c
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
@@ -65,9 +67,11 @@ executable cut-the-crap
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
-  cc-options: -DMODELDIR=""
+  cc-options: -DMODELDIR="/nix/store/rxldywdwy8a53yy9lwhrz8z7iqvh3lld-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  include-dirs:
+      includes
   c-sources:
-      main.c
+      includes/main.c
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
@@ -95,10 +99,10 @@ test-suite unit
       Test.TestSpec
       Cut.Analyze
       Cut.CutVideo
-      Cut.FFI
       Cut.Ffmpeg
       Cut.Lib
       Cut.Options
+      Cut.SphinxBindings
       Cut.SplitVideo
       Paths_cut_the_crap
   hs-source-dirs:
@@ -106,9 +110,11 @@ test-suite unit
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR=""
+  cc-options: -DMODELDIR="/nix/store/rxldywdwy8a53yy9lwhrz8z7iqvh3lld-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  include-dirs:
+      includes
   c-sources:
-      main.c
+      includes/main.c
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase

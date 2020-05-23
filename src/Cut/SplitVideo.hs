@@ -8,7 +8,7 @@ import           Control.Monad
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Text.Lens
-import           Shelly                  hiding ( FilePath )
+import           Shelly         hiding (FilePath)
 
 -- | Splits a video into segments
 split :: FilePath -> Options -> Sh ()
@@ -30,3 +30,4 @@ split tmp opt' = do
     , "1"
     , opt' ^. out_file . packed <> "%03d.mp4"
     ]
+

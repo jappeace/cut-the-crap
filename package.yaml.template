@@ -94,7 +94,8 @@ tests:
     - hspec
     - hspec-core
 
-c-sources: main.c
+c-sources: includes/main.c
+include-dirs: includes
 cc-options: -DMODELDIR="REPLACED_MODEL"
 pkg-config-dependencies: 
   - pocketsphinx

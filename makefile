@@ -6,6 +6,7 @@ haddock:
 	cabal new-haddock all
 
 hpack:
+	nix-shell --run "c2hs ../../includes/main.h src/Cut/SphinxBindings.chs"
 	nix-shell ./hpack-shell.nix --run "make update-cabal"
 
 ghcid: clean hpack etags
@@ -19,7 +20,7 @@ etags:
 
 update-cabal:
 	cat package.yaml.template | sed s,REPLACED_MODEL,"$(MODEL)",g > package.yaml
-	hpack --force ./
+	hpack --force ./ - | awk -f fixup-cabal.awk > cut-the-crap.cabal
 	cabal2nix . > dependencies.nix
 
 enter:
@@ -65,9 +66,9 @@ ubuntu-release:
 	docker build -t ubuntu-release scripts
 	docker run -v ~/projects/cut-the-crap:/home/jappie -t ubuntu-release
 
-MODEL=$(shell pkg-config --variable=modeldir pocketsphinx)
+MODEL=$(shell nix-shell --run "pkg-config --variable=modeldir pocketsphinx")
 sphinx:
-	gcc -o run-sphinx.bin main.c \
+	gcc -o run-sphinx.bin includes/main.c \
 	    -DMODELDIR="\"$(MODEL)\"" \
 	    $(shell pkg-config --cflags --libs pocketsphinx sphinxbase)
 

@@ -23,10 +23,7 @@ typedef enum {
 
 typedef struct {
   result_code code;
-  union {
-    unit u;
-    detected_words  words;
-  };
+  detected_words words;
 } detect_result;
 
 detect_result detect_words(char* filepath);

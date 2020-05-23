@@ -2,21 +2,19 @@
 #include <pocketsphinx.h>
 
 detect_result detect_words(char* filepath){
-    const cmd_ln_t* config = cmd_ln_init(NULL, ps_args(), TRUE,
+    cmd_ln_t* config = cmd_ln_init(NULL, ps_args(), TRUE,
 		         "-hmm", MODELDIR "/en-us/en-us",
 	                 "-lm", MODELDIR "/en-us/en-us.lm.bin",
 	                 "-dict", MODELDIR "/en-us/cmudict-en-us.dict",
 	                 NULL);
 
     detect_result res;
-    unit var;
-    res.u = var;
     if (config == NULL) {
         res.code = FAILED_CONFIG_OBJECT;
 	return res;
     }
 
-    const ps_decoder_t* decoder = ps_init(config);
+    ps_decoder_t* decoder = ps_init(config);
     if (decoder == NULL) {
         res.code = FAILED_CONFIG_OBJECT;
 	return res;
@@ -36,7 +34,7 @@ detect_result detect_words(char* filepath){
 	size_t nsamp;
 	nsamp = fread(buf, 2, 512, audioFile);
 	rv = ps_process_raw(decoder, buf, nsamp, FALSE, FALSE);
-        printf("cur rv: %i - %i \n", rv, nsamp);
+        printf("cur rv: %i - %i \n", rv, (int) nsamp);
     }
     rv = ps_end_utt(decoder); // make decoder 'realize' recognintion is over
 
@@ -57,7 +55,7 @@ detect_result detect_words(char* filepath){
         
         char const* word = ps_seg_word(iterator);
 
-        current_word_frame->word = (const char*) malloc(strlen(word)*sizeof(char));
+        current_word_frame->word = (char*) malloc(strlen(word)*sizeof(char));
         strcpy(current_word_frame->word, word);
 
         result[used] = current_word_frame;
