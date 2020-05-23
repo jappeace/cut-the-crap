@@ -4,6 +4,7 @@
 
 module Cut.Options
   ( Options
+  , parseRecord
   , in_file
   , out_file
   , seg_size
@@ -17,42 +18,44 @@ module Cut.Options
   )
 where
 
-import           Control.Lens
+import           Control.Lens                   ( (#)
+                                                , Lens'
+                                                , _Just
+                                                , non
+                                                )
 import           Data.Generics.Product.Fields
-import           Options.Generic
+import           GHC.Generics
+import           Options.Applicative
 
 simpleOptions :: Options
-simpleOptions = Options { inFile         = halp # "in.mkv"
-                        , outFile        = halp # "out.mkv"
-                        , segmentSize    = halp . _Just # def_seg_size
-                        , silentTreshold = halp . _Just # def_silent
-                        , detectMargin   = halp . _Just # def_margin
-                        , voiceTrack     = halp . _Just # 2
-                        , musicTrack     = halp # Nothing
-                        , silentDuration = halp . _Just # def_duration
-                        , workDir        = halp # Nothing
+simpleOptions = Options { inFile         = "in.mkv"
+                        , outFile        = "out.mkv"
+                        , segmentSize    = _Just # def_seg_size
+                        , silentTreshold = _Just # def_silent
+                        , detectMargin   = _Just # def_margin
+                        , voiceTrack     = _Just # 2
+                        , musicTrack     = Nothing
+                        , silentDuration = _Just # def_duration
+                        , workDir        = Nothing
                         }
 
 data Options = Options
-  { inFile :: FilePath <?> "The input video"
-  , outFile :: FilePath <?> "The output name without format"
-  , segmentSize :: Maybe Int <?> "The size of video segments in minutes"
-  , silentTreshold :: Maybe Double <?> "The treshold for determining intersting sections, closer to zero is detects more audio (n: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
-  , silentDuration :: Maybe Double <?> "The duration before soemthing can be considered a silence (d: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
-  , detectMargin :: Maybe Double <?> "Margin seconds around detection"
-  , voiceTrack :: Maybe Int <?> "The track to detect audio upon"
-  , musicTrack :: Maybe Int <?> "The track to detect audio upon"
-  , workDir :: Maybe FilePath <?> "If specified will use this as temporty directory to store intermeidate files in, good for debugging. Needs to be absolute"
+  { inFile :: FilePath
+  , outFile :: FilePath
+  , segmentSize :: Maybe Int
+  , silentTreshold :: Maybe Double
+  , silentDuration :: Maybe Double
+  , detectMargin :: Maybe Double
+  , voiceTrack :: Maybe Int
+  , musicTrack :: Maybe Int
+  , workDir :: Maybe FilePath
   } deriving (Show, Generic)
 
-halp :: Iso' (a <?> b) a
-halp = iso unHelpful Helpful
-
 in_file :: Lens' Options FilePath
-in_file = field @"inFile" . halp
+in_file = field @"inFile"
 
 out_file :: Lens' Options FilePath
-out_file = field @"outFile" . halp
+out_file = field @"outFile"
 
 def_seg_size :: Int
 def_seg_size = 20
@@ -70,24 +73,53 @@ def_voice :: Int
 def_voice = 1
 
 seg_size :: Lens' Options Int
-seg_size = field @"segmentSize" . halp . non def_seg_size
+seg_size = field @"segmentSize" . non def_seg_size
 
 detect_margin :: Lens' Options Double
-detect_margin = field @"detectMargin" . halp . non def_margin
+detect_margin = field @"detectMargin" . non def_margin
 
 silent_treshold :: Lens' Options Double
-silent_treshold = field @"silentTreshold" . halp . non def_silent
+silent_treshold = field @"silentTreshold" . non def_silent
 
 silent_duration :: Lens' Options Double
-silent_duration = field @"silentDuration" . halp . non def_duration
+silent_duration = field @"silentDuration" . non def_duration
 
 voice_track :: Lens' Options Int
-voice_track = field @"voiceTrack" . halp . non def_voice
+voice_track = field @"voiceTrack" . non def_voice
 
 music_track :: Lens' Options (Maybe Int)
-music_track = field @"musicTrack" . halp
+music_track = field @"musicTrack"
 
 work_dir :: Lens' Options (Maybe FilePath)
-work_dir = field @"workDir" . halp
+work_dir = field @"workDir"
 
-instance ParseRecord Options
+parseRecord :: Parser Options
+parseRecord =
+  Options
+    <$> argument str (help "The input video")
+    <*> argument str (help "The output name without format")
+    <*> optional (argument auto (help "The size of video segments in minutes"))
+    <*> optional
+          (argument
+            auto
+            (help
+              "The treshold for determining intersting sections, closer to zero is detects more audio (n: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
+            )
+          )
+    <*> optional
+          (argument
+            auto
+            (help
+              "The duration before soemthing can be considered a silence (d: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
+            )
+          )
+    <*> optional (argument auto (help "Margin seconds around detection"))
+    <*> optional (argument auto (help "The track to detect audio upon"))
+    <*> optional (argument auto (help "The track to detect audio upon"))
+    <*> optional
+          (argument
+            str
+            (help
+              "If specified will use this as temporty directory to store intermeidate files in, good for debugging. Needs to be absolute"
+            )
+          )
