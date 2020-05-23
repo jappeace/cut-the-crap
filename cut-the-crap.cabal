@@ -39,6 +39,7 @@ library
   cc-options: -DMODELDIR="/nix/store/rxldywdwy8a53yy9lwhrz8z7iqvh3lld-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
+  includes: main.h
   c-sources:
       includes/main.c
   pkgconfig-depends:

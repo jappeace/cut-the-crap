@@ -13,6 +13,8 @@ let
         pkgs.hlint
         pkgs.pocketsphinx
         pkgs.pkg-config
+        pkgs.cabal2nix 
+        pkgs.haskellPackages.hpack
         ];
     });
 in 

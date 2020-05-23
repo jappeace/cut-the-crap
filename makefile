@@ -6,11 +6,13 @@ haddock:
 	cabal new-haddock all
 
 hpack:
-	nix-shell --run "c2hs ../../includes/main.h src/Cut/SphinxBindings.chs"
 	nix-shell ./hpack-shell.nix --run "make update-cabal"
 
 ghcid: clean hpack etags
-	nix-shell --run "ghcid -s \"import Main\" -c \"cabal new-repl\" -T \"main\" test:unit"
+	nix-shell --run "make ghcid_"
+
+ghcid_:
+	ghcid -s "import Main" -c "cabal new-repl" -T "main" test:unit
 
 ghci:
 	nix-shell --run "cabal new-repl test:unit"

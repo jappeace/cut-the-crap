@@ -1,4 +1,10 @@
-  
+import Control.Monad (liftM, when)
+import Foreign
+import Foreign.C
+import System.IO.Unsafe (unsafePerformIO)
+
+#include "main.h"
+
 {#enum result_code as ResultCode {upcaseFirstLetter}#}
 
 
