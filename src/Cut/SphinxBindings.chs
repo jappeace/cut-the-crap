@@ -5,7 +5,7 @@ import Foreign
 import Foreign.C
 import System.IO.Unsafe (unsafePerformIO)
 
-#include "main.h"
+#include "speech_recognition.h"
 
 {#enum result_code as ResultCode {upcaseFirstLetter}#}
 

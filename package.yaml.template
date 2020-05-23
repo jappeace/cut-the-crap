@@ -94,7 +94,7 @@ tests:
     - hspec
     - hspec-core
 
-c-sources: includes/main.c
+c-sources: includes/speech_recognition.c
 include-dirs: includes
 cc-options: -DMODELDIR="REPLACED_MODEL"
 pkg-config-dependencies: 

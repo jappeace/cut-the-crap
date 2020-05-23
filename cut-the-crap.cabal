@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ffdc6e23cc8a3d2faf21453260e1c243d1bb4ac41607e66f9bbb57c3cb02c7ff
+-- hash: 0872d32c55081f29b054bd04c01cfbaaa792883b0c15bdd099b07fe56fdbecbd
 
 name:           cut-the-crap
 version:        1.0.0
@@ -39,9 +39,8 @@ library
   cc-options: -DMODELDIR="/nix/store/rxldywdwy8a53yy9lwhrz8z7iqvh3lld-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
-  includes: main.h
   c-sources:
-      includes/main.c
+      includes/speech_recognition.c
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
@@ -72,7 +71,7 @@ executable cut-the-crap
   include-dirs:
       includes
   c-sources:
-      includes/main.c
+      includes/speech_recognition.c
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
@@ -115,7 +114,7 @@ test-suite unit
   include-dirs:
       includes
   c-sources:
-      includes/main.c
+      includes/speech_recognition.c
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase

@@ -22,7 +22,8 @@ etags:
 
 update-cabal:
 	cat package.yaml.template | sed s,REPLACED_MODEL,"$(MODEL)",g > package.yaml
-	hpack --force ./ - | awk -f fixup-cabal.awk > cut-the-crap.cabal
+	hpack --force ./
+	rm package.yaml
 	cabal2nix . > dependencies.nix
 
 enter:
