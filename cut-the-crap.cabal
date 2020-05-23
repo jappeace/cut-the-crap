@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0872d32c55081f29b054bd04c01cfbaaa792883b0c15bdd099b07fe56fdbecbd
+-- hash: af518da01bbef24e821d2ffd6f9a1784d9b8b9acb652878a083d87097c31f759
 
 name:           cut-the-crap
 version:        1.0.0
@@ -50,7 +50,6 @@ library
     , generic-lens
     , lens
     , optparse-applicative
-    , optparse-generic
     , regex-tdfa
     , shelly
     , system-filepath
@@ -82,7 +81,6 @@ executable cut-the-crap
     , generic-lens
     , lens
     , optparse-applicative
-    , optparse-generic
     , regex-tdfa
     , shelly
     , system-filepath
@@ -126,7 +124,6 @@ test-suite unit
     , hspec-core
     , lens
     , optparse-applicative
-    , optparse-generic
     , regex-tdfa
     , shelly
     , system-filepath

@@ -24,7 +24,6 @@ import qualified Data.Text                     as Text
 import qualified Data.Text.IO                  as Text
 import           Data.Text.Lens
 import           Options.Applicative
-import           Options.Generic
 import           Shelly                  hiding ( FilePath )
 import           System.IO.Temp
 import           Text.Regex.TDFA         hiding ( empty
@@ -56,8 +55,7 @@ runEdit options parsed temp = do
 combineDir :: Options -> FilePath -> Sh ()
 combineDir options temp = do
   res <- lsT $ fromText $ Text.pack temp
-  let paths :: Text
-      paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
+  let paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
   writefile (fromText $ Text.pack $ temp <> "/input.txt") paths
   combine temp
 
