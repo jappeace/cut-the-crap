@@ -76,8 +76,7 @@ speechAnalyses :: FilePath -> IO (Either ResultCode [WordFrame])
 speechAnalyses filePath = do
   print filePath
   c_filePath <- newCString filePath
-  print c_filePath
-  let c_result = detect_words_ffi c_filePath
+  c_result <- {#call detect_words#} c_filePath
   print "got result"
   print c_result
   c_words <- {#get detect_result.words #} c_result
@@ -88,6 +87,8 @@ speechAnalyses filePath = do
     Success -> Right <$> detectedToList c_words
     x -> pure $ Left x
 
-foreign import ccall "detect_words" detect_words_ffi :: CString -> {#type detect_result#}
+foreign import ccall "detect_words" detect_words_ffi :: String -> IO () 
 
+-- type DetectResult = {#type detect_result #}
 
+-- {#fun detect_words as detectWords {`String'} -> `DetectResult' #}
