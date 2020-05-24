@@ -4,8 +4,11 @@ import qualified Cut.Lib            as Lib
 import           Cut.SphinxBindings
 
 main :: IO ()
-main = error "compiles mostly"
+main = do
+  result <- speechAnalyses "goforward.raw"
+  print result
   -- detect_words "heyo.raw"
 
-fun :: ResultCode
-fun = SUCCESS
+-- fun :: ResultCode
+-- fun = SUCCESS
+

@@ -2,6 +2,7 @@
 #include <pocketsphinx.h>
 
 detect_result detect_words(char* filepath){
+    printf("using %s", filepath);
     cmd_ln_t* config = cmd_ln_init(NULL, ps_args(), TRUE,
 		         "-hmm", MODELDIR "/en-us/en-us",
 	                 "-lm", MODELDIR "/en-us/en-us.lm.bin",
