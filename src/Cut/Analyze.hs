@@ -11,19 +11,18 @@ module Cut.Analyze
 where
 
 import           Control.Lens
-import           Control.Monad
 import           Control.Monad.Catch
 import           Control.Monad.IO.Unlift
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Data.Foldable
 import           Data.Maybe
-import           Data.Text                      ( Text )
-import qualified Data.Text                     as Text
-import qualified Data.Text.IO                  as Text
+import           Data.Text               (Text)
+import qualified Data.Text               as Text
+import qualified Data.Text.IO            as Text
 import           Data.Text.Lens
-import           Shelly                  hiding ( find )
-import           Text.Regex.TDFA         hiding ( empty )
+import           Shelly                  hiding (find)
+import           Text.Regex.TDFA         hiding (empty)
 
 data Silent
 data Sound
