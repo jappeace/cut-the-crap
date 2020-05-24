@@ -77,24 +77,28 @@ getMusic opt' tempDir = do
   res <- case opt' ^. music_track of
     Nothing -> pure $ Text.pack combinedFile
     Just x  -> do
-      shelly $ ffmpeg $ args x
-      shelly $ combineMusic tempDir
+      shelly $ extractMusicTrack x (opt' ^. in_file) tempDir
+      shelly $ mergeMusicAndVideo tempDir
       pure $ Text.pack (tempDir <> "/" <> withMusicFile)
   putStrLn "done get music"
   shelly $ cp (fromText res) (opt' ^. out_file . packed . to fromText)
   pure ()
- where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
+ where
   combinedFile = tempDir <> "/" <> combineOutput
-  args x' =
+
+extractMusicTrack :: Int -> FilePath -> FilePath -> Sh ()
+extractMusicTrack musicTrack inputFile tempDir = void $ ffmpeg args
+ where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
+  args =
     [ "-i"
-    , opt' ^. in_file . packed
+    , Text.pack inputFile
     , "-map"
-    , "0:" <> Text.pack (show x')
+    , "0:" <> Text.pack (show musicTrack)
     , Text.pack (tempDir <> "/" <> musicFile)
     ]
 
-combineMusic :: FilePath -> Sh ()
-combineMusic tempDir = void $ ffmpeg args
+mergeMusicAndVideo :: FilePath -> Sh ()
+mergeMusicAndVideo tempDir = void $ ffmpeg args
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   args =
     [ "-i"
