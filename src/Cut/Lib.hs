@@ -84,18 +84,16 @@ getMusic opt' tempDir = do
   where combinedFile = tempDir <> "/" <> combineOutput
 
 extractMusicTrack :: Int -> FilePath -> FilePath -> Sh ()
-extractMusicTrack musicTrack inputFile tempDir = void $ ffmpeg args
+extractMusicTrack musicTrack inputFile tempDir = void $ ffmpeg inputFile args
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   args =
-    [ "-i"
-    , Text.pack inputFile
-    , "-map"
+    ["-map"
     , "0:" <> Text.pack (show musicTrack)
     , Text.pack (tempDir <> "/" <> musicFile)
     ]
 
 mergeMusicAndVideo :: FilePath -> Sh ()
-mergeMusicAndVideo tempDir = void $ ffmpeg args
+mergeMusicAndVideo tempDir = void $ ffmpeg' args
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   args =
     [ "-i"
