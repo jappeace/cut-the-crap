@@ -23,7 +23,7 @@ ffmpeg -y -i ./shitty-recording.mp3 -f s16le -acodec pcm_s16le -filter:a aresamp
 20, 30 HELLO
 34, 50 WORLD -> WOBLD
 
-** TODO connection between c/haskell (somehow)
+** DONE connection between c/haskell (somehow)
    FFI (if we can do it!)
 
 ** Worries / woes

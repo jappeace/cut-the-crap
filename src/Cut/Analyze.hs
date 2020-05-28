@@ -1,5 +1,5 @@
 module Cut.Analyze
-  ( detect
+  ( detectSoundInterval
   , Interval(..)
   , Sound
   , Silent
@@ -15,6 +15,7 @@ import           Control.Monad.Catch
 import           Control.Monad.IO.Unlift
 import           Cut.Ffmpeg
 import           Cut.Options
+import           Cut.SpeechRecognition
 import           Data.Foldable
 import           Data.Maybe
 import           Data.Text               (Text)
@@ -35,8 +36,8 @@ data Interval e = Interval
   , interval_input_end   :: Text
   } deriving Show
 
-detect :: (MonadMask m, MonadUnliftIO m) => Options -> m [Interval Sound]
-detect opts = do
+detectSoundInterval :: (MonadMask m, MonadUnliftIO m) => Options -> m [Interval Sound]
+detectSoundInterval opts = do
   lines'' <- shelly $ detectShell opts
   let linesRes = do
         line <- lines''
@@ -116,10 +117,8 @@ compare' opts current prev = (current, soundedInterval : snd prev)
 
 
 detectShell :: Options -> Sh [Text]
-detectShell opt' = ffmpeg
-  [ "-i"
-  , opt' ^. in_file . packed
-  , "-map"
+detectShell opt' = ffmpeg (opt' ^. in_file . packed)
+  ["-map"
   , "0:" <> opt' ^. voice_track . to show . packed
   , "-filter:a"
                  -- , "silencedetect=noise=-30dB:d=0.5"
@@ -170,3 +169,19 @@ getEnd line = read $ match2 ^. _3
   match1 = str =~ pipe
   match2 :: (String, String, String)
   match2 = (match1 ^. _1) =~ startMatch
+
+
+-- | Detect the speech on the mkv file
+detectSpeech :: Prelude.FilePath -> Sh (Either ResultCode [WordFrame])
+detectSpeech xx = do
+  tempmp3File <- error "TODO make temp out file"
+  ffmpeg xx [
+      "-map", "0:0",  "-map", "0:2", tempmp3File
+    ]
+  tempRawFile <- error "Make temp raw file"
+  ffmpeg (Text.unpack tempmp3File) [
+    "-f", "s16le", "-acodec", "pcm_s16le", "-filter:a", "aresample=resampler=soxr:osr=16000", "-ac", "1", tempRawFile
+    ]
+  liftIO $ speechAnalyses $ Text.unpack tempRawFile
+
+

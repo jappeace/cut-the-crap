@@ -109,6 +109,12 @@ and Youtube friendly music on Youtube.
 This project is mostly a wrapper around ffmpeg.
 We use Haskell for shell programming.
 
+We first figure out what's going on with the video.
+For example we do silence detection or speech recogontion, maybe even motion detection etc.
+After the analyze phase we act in the edit phase.
+Where we for example cut.
+Finally we produce some result.
+
 The [shelly](http://hackage.haskell.org/package/shelly) library was chosen in support of shell programming.
 Originally we used [turtle](http://hackage.haskell.org/package/turtle),
 but that library is much more complicated to use because it assumes you

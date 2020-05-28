@@ -15,10 +15,8 @@ split :: FilePath -> Options -> Sh ()
 split tmp opt' = do
   cp (fromText (tmp ^. packed))
      (fromText (opt' ^. out_file . packed <> "-full.mp4"))
-  void $ ffmpeg
-    [ "-i"
-    , tmp ^. packed
-    , "-c"
+  void $ ffmpeg tmp
+    ["-c"
     , "copy"
     , "-map"
     , "0"

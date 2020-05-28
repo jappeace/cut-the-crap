@@ -5,7 +5,13 @@
 
 -- | This entire module leaks like crazy, it's not a big deal because
 --   at the moment this process is confined
-module Cut.SphinxBindings(speechAnalyses) where
+module Cut.SpeechRecognition(speechAnalyses
+                            , frame_from
+                            , frame_to
+                            , frame_word
+                            , WordFrame
+                            , ResultCode(..)
+                            ) where
 
 import           GHC.Generics
 import Data.Text(Text)
@@ -31,10 +37,11 @@ data WordFrame = WordFrame
 instance Storable WordFrame where
         alignment _ = 4
         sizeOf _    = 16
-        peek ptr    = WordFrame
+        peek ptr    =
+            WordFrame
               <$> peekByteOff ptr 0
               <*> peekByteOff ptr 4
-              <*> peekByteOff ptr 8
+              <*> (peekByteOff ptr 8 >>= fmap Text.pack . peekCString)
         poke ptr (WordFrame d c i) = do
             pokeByteOff ptr 0 d
             pokeByteOff ptr 4 c

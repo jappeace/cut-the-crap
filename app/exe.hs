@@ -1,7 +1,7 @@
 module Main where
 
-import qualified Cut.Lib            as Lib
-import           Cut.SphinxBindings
+import qualified Cut.Lib               as Lib
+import           Cut.SpeechRecognition
 
 main :: IO ()
 main = do

@@ -20,15 +20,13 @@ import           Cut.Options
 import           Cut.SplitVideo
 import           Data.Bifunctor
 import           Data.Either
-import qualified Data.Text                     as Text
-import qualified Data.Text.IO                  as Text
+import qualified Data.Text               as Text
+import qualified Data.Text.IO            as Text
 import           Data.Text.Lens
 import           Options.Applicative
-import           Shelly                  hiding ( FilePath )
+import           Shelly                  hiding (FilePath)
 import           System.IO.Temp
-import           Text.Regex.TDFA         hiding ( empty
-                                                , extract
-                                                )
+import           Text.Regex.TDFA         hiding (empty, extract)
 
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
 entryPoint = catch main
@@ -40,7 +38,7 @@ main = do
   liftIO $ putStr "started with options: "
   liftIO $ print options
 
-  parsed <- detect options
+  parsed <- detectSoundInterval options
   case options ^. work_dir of
     Nothing ->
       withTempDirectory "/tmp" "streamedit" $ liftIO . runEdit options parsed
@@ -77,7 +75,7 @@ getMusic opt' tempfiles = do
   res <- case opt' ^. music_track of
     Nothing -> pure $ Text.pack combinedFile
     Just x  -> do
-      shelly $ ffmpeg $ args x
+      shelly $ ffmpeg (opt' ^. in_file) $ args x
       shelly $ combineMusic tempfiles
       pure $ Text.pack (tempfiles <> "/" <> withMusicFile)
   putStrLn "done get music"
@@ -86,15 +84,13 @@ getMusic opt' tempfiles = do
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   combinedFile = tempfiles <> "/" <> combineOutput
   args x' =
-    [ "-i"
-    , opt' ^. in_file . packed
-    , "-map"
+    ["-map"
     , "0:" <> Text.pack (show x')
     , Text.pack (tempfiles <> "/" <> musicFile)
     ]
 
 combineMusic :: FilePath -> Sh ()
-combineMusic tempfiles = void $ ffmpeg args
+combineMusic tempfiles = void $ ffmpeg' args
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   args =
     [ "-i"

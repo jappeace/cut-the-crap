@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: af518da01bbef24e821d2ffd6f9a1784d9b8b9acb652878a083d87097c31f759
+-- hash: de0dcada5810eb4e23c36b3e0912c2f2d9b4e3181caa0b45ae66354e0d5eef4c
 
 name:           cut-the-crap
 version:        1.0.0
@@ -28,7 +28,7 @@ library
       Cut.Ffmpeg
       Cut.Lib
       Cut.Options
-      Cut.SphinxBindings
+      Cut.SpeechRecognition
       Cut.SplitVideo
   other-modules:
       Paths_cut_the_crap
@@ -100,7 +100,7 @@ test-suite unit
       Cut.Ffmpeg
       Cut.Lib
       Cut.Options
-      Cut.SphinxBindings
+      Cut.SpeechRecognition
       Cut.SplitVideo
       Paths_cut_the_crap
   hs-source-dirs:

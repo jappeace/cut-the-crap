@@ -2,6 +2,7 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators    #-}
 
+
 module Cut.Options
   ( Options
   , parseRecord
@@ -18,11 +19,7 @@ module Cut.Options
   )
 where
 
-import           Control.Lens                   ( (#)
-                                                , Lens'
-                                                , _Just
-                                                , non
-                                                )
+import           Control.Lens                 (Lens', non, ( # ), _Just)
 import           Data.Generics.Product.Fields
 import           GHC.Generics
 import           Options.Applicative
@@ -40,15 +37,15 @@ simpleOptions = Options { inFile         = "in.mkv"
                         }
 
 data Options = Options
-  { inFile :: FilePath
-  , outFile :: FilePath
-  , segmentSize :: Maybe Int
+  { inFile         :: FilePath
+  , outFile        :: FilePath
+  , segmentSize    :: Maybe Int
   , silentTreshold :: Maybe Double
   , silentDuration :: Maybe Double
-  , detectMargin :: Maybe Double
-  , voiceTrack :: Maybe Int
-  , musicTrack :: Maybe Int
-  , workDir :: Maybe FilePath
+  , detectMargin   :: Maybe Double
+  , voiceTrack     :: Maybe Int
+  , musicTrack     :: Maybe Int
+  , workDir        :: Maybe FilePath
   } deriving (Show, Generic)
 
 in_file :: Lens' Options FilePath
