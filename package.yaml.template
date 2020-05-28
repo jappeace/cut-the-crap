@@ -95,7 +95,7 @@ tests:
 
 c-sources: includes/speech_recognition.c
 include-dirs: includes
-cc-options: -DMODELDIR="REPLACED_MODEL"
+cc-options: -DMODELDIR="REPLACED_MODEL" 
 pkg-config-dependencies: 
   - pocketsphinx
   - sphinxbase

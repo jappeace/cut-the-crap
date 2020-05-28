@@ -71,7 +71,8 @@ ubuntu-release:
 
 MODEL=$(shell nix-shell --run "pkg-config --variable=modeldir pocketsphinx")
 sphinx:
-	gcc -o run-sphinx.bin includes/main.c \
+	gcc -o run-sphinx.bin main.c includes/speech_recognition.c \
+            -Iincludes \
 	    -DMODELDIR="\"$(MODEL)\"" \
 	    $(shell pkg-config --cflags --libs pocketsphinx sphinxbase)
 
