@@ -93,30 +93,46 @@ work_dir = field @"workDir"
 parseRecord :: Parser Options
 parseRecord =
   Options
-    <$> argument str (help "The input video")
-    <*> argument str (help "The output name without format")
-    <*> optional (argument auto (help "The size of video segments in minutes"))
+    <$> option str (long "inFile" <> help "The input video")
+    <*> option str (long "outFile" <> help "The output name without format")
     <*> optional
-          (argument
+          (option
             auto
-            (help
-              "The treshold for determining intersting sections, closer to zero is detects more audio (n: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
+            (long "segmentSize" <> help "The size of video segments in minutes")
+          )
+    <*> optional
+          (option
+            auto
+            (  long "silentTreshold"
+            <> help
+                 "The treshold for determining intersting sections, closer to zero is detects more audio (n: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
             )
           )
     <*> optional
-          (argument
+          (option
             auto
-            (help
-              "The duration before soemthing can be considered a silence (d: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
+            (  long "silentDuration"
+            <> help
+                 "The duration before soemthing can be considered a silence (d: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
             )
           )
-    <*> optional (argument auto (help "Margin seconds around detection"))
-    <*> optional (argument auto (help "The track to detect audio upon"))
-    <*> optional (argument auto (help "The track to detect audio upon"))
     <*> optional
-          (argument
+          (option
+            auto
+            (long "detectMargin" <> help "Margin seconds around detection")
+          )
+    <*> optional
+          (option
+            auto
+            (long "voiceTrack" <> help "The track to detect the silences upon")
+          )
+    <*> optional
+          (option auto (long "musicTrack" <> help "The track to integrate"))
+    <*> optional
+          (option
             str
-            (help
-              "If specified will use this as temporty directory to store intermeidate files in, good for debugging. Needs to be absolute"
+            (  long "workDir"
+            <> help
+                 "If specified will use this as temporary directory to store intermeidate files in, good for debugging. Needs to be absolute"
             )
           )

@@ -45,17 +45,17 @@ main = do
     Just x -> liftIO $ runEdit options parsed x
 
 runEdit :: Options -> [Interval Sound] -> FilePath -> IO ()
-runEdit options parsed temp = do
-  extract options temp parsed
-  shelly $ combineDir options temp
-  getMusic options temp
+runEdit options parsed tempDir = do
+  extract options tempDir parsed
+  shelly $ combineDir options tempDir
+  getMusic options tempDir
 
 combineDir :: Options -> FilePath -> Sh ()
-combineDir options temp = do
-  res <- lsT $ fromText $ Text.pack temp
+combineDir options tempDir = do
+  res <- lsT $ fromText $ Text.pack tempDir
   let paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
-  writefile (fromText $ Text.pack $ temp <> "/input.txt") paths
-  combine temp
+  writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths
+  combine tempDir
 
 readSettings :: IO Options
 readSettings = customExecParser (prefs showHelpOnError) $ info
@@ -71,32 +71,37 @@ withMusicFile :: FilePath
 withMusicFile = "combined.mkv"
 
 getMusic :: Options -> FilePath -> IO ()
-getMusic opt' tempfiles = do
+getMusic opt' tempDir = do
   res <- case opt' ^. music_track of
     Nothing -> pure $ Text.pack combinedFile
     Just x  -> do
-      shelly $ ffmpeg (opt' ^. in_file) $ args x
-      shelly $ combineMusic tempfiles
-      pure $ Text.pack (tempfiles <> "/" <> withMusicFile)
+      shelly $ extractMusicTrack x (opt' ^. in_file) tempDir
+      shelly $ mergeMusicAndVideo tempDir
+      pure $ Text.pack (tempDir <> "/" <> withMusicFile)
   putStrLn "done get music"
   shelly $ cp (fromText res) (opt' ^. out_file . packed . to fromText)
   pure ()
- where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
-  combinedFile = tempfiles <> "/" <> combineOutput
-  args x' =
-    ["-map"
-    , "0:" <> Text.pack (show x')
-    , Text.pack (tempfiles <> "/" <> musicFile)
-    ]
+  where combinedFile = tempDir <> "/" <> combineOutput
 
-combineMusic :: FilePath -> Sh ()
-combineMusic tempfiles = void $ ffmpeg' args
+extractMusicTrack :: Int -> FilePath -> FilePath -> Sh ()
+extractMusicTrack musicTrack inputFile tempDir = void $ ffmpeg args
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   args =
     [ "-i"
-    , Text.pack $ tempfiles <> "/" <> combineOutput
+    , Text.pack inputFile
+    , "-map"
+    , "0:" <> Text.pack (show musicTrack)
+    , Text.pack (tempDir <> "/" <> musicFile)
+    ]
+
+mergeMusicAndVideo :: FilePath -> Sh ()
+mergeMusicAndVideo tempDir = void $ ffmpeg args
+ where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
+  args =
+    [ "-i"
+    , Text.pack $ tempDir <> "/" <> combineOutput
     , "-i"
-    , Text.pack $ tempfiles <> "/" <> musicFile
+    , Text.pack $ tempDir <> "/" <> musicFile
     , "-filter_complex"
     , "[0:a][1:a]amerge=inputs=2[a]"
     , "-map"
@@ -110,5 +115,5 @@ combineMusic tempfiles = void $ ffmpeg' args
     , "-ac"
     , "2"
     , "-shortest"
-    , Text.pack (tempfiles <> "/" <> withMusicFile)
+    , Text.pack (tempDir <> "/" <> withMusicFile)
     ]

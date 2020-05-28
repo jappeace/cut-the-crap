@@ -79,8 +79,8 @@ combine tempfiles = do
     , "-safe"
     , "0"
     , "-i"
-    , Text.pack (tempfiles <> "/input.txt")
+    , Text.pack (tempDir <> "/input.txt")
     , "-c"
     , "copy"
-    , Text.pack $ tempfiles <> "/" <> combineOutput
+    , Text.pack $ tempDir <> "/" <> combineOutput
     ]
