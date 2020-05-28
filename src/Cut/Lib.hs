@@ -83,8 +83,7 @@ getMusic opt' tempDir = do
   putStrLn "done get music"
   shelly $ cp (fromText res) (opt' ^. out_file . packed . to fromText)
   pure ()
- where
-  combinedFile = tempDir <> "/" <> combineOutput
+  where combinedFile = tempDir <> "/" <> combineOutput
 
 extractMusicTrack :: Int -> FilePath -> FilePath -> Sh ()
 extractMusicTrack musicTrack inputFile tempDir = void $ ffmpeg args
