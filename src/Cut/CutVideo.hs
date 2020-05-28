@@ -68,7 +68,7 @@ combineOutput :: FilePath
 combineOutput = "combined-output.mkv"
 
 combine :: FilePath -> Sh ()
-combine tempfiles = do
+combine tempDir = do
   output' <- ffmpeg args
   liftIO $ print ("output", output')
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
@@ -79,8 +79,8 @@ combine tempfiles = do
     , "-safe"
     , "0"
     , "-i"
-    , Text.pack (tempfiles <> "/input.txt")
+    , Text.pack (tempDir <> "/input.txt")
     , "-c"
     , "copy"
-    , Text.pack $ tempfiles <> "/" <> combineOutput
+    , Text.pack $ tempDir <> "/" <> combineOutput
     ]
