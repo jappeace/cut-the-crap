@@ -36,7 +36,7 @@ which will not be chopped up.
 + simply run `cut-the-crap` to display usage instructions.
 
 ## Ubuntu
-Download the .deb file from the release page.
+Download the .deb file from the [release page](https://github.com/jappeace/cut-the-crap/releases).
 Install with:
 
 ```shell
