@@ -72,6 +72,15 @@ for example for further editing,
 you can also leave that argument out.
 I did this for example to mix back in the music of the original file later.
 
+## Test data
+It maybe a bit awkward to record yourself just for testing data.
+To get some easy test date we can use youtube-dl, and make it a bit shorter with ffmpeg,
+for example:
+
+```shell
+youtube-dl "https://www.youtube.com/watch?v=kCpQ4aTzlis" && ffmpeg -i "Opening Ceremony & 'Languages all the way down' by Rob Rix - ZuriHac 2020-kCpQ4aTzlis.mkv" -t 00:20:00.00 -c copy input.mkv
+```
+
 # Use case
 I'm using this program to record my [stream](https://www.twitch.tv/jappiejappie)
 and upload it to my
