@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.33.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: de0dcada5810eb4e23c36b3e0912c2f2d9b4e3181caa0b45ae66354e0d5eef4c
+-- hash: 85446098e97a071602a6a892c4ddd49d0f4248f601216f61f5c59f6ebd3bbef4
 
 name:           cut-the-crap
 version:        1.0.0
@@ -36,7 +36,7 @@ library
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/rxldywdwy8a53yy9lwhrz8z7iqvh3lld-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/qzkx381b0abr65lvlf5r661nlwclbxcs-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -55,6 +55,7 @@ library
     , system-filepath
     , temporary
     , text
+    , time
     , unliftio-core
   default-language: Haskell2010
 
@@ -66,7 +67,7 @@ executable cut-the-crap
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
-  cc-options: -DMODELDIR="/nix/store/rxldywdwy8a53yy9lwhrz8z7iqvh3lld-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/qzkx381b0abr65lvlf5r661nlwclbxcs-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -86,6 +87,7 @@ executable cut-the-crap
     , system-filepath
     , temporary
     , text
+    , time
     , unliftio-core
   default-language: Haskell2010
 
@@ -108,7 +110,7 @@ test-suite unit
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/rxldywdwy8a53yy9lwhrz8z7iqvh3lld-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/qzkx381b0abr65lvlf5r661nlwclbxcs-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -129,5 +131,6 @@ test-suite unit
     , system-filepath
     , temporary
     , text
+    , time
     , unliftio-core
   default-language: Haskell2010

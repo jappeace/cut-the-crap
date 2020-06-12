@@ -67,6 +67,7 @@ dependencies:
 - temporary
 - regex-tdfa
 - system-filepath
+- time
 
 library:
   source-dirs: src

@@ -11,8 +11,10 @@ module Cut.SpeechRecognition(speechAnalyses
                             , frame_word
                             , WordFrame
                             , ResultCode(..)
+                            , toDiffTime 
                             ) where
 
+import Data.Time
 import           GHC.Generics
 import Data.Text(Text)
 import qualified Data.Text as Text
@@ -28,9 +30,12 @@ import           Data.Generics.Product.Fields
 {#enum result_code as ResultCode {underscoreToCase}#}
 deriving instance Show ResultCode
 
+newtype FrameOffset = FrameOffset Int
+  deriving (Generic, Show)
+
 data WordFrame = WordFrame
-  { _frame_from :: Int
-  , _frame_to :: Int
+  { _frame_from :: FrameOffset 
+  , _frame_to :: FrameOffset 
   , _frame_word :: Text
   } deriving (Generic, Show)
 
@@ -39,19 +44,22 @@ instance Storable WordFrame where
         sizeOf _    = 16
         peek ptr    =
             WordFrame
-              <$> peekByteOff ptr 0
-              <*> peekByteOff ptr 4
+              <$> (FrameOffset . toInt <$> peekByteOff ptr 0)
+              <*> (FrameOffset . toInt <$> peekByteOff ptr 4)
               <*> (peekByteOff ptr 8 >>= fmap Text.pack . peekCString)
-        poke ptr (WordFrame d c i) = do
+        poke ptr (WordFrame (FrameOffset d) (FrameOffset c) i) = do
             pokeByteOff ptr 0 d
             pokeByteOff ptr 4 c
             withCString (Text.unpack i) $ pokeByteOff ptr 8
 
-frame_from :: Lens' WordFrame Int
+frame_from :: Lens' WordFrame FrameOffset 
 frame_from = field @"_frame_from"
 
-frame_to :: Lens' WordFrame Int
+frame_to :: Lens' WordFrame FrameOffset 
 frame_to = field @"_frame_to"
+
+toDiffTime :: FrameOffset -> DiffTime
+toDiffTime (FrameOffset x) = secondsToDiffTime $ toInteger $ div (x - 1978) 160
 
 frame_word :: Lens' WordFrame Text
 frame_word = field @"_frame_word"

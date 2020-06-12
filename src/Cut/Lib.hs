@@ -5,6 +5,7 @@
 module Cut.Lib
   ( entryPoint
   , combineDir
+  , makeSrt
   )
 where
 
@@ -17,12 +18,15 @@ import           Cut.Analyze
 import           Cut.CutVideo
 import           Cut.Ffmpeg
 import           Cut.Options
+import           Cut.SpeechRecognition
 import           Cut.SplitVideo
 import           Data.Bifunctor
 import           Data.Either
+import           Data.Foldable           (fold)
 import qualified Data.Text               as Text
 import qualified Data.Text.IO            as Text
 import           Data.Text.Lens
+import           Data.Time
 import           Options.Applicative
 import           Shelly                  hiding (FilePath)
 import           System.IO.Temp
@@ -41,7 +45,7 @@ main = do
   parsed <- detectSoundInterval options
   case options ^. work_dir of
     Nothing ->
-      withTempDirectory "/tmp" "streamedit" $ liftIO . runEdit options parsed
+      withTempDirectory "/tmp" "cut-the-crap" $ liftIO . runEdit options parsed
     Just x -> liftIO $ runEdit options parsed x
 
 runEdit :: Options -> [Interval Sound] -> FilePath -> IO ()
@@ -115,3 +119,22 @@ mergeMusicAndVideo tempDir = void $ ffmpeg' args
     , "-shortest"
     , Text.pack (tempDir <> "/" <> withMusicFile)
     ]
+
+makeSrt :: [WordFrame] -> Text.Text
+makeSrt = fold . imap srt
+
+-- | wikipedia explains the srt format pretty well: https://en.wikipedia.org/wiki/SubRip
+--  in escence :
+-- [A numeric counter identifying each sequential subtitle]
+-- [The time that the subtitle should appear on the screen] --–> [d the time it should disappear]
+-- [Subtitle text itself on one or more lines]
+-- [A blank line containing no text, indicating the end of this subtitle]
+srt :: Int -> WordFrame -> Text.Text
+srt counter frame = fold [
+  Text.pack $ show counter,
+  "\n",
+  Text.pack $ formatTime defaultTimeLocale "%0H:%0M:%0S,000" $ toDiffTime $ view frame_from frame,
+  " --> ",
+  Text.pack $ formatTime defaultTimeLocale "%0H:%0M:%0S,000" $ toDiffTime $ view frame_to frame,
+  "\n",
+  (view frame_word frame),  "\n", "\n"]

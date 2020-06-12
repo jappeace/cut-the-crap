@@ -1,6 +1,8 @@
 OPTIMIZATION=-O0
 build: 
-	nix-shell --run "cabal new-build all -j --ghc-options $(OPTIMIZATION)"
+	nix-shell --run "make build_"
+build_: 
+	cabal new-build all -j --ghc-options $(OPTIMIZATION)
 
 haddock:
 	nix-shell --run "cabal new-haddock all"

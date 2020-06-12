@@ -7,10 +7,12 @@ module Cut.Analyze
   , getEnd
   , getDuration
   , takeOnlyLines
+  , detectSpeech
   )
 where
 
 import           Control.Lens
+import           Control.Monad
 import           Control.Monad.Catch
 import           Control.Monad.IO.Unlift
 import           Cut.Ffmpeg
@@ -119,7 +121,7 @@ compare' opts current prev = (current, soundedInterval : snd prev)
 detectShell :: Options -> Sh [Text]
 detectShell opt' = ffmpeg (opt' ^. in_file . packed)
   ["-map"
-  , "0:" <> opt' ^. voice_track . to show . packed
+  , voice_track_map opt'
   , "-filter:a"
                  -- , "silencedetect=noise=-30dB:d=0.5"
   , "silencedetect=noise="
@@ -172,16 +174,15 @@ getEnd line = read $ match2 ^. _3
 
 
 -- | Detect the speech on the mkv file
-detectSpeech :: Prelude.FilePath -> Sh (Either ResultCode [WordFrame])
-detectSpeech xx = do
-  tempmp3File <- error "TODO make temp out file"
-  ffmpeg xx [
-      "-map", "0:0",  "-map", "0:2", tempmp3File
+detectSpeech :: Options -> Prelude.FilePath -> Prelude.FilePath -> Sh (Either ResultCode [WordFrame])
+detectSpeech options tempdir inputFile = do
+  void $ ffmpeg inputFile $ (specifyTracks options) <> [
+      Text.pack tmpMp3File
     ]
-  tempRawFile <- error "Make temp raw file"
-  ffmpeg (Text.unpack tempmp3File) [
-    "-f", "s16le", "-acodec", "pcm_s16le", "-filter:a", "aresample=resampler=soxr:osr=16000", "-ac", "1", tempRawFile
+  void $ ffmpeg tmpMp3File [
+    "-f", "s16le", "-acodec", "pcm_s16le", "-filter:a", "aresample=resampler=soxr:osr=16000", "-ac", "1", Text.pack tmpRawFile
     ]
-  liftIO $ speechAnalyses $ Text.unpack tempRawFile
-
-
+  liftIO $ speechAnalyses tmpRawFile
+  where
+    tmpMp3File = tempdir <> "/" <> "speechdetect.mp3"
+    tmpRawFile = tempdir <> "/" <> "speechdetect.raw"

@@ -16,13 +16,18 @@ module Cut.Options
   , silent_duration
   , work_dir
   , simpleOptions
+  , voice_track_map
+  , specifyTracks
   )
 where
 
-import           Control.Lens                 (Lens', non, ( # ), _Just)
+import           Control.Lens
 import           Data.Generics.Product.Fields
-import           GHC.Generics
+import qualified Data.Text                    as Text
+import           Data.Text.Lens
+import           GHC.Generics                 hiding (to)
 import           Options.Applicative
+
 
 simpleOptions :: Options
 simpleOptions = Options { inFile         = "in.mkv"
@@ -89,6 +94,18 @@ music_track = field @"musicTrack"
 
 work_dir :: Lens' Options (Maybe FilePath)
 work_dir = field @"workDir"
+
+voice_track_map :: Options -> Text.Text
+voice_track_map = mappend "0:" . view (voice_track . to show . packed)
+
+specifyTracks :: Options -> [Text.Text]
+specifyTracks options =
+  [ "-map"
+  , "0:0"
+  , "-map"  -- then copy only the voice track
+  , voice_track_map options
+  ]
+
 
 parseRecord :: Parser Options
 parseRecord =

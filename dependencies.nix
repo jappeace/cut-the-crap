@@ -1,6 +1,6 @@
 { mkDerivation, base, exceptions, generic-lens, hspec, hspec-core
 , lens, optparse-applicative, pocketsphinx, regex-tdfa, shelly
-, sphinxbase, stdenv, system-filepath, temporary, text
+, sphinxbase, stdenv, system-filepath, temporary, text, time
 , unliftio-core
 }:
 mkDerivation {
@@ -11,18 +11,18 @@ mkDerivation {
   isExecutable = true;
   libraryHaskellDepends = [
     base exceptions generic-lens lens optparse-applicative regex-tdfa
-    shelly system-filepath temporary text unliftio-core
+    shelly system-filepath temporary text time unliftio-core
   ];
   libraryPkgconfigDepends = [ pocketsphinx sphinxbase ];
   executableHaskellDepends = [
     base exceptions generic-lens lens optparse-applicative regex-tdfa
-    shelly system-filepath temporary text unliftio-core
+    shelly system-filepath temporary text time unliftio-core
   ];
   executablePkgconfigDepends = [ pocketsphinx sphinxbase ];
   testHaskellDepends = [
     base exceptions generic-lens hspec hspec-core lens
     optparse-applicative regex-tdfa shelly system-filepath temporary
-    text unliftio-core
+    text time unliftio-core
   ];
   testPkgconfigDepends = [ pocketsphinx sphinxbase ];
   description = "Cuts out uninteresting parts of videos by detecting silences";

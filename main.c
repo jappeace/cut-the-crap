@@ -9,7 +9,7 @@ void see_if_it_works(detected_words words){
 }
 
 int main(int argc, char *argv[]){
-  detect_result* res = detect_words("shitty-recording.raw");
+  detect_result* res = detect_words("tmptmp/speechdetect.raw");
   switch(res->code){
     case SUCCESS: 
       see_if_it_works(res->words);
