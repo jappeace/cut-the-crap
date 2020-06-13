@@ -7,6 +7,7 @@ typedef struct {
   int from_frame; // 4
   int to_frame; // 4
   char* word; // 8
+  // TODO https://github.com/cmusphinx/pocketsphinx/blob/3a193dd38e2b6107a8068b6679cca38e41248b18/include/pocketsphinx.h#L510
 } word_frame;
 
 typedef struct { // size = 16 ?!

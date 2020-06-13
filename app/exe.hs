@@ -9,14 +9,15 @@ import           Data.Foldable
 import qualified Data.Text.IO          as T
 import           Shelly                hiding (FilePath)
 
-txt :: String
-txt = "short-opening"
+txts :: [String]
+txts = ["short-opening", "input"]
 
 main :: IO ()
 main = do
-  result <- shelly $ detectSpeech (set voice_track 1 simpleOptions) "tmptmp" (txt <>".mkv")
-  print result
-  traverse_ (T.writeFile (txt <> ".srt") . Lib.makeSrt) result
+  flip traverse_ txts $ \txt -> do
+    result <- shelly $ detectSpeech (set voice_track 1 simpleOptions) "tmptmp" (txt <>".mkv")
+    print result
+    traverse_ (T.writeFile (txt <> ".srt") . Lib.makeSrt) result
   -- detect_words "heyo.raw"
 
 -- fun :: ResultCode

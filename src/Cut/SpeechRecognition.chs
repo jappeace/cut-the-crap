@@ -69,7 +69,8 @@ frame_to :: Lens' WordFrame FrameOffset
 frame_to = field @"_frame_to"
 
 toDiffTime :: FrameOffset -> FrameOffset -> DiffTime
-toDiffTime (FrameOffset startoffset) (FrameOffset x) = secondsToDiffTime $ toInteger $ x - startoffset
+toDiffTime (FrameOffset startoffset) (FrameOffset x) =
+  secondsToDiffTime $ toInteger $ div (x - startoffset) 45
 
 frame_word :: Lens' WordFrame Text
 frame_word = field @"_frame_word"
