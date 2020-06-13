@@ -22,3 +22,4 @@ package.yaml
 *.chi
 *.chs.h
 src/Cut/SphinxBindings.hs
+*.srt
