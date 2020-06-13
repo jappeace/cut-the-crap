@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds     #-}
 {-# LANGUAGE TypeOperators #-}
-{-# OPTIONS_GHC -w #-}
 
 module Cut.Lib
   ( entryPoint
@@ -19,22 +18,24 @@ import           Cut.CutVideo
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Cut.SpeechRecognition
-import           Cut.SplitVideo
-import           Data.Bifunctor
-import           Data.Either
-import           Data.Foldable           (fold)
-import qualified Data.Text               as Text
-import qualified Data.Text.IO            as Text
+import           Data.Foldable                (fold)
+import           Data.Generics.Product.Fields
+import           Data.Maybe
+import           Data.Text                    (Text)
+import qualified Data.Text                    as Text
 import           Data.Text.Lens
 import           Data.Time
+import           GHC.Generics                 hiding (to)
 import           Options.Applicative
-import           Shelly                  hiding (FilePath)
+import           Shelly                       hiding (FilePath)
 import           System.IO.Temp
-import           Text.Regex.TDFA         hiding (empty, extract)
 
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
 entryPoint = catch main
-  $ \exec -> liftIO (print ("Uncaught exception: ", exec :: SomeException))
+  $ \exec -> liftIO (print (exceptionString, exec :: SomeException))
+
+exceptionString :: String
+exceptionString = "Uncaught exception: "
 
 main :: (MonadMask m, MonadUnliftIO m) => m ()
 main = do
@@ -55,7 +56,7 @@ runEdit options parsed tempDir = do
   getMusic options tempDir
 
 combineDir :: Options -> FilePath -> Sh ()
-combineDir options tempDir = do
+combineDir _ tempDir = do
   res <- lsT $ fromText $ Text.pack tempDir
   let paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
   writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths
@@ -120,8 +121,36 @@ mergeMusicAndVideo tempDir = void $ ffmpeg' args
     , Text.pack (tempDir <> "/" <> withMusicFile)
     ]
 
+
+data SrtSentence = SrtSentence
+  { _srt_from     :: DiffTime
+  , _srt_to       :: DiffTime
+  , _srt_words    :: Text
+  , _srt_position :: Int
+  } deriving (Show, Eq, Generic)
+
+srt_from     :: Lens' SrtSentence DiffTime
+srt_from = field @"_srt_from"
+srt_to       :: Lens' SrtSentence DiffTime
+srt_to = field @"_srt_to"
+srt_words    :: Lens' SrtSentence Text
+srt_words = field @"_srt_words"
+srt_position :: Lens' SrtSentence Int
+srt_position = field @"_srt_position"
+
 makeSrt :: [WordFrame] -> Text.Text
-makeSrt = fold . imap srt
+makeSrt frames = fold $ imap (fmap formatSrt . (toSrtSentence off)) frames
+  where
+    off = fromMaybe noOffset $ frames ^? ix 0 . frame_from
+
+toSrtSentence :: FrameOffset -> Int -> WordFrame -> SrtSentence
+toSrtSentence firstOffset ix' frame = SrtSentence
+  { _srt_from = frame ^. frame_from . to (toDiffTime firstOffset )
+  , _srt_to = frame ^. frame_to . to (toDiffTime firstOffset )
+  , _srt_words = frame ^. frame_word
+  , _srt_position = ix'
+  }
+
 
 -- | wikipedia explains the srt format pretty well: https://en.wikipedia.org/wiki/SubRip
 --  in escence :
@@ -129,12 +158,13 @@ makeSrt = fold . imap srt
 -- [The time that the subtitle should appear on the screen] --–> [d the time it should disappear]
 -- [Subtitle text itself on one or more lines]
 -- [A blank line containing no text, indicating the end of this subtitle]
-srt :: Int -> WordFrame -> Text.Text
-srt counter frame = fold [
-  Text.pack $ show counter,
+formatSrt :: SrtSentence -> Text.Text
+formatSrt sentence = fold [
+  sentence ^. srt_position . to show . packed,
   "\n",
-  Text.pack $ formatTime defaultTimeLocale "%0H:%0M:%0S,000" $ toDiffTime $ view frame_from frame,
+  Text.pack $ formatTime defaultTimeLocale "%0H:%0M:%0S,000" $ sentence ^. srt_from,
   " --> ",
-  Text.pack $ formatTime defaultTimeLocale "%0H:%0M:%0S,000" $ toDiffTime $ view frame_to frame,
+  Text.pack $ formatTime defaultTimeLocale "%0H:%0M:%0S,000" $ sentence ^. srt_to,
   "\n",
-  (view frame_word frame),  "\n", "\n"]
+  (sentence ^. srt_words),  "\n", "\n"]
+

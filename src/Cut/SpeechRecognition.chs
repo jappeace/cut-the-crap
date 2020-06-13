@@ -9,9 +9,12 @@ module Cut.SpeechRecognition(speechAnalyses
                             , frame_from
                             , frame_to
                             , frame_word
+                            , FrameOffset
                             , WordFrame
                             , ResultCode(..)
-                            , toDiffTime 
+                            , toDiffTime
+                            , toFrameOffset
+                            , noOffset 
                             ) where
 
 import Data.Time
@@ -32,6 +35,13 @@ deriving instance Show ResultCode
 
 newtype FrameOffset = FrameOffset Int
   deriving (Generic, Show)
+
+noOffset :: FrameOffset
+noOffset = FrameOffset 0
+
+
+toFrameOffset :: Int -> FrameOffset
+toFrameOffset = FrameOffset
 
 data WordFrame = WordFrame
   { _frame_from :: FrameOffset 
@@ -58,8 +68,8 @@ frame_from = field @"_frame_from"
 frame_to :: Lens' WordFrame FrameOffset 
 frame_to = field @"_frame_to"
 
-toDiffTime :: FrameOffset -> DiffTime
-toDiffTime (FrameOffset x) = secondsToDiffTime $ toInteger $ div x 21
+toDiffTime :: FrameOffset -> FrameOffset -> DiffTime
+toDiffTime (FrameOffset startoffset) (FrameOffset x) = secondsToDiffTime $ toInteger $ x - startoffset
 
 frame_word :: Lens' WordFrame Text
 frame_word = field @"_frame_word"

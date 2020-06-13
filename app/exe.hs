@@ -10,12 +10,12 @@ import qualified Data.Text.IO          as T
 import           Shelly                hiding (FilePath)
 
 txt :: String
-txt = "input"
+txt = "short-opening"
 
 main :: IO ()
 main = do
   result <- shelly $ detectSpeech (set voice_track 1 simpleOptions) "tmptmp" (txt <>".mkv")
-
+  print result
   traverse_ (T.writeFile (txt <> ".srt") . Lib.makeSrt) result
   -- detect_words "heyo.raw"
 

@@ -31,6 +31,20 @@ ffmpeg -y -i ./shitty-recording.mp3 -f s16le -acodec pcm_s16le -filter:a aresamp
 *** mp3 -> RAW - will time align
 Detection may be possible by generating SRT files (and thus subtitles)
 
+It doesn't (lol)
+
+**** DONE Refactor code to be unit testable
+     
+
+**** TODO Write test for toDiffTime 
+     We should make 1 wordFrame align with the video.
+     Then another wordFrame.
+
+     Then do same for another vid.
+**** TODO Write some unit test based on observations
+
+
+**** An idea: we could attempt align silences detected by ffmpeg with those of the speech recognition engine.
 
 *** Does it doe sentences? How will it handle large audio files
 I'm affraind this thing can only do small audio files.

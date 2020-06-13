@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 85446098e97a071602a6a892c4ddd49d0f4248f601216f61f5c59f6ebd3bbef4
+-- hash: 52b93fa6b37058f2616864a70d6787e5884027a3cabaa3249e6793bca910c7d4
 
 name:           cut-the-crap
 version:        1.0.0
@@ -96,6 +96,7 @@ test-suite unit
   main-is: Spec.hs
   other-modules:
       Test.MatchLineSpec
+      Test.SubtitleAlignmentSpec
       Test.TestSpec
       Cut.Analyze
       Cut.CutVideo
