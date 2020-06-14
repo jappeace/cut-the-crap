@@ -31,8 +31,8 @@ import           Shelly                       hiding (FilePath)
 import           System.IO.Temp
 
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
-entryPoint = catch main
-  $ \exec -> liftIO (print (exceptionString, exec :: SomeException))
+entryPoint =
+  catch main $ \exec -> liftIO (print (exceptionString, exec :: SomeException))
 
 exceptionString :: String
 exceptionString = "Uncaught exception: "
@@ -97,7 +97,7 @@ extractMusicTrack :: Int -> FilePath -> FilePath -> Sh ()
 extractMusicTrack musicTrack inputFile tempDir = void $ ffmpeg inputFile args
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   args =
-    ["-map"
+    [ "-map"
     , "0:" <> Text.pack (show musicTrack)
     , Text.pack (tempDir <> "/" <> musicFile)
     ]
@@ -134,25 +134,24 @@ data SrtSentence = SrtSentence
   , _srt_position :: Int
   } deriving (Show, Eq, Generic)
 
-srt_from     :: Lens' SrtSentence DiffTime
+srt_from :: Lens' SrtSentence DiffTime
 srt_from = field @"_srt_from"
-srt_to       :: Lens' SrtSentence DiffTime
+srt_to :: Lens' SrtSentence DiffTime
 srt_to = field @"_srt_to"
-srt_words    :: Lens' SrtSentence Text
+srt_words :: Lens' SrtSentence Text
 srt_words = field @"_srt_words"
 srt_position :: Lens' SrtSentence Int
 srt_position = field @"_srt_position"
 
 makeSrt :: [WordFrame] -> Text.Text
 makeSrt frames = fold $ imap (fmap formatSrt . (toSrtSentence off)) frames
-  where
-    off = fromMaybe noOffset $ frames ^? ix 0 . frame_from
+  where off = fromMaybe noOffset $ frames ^? ix 0 . frame_from
 
 toSrtSentence :: FrameOffset -> Int -> WordFrame -> SrtSentence
 toSrtSentence firstOffset ix' frame = SrtSentence
-  { _srt_from = frame ^. frame_from . to (toDiffTime firstOffset )
-  , _srt_to = frame ^. frame_to . to (toDiffTime firstOffset )
-  , _srt_words = frame ^. frame_word
+  { _srt_from     = frame ^. frame_from . to (toDiffTime firstOffset)
+  , _srt_to       = frame ^. frame_to . to (toDiffTime firstOffset)
+  , _srt_words    = frame ^. frame_word
   , _srt_position = ix'
   }
 
@@ -164,12 +163,21 @@ toSrtSentence firstOffset ix' frame = SrtSentence
 -- [Subtitle text itself on one or more lines]
 -- [A blank line containing no text, indicating the end of this subtitle]
 formatSrt :: SrtSentence -> Text.Text
-formatSrt sentence = fold [
-  sentence ^. srt_position . to show . packed,
-  "\n",
-  Text.pack $ formatTime defaultTimeLocale "%0H:%0M:%0S,000" $ sentence ^. srt_from,
-  " --> ",
-  Text.pack $ formatTime defaultTimeLocale "%0H:%0M:%0S,000" $ sentence ^. srt_to,
-  "\n",
-  (sentence ^. srt_words),  "\n", "\n"]
+formatSrt sentence = fold
+  [ sentence ^. srt_position . to show . packed
+  , "\n"
+  , Text.pack
+  $  formatTime defaultTimeLocale "%0H:%0M:%0S,000"
+  $  sentence
+  ^. srt_from
+  , " --> "
+  , Text.pack
+  $  formatTime defaultTimeLocale "%0H:%0M:%0S,000"
+  $  sentence
+  ^. srt_to
+  , "\n"
+  , (sentence ^. srt_words)
+  , "\n"
+  , "\n"
+  ]
 
