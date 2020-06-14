@@ -141,7 +141,8 @@ parseRecord =
           )
     <*> optional
           (option auto (long "musicTrack" <> help "The track to integrate"))
-    <*> switch (long "cutNoise" <> help "Whether to cut noise instead of silence")
+    <*> switch
+          (long "cutNoise" <> help "Whether to cut noise instead of silence")
     <*> optional
           (option
             str
