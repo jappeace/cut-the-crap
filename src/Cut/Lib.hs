@@ -18,6 +18,7 @@ import           Cut.CutVideo
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Cut.SpeechRecognition
+import           Data.Foldable                (foldl')
 import           Data.Foldable                (fold)
 import           Data.Generics.Product.Fields
 import           Data.Maybe
@@ -127,28 +128,51 @@ mergeMusicAndVideo tempDir = void $ ffmpeg' args
     ]
 
 
-data SrtSentence = SrtSentence
+data SrtDisplay = SrtDisplay
   { _srt_from     :: DiffTime
   , _srt_to       :: DiffTime
   , _srt_words    :: Text
   , _srt_position :: Int
   } deriving (Show, Eq, Generic)
 
-srt_from :: Lens' SrtSentence DiffTime
+instance Semigroup SrtDisplay where
+  (<>) a b = SrtDisplay{
+    _srt_from = a ^. srt_from,
+    _srt_to = b ^. srt_to,
+    _srt_words = a ^. srt_words <> " " <> b ^. srt_words,
+    _srt_position = a ^. srt_position
+    }
+instance Monoid SrtDisplay where
+  mempty = SrtDisplay{
+    _srt_from = 0,
+    _srt_to = 0,
+    _srt_words = mempty,
+    _srt_position = 0
+    }
+
+srt_from :: Lens' SrtDisplay DiffTime
 srt_from = field @"_srt_from"
-srt_to :: Lens' SrtSentence DiffTime
+srt_to :: Lens' SrtDisplay DiffTime
 srt_to = field @"_srt_to"
-srt_words :: Lens' SrtSentence Text
+srt_words :: Lens' SrtDisplay Text
 srt_words = field @"_srt_words"
-srt_position :: Lens' SrtSentence Int
+srt_position :: Lens' SrtDisplay Int
 srt_position = field @"_srt_position"
 
 makeSrt :: [WordFrame] -> Text.Text
-makeSrt frames = fold $ imap (fmap formatSrt . (toSrtSentence off)) frames
+makeSrt frames = fold $ fmap (formatSrt . foldl' (<>) mempty) $ groupBySentence $ imap (toSrtDisplay off) frames
   where off = fromMaybe noOffset $ frames ^? ix 0 . frame_from
 
-toSrtSentence :: FrameOffset -> Int -> WordFrame -> SrtSentence
-toSrtSentence firstOffset ix' frame = SrtSentence
+groupBySentence :: [SrtDisplay] -> [[SrtDisplay]]
+groupBySentence = snd . foldl' innerFold ([], []) -- face
+
+innerFold :: ([SrtDisplay], [[SrtDisplay]]) -> SrtDisplay ->  ([SrtDisplay], [[SrtDisplay]])
+innerFold (prev, res) x = if x ^. srt_words == "<sil>" then ([], prev : res) else
+  (x : prev, res)
+
+
+toSrtDisplay :: FrameOffset -> Int -> WordFrame -> SrtDisplay
+toSrtDisplay firstOffset ix' frame = SrtDisplay
   { _srt_from     = frame ^. frame_from . to (toDiffTime firstOffset)
   , _srt_to       = frame ^. frame_to . to (toDiffTime firstOffset)
   , _srt_words    = frame ^. frame_word
@@ -162,7 +186,7 @@ toSrtSentence firstOffset ix' frame = SrtSentence
 -- [The time that the subtitle should appear on the screen] --–> [d the time it should disappear]
 -- [Subtitle text itself on one or more lines]
 -- [A blank line containing no text, indicating the end of this subtitle]
-formatSrt :: SrtSentence -> Text.Text
+formatSrt :: SrtDisplay -> Text.Text
 formatSrt sentence = fold
   [ sentence ^. srt_position . to show . packed
   , "\n"

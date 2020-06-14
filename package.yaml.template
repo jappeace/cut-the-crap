@@ -93,6 +93,7 @@ tests:
     dependencies:
     - hspec
     - hspec-core
+    - quickcheck
 
 c-sources: includes/speech_recognition.c
 include-dirs: includes
