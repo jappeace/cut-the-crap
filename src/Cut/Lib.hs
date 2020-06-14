@@ -31,11 +31,7 @@ import           Text.Regex.TDFA         hiding ( empty
                                                 )
 
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
-entryPoint = catch main
-  $ \exec -> liftIO (print ("Uncaught exception: ", exec :: SomeException))
-
-main :: (MonadMask m, MonadUnliftIO m) => m ()
-main = do
+entryPoint = do
   options <- liftIO readSettings
   liftIO $ putStr "started with options: "
   liftIO $ print options
@@ -66,7 +62,7 @@ combineDir options tempDir = do
 
 readSettings :: IO Options
 readSettings = customExecParser (prefs showHelpOnError) $ info
-  parseRecord
+  (parseRecord <**> helper)
   (fullDesc <> Options.Applicative.header "Cut the crap" <> progDesc
     "Automated video extracting, can cut out silences"
   )
