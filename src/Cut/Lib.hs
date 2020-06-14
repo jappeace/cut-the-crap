@@ -42,11 +42,14 @@ main = do
 
   parsed <- detect options
   case parsed of
-    [] -> liftIO $ putStr "\n\nNo silence in input video detected. There is nothing to be cut so exiting.\n\n"
+    [] ->
+      liftIO
+        $ putStr
+            "\n\nNo silence in input video detected. There is nothing to be cut so exiting.\n\n"
     _ -> case options ^. work_dir of
-          Nothing ->
-            withTempDirectory "/tmp" "streamedit" $ liftIO . runEdit options parsed
-          Just x -> liftIO $ runEdit options parsed x
+      Nothing ->
+        withTempDirectory "/tmp" "streamedit" $ liftIO . runEdit options parsed
+      Just x -> liftIO $ runEdit options parsed x
 
 runEdit :: Options -> [Interval Sound] -> FilePath -> IO ()
 runEdit options parsed tempDir = do
