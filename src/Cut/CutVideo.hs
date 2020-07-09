@@ -21,6 +21,7 @@ import           Data.Text                      ( Text )
 import qualified Data.Text                     as Text
 import           Data.Text.Lens
 import           Shelly                  hiding ( FilePath )
+import           Text.Printf                    ( printf )
 
 specifyTracks :: Options -> [Text]
 specifyTracks options =
@@ -49,7 +50,7 @@ toArgs options tmp inter =
  where
   start    = floatToText $ interval_start inter
   duration = floatToText $ interval_duration inter
-  fname    = Text.pack $ show $ truncate $ interval_start inter * 100
+  fname    = Text.pack $ printf "%010d" (truncate $ interval_start inter * 100 :: Integer)
 
 extract :: Options -> FilePath -> [Interval Sound] -> IO ()
 extract options tempDir intervals = do
