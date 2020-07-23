@@ -58,7 +58,7 @@ clean: clean-work-dir
 
 .PHONY: test run_
 
-sdist:
+sdist: hpack
 	make run-in-shell RUN="cabal sdist"
 
 brittany_:
