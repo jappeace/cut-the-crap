@@ -2,9 +2,11 @@
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -w #-}
 
-module Cut.Lib
+module Cut.Crap
   ( entryPoint
   , combineDir
+  , runCrap
+  , runEdit
   )
 where
 
@@ -17,26 +19,28 @@ import           Cut.Analyze
 import           Cut.CutVideo
 import           Cut.Ffmpeg
 import           Cut.Options
-import           Cut.SplitVideo
 import           Data.Bifunctor
 import           Data.Either
-import qualified Data.Text                     as Text
-import qualified Data.Text.IO                  as Text
+import qualified Data.Text               as Text
+import qualified Data.Text.IO            as Text
 import           Data.Text.Lens
 import           Options.Applicative
-import           Shelly                  hiding ( FilePath )
+import           Shelly                  hiding (FilePath)
 import           System.IO.Temp
-import           Text.Regex.TDFA         hiding ( empty
-                                                , extract
-                                                )
+import           Text.Regex.TDFA         hiding (empty, extract)
 
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
-entryPoint = do
-  options <- liftIO readSettings
+entryPoint = runCrap =<< liftIO readSettings
+
+runCrap :: (MonadMask m, MonadUnliftIO m) => Options -> m ()
+runCrap options = do
   liftIO $ putStr "started with options: "
   liftIO $ print options
 
+  -- first figure out what's up in the vid
   parsed <- detect options
+
+  -- then do stuff to it
   case parsed of
     [] ->
       liftIO
@@ -55,7 +59,7 @@ runEdit options parsed tempDir = do
 
 combineDir :: Options -> FilePath -> Sh ()
 combineDir options tempDir = do
-  res <- lsT $ fromText $ Text.pack tempDir
+  res <- lsT $ fromText $ Text.pack (tempDir <> extractDir)
   let paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
   writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths
   combine tempDir

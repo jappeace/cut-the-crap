@@ -16,14 +16,11 @@ module Cut.Options
   , cut_noise
   , work_dir
   , simpleOptions
+  , getOutFileName
   )
 where
 
-import           Control.Lens                   ( (#)
-                                                , Lens'
-                                                , _Just
-                                                , non
-                                                )
+import           Control.Lens                 (Lens', non, view, ( # ), _Just)
 import           Data.Generics.Product.Fields
 import           GHC.Generics
 import           Options.Applicative
@@ -41,17 +38,20 @@ simpleOptions = Options { inFile         = "in.mkv"
                         , workDir        = Nothing
                         }
 
+getOutFileName :: Options -> FilePath
+getOutFileName = reverse . takeWhile ((/=) '/') . reverse . view out_file
+
 data Options = Options
-  { inFile :: FilePath
-  , outFile :: FilePath
-  , segmentSize :: Maybe Int
+  { inFile         :: FilePath
+  , outFile        :: FilePath
+  , segmentSize    :: Maybe Int
   , silentTreshold :: Maybe Double
   , silentDuration :: Maybe Double
-  , detectMargin :: Maybe Double
-  , voiceTrack :: Maybe Int
-  , musicTrack :: Maybe Int
-  , cutNoise :: Bool
-  , workDir :: Maybe FilePath
+  , detectMargin   :: Maybe Double
+  , voiceTrack     :: Maybe Int
+  , musicTrack     :: Maybe Int
+  , cutNoise       :: Bool
+  , workDir        :: Maybe FilePath
   } deriving (Show, Generic)
 
 in_file :: Lens' Options FilePath

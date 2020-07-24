@@ -1,6 +1,6 @@
 module Main where
 
-import qualified Cut.Lib                       as Lib
+import qualified Cut.Crap as Lib
 
 main :: IO ()
 main = Lib.entryPoint
