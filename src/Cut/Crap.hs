@@ -2,6 +2,7 @@
 {-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -w #-}
 
+-- | This is where it all started
 module Cut.Crap
   ( entryPoint
   , combineDir
@@ -29,9 +30,11 @@ import           Shelly                  hiding (FilePath)
 import           System.IO.Temp
 import           Text.Regex.TDFA         hiding (empty, extract)
 
+-- | `runCrap` by reading settings from CLI
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
 entryPoint = runCrap =<< liftIO readSettings
 
+-- | Runs cut-the-crap with provided `Options`
 runCrap :: (MonadMask m, MonadUnliftIO m) => Options -> m ()
 runCrap options = do
   liftIO $ putStr "started with options: "
@@ -51,6 +54,8 @@ runCrap options = do
         withTempDirectory "/tmp" "streamedit" $ liftIO . runEdit options parsed
       Just x -> liftIO $ runEdit options parsed x
 
+-- | Run editing on video from options with preprovided detections
+--   normally aquired throug `detect`
 runEdit :: Options -> [Interval Sound] -> FilePath -> IO ()
 runEdit options parsed tempDir = do
   extract options tempDir parsed
