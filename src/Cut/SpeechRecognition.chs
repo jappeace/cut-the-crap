@@ -21,10 +21,8 @@ import Data.Time
 import           GHC.Generics
 import Data.Text(Text)
 import qualified Data.Text as Text
-import Control.Monad (liftM, when)
 import Foreign
 import Foreign.C
-import System.IO.Unsafe (unsafePerformIO)
 import Control.Lens
 import           Data.Generics.Product.Fields
 

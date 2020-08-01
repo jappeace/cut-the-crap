@@ -31,7 +31,6 @@ update-cabal:
 	cat package.yaml.template | sed s,REPLACED_MODEL,"$(MODEL)",g > package.yaml
 	hpack --force ./
 	rm package.yaml
-	cabal2nix . > dependencies.nix
 
 enter:
 	nix-shell --cores 0 -j 8 --pure
