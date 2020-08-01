@@ -33,7 +33,6 @@ import           GHC.Generics                 hiding (to)
 import           Options.Applicative
 import           Shelly                       hiding (FilePath)
 import           System.IO.Temp
-import           Text.Regex.TDFA              hiding (empty, extract)
 
 -- | `runCrap` by reading settings from CLI
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
@@ -46,7 +45,7 @@ runCrap options = do
   liftIO $ print options
 
   -- first figure out what's up in the vid
-  parsed <- detect options
+  parsed <- detectSoundInterval options
 
   -- then do stuff to it
   case parsed of
@@ -68,7 +67,7 @@ runEdit options parsed tempDir = do
   getMusic options tempDir
 
 combineDir :: Options -> FilePath -> Sh ()
-combineDir options tempDir = do
+combineDir _ tempDir = do
   res <- lsT $ fromText $ Text.pack (tempDir <> extractDir)
   let paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
   writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths

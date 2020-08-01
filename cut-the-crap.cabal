@@ -1,13 +1,13 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.1.
+-- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f24854d4c8fa021dd02b4247a702ee1fa38c5ee9c1b164a5ae0f18a66257649f
+-- hash: 81213021c86848175941e7f40ab1ee7fc9310bffc642ad3a10c268ecdbf49690
 
 name:           cut-the-crap
-version:        1.1.0
+version:        1.3.0
 synopsis:       Cuts out uninteresting parts of videos by detecting silences.
 description:    Cut the crap is an automatic video editing program for streamers. It can cut out uninteresting parts by detecting silences. This was inspired by [jumpcutter](https://github.com/carykh/jumpcutter), where this program can get better quality results by using an (optional) dedicated microphone track. This prevents cutting of [quieter consonants](https://youtu.be/DQ8orIurGxw?t=675) for example. Using ffmpeg more efficiently also produces faster results and is less error prone.
 category:       video
@@ -36,7 +36,7 @@ library
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/qzkx381b0abr65lvlf5r661nlwclbxcs-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/ljgpkp7a6b1jnixz4d68xx96kdh31pxb-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -67,7 +67,7 @@ executable cut-the-crap
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
-  cc-options: -DMODELDIR="/nix/store/qzkx381b0abr65lvlf5r661nlwclbxcs-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/ljgpkp7a6b1jnixz4d68xx96kdh31pxb-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -111,7 +111,7 @@ test-suite unit
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/qzkx381b0abr65lvlf5r661nlwclbxcs-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/ljgpkp7a6b1jnixz4d68xx96kdh31pxb-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:

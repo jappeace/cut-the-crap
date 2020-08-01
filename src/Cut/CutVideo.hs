@@ -24,14 +24,6 @@ import           Data.Text.Lens
 import           Shelly              hiding (FilePath)
 import           Text.Printf         (printf)
 
-specifyTracks :: Options -> [Text]
-specifyTracks options =
-  [ "-map"
-  , "0:0"
-  , "-map"  -- then copy only the voice track
-  , "0:" <> options ^. voice_track . to show . packed
-  ]
-
 toArgs :: Options -> FilePath -> Interval Sound -> (Interval Sound, [Text])
 toArgs options tmp inter =
   ( inter
