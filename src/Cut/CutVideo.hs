@@ -24,11 +24,11 @@ import           Data.Text.Lens
 import           Shelly              hiding (FilePath)
 import           Text.Printf         (printf)
 
-toArgs :: Options -> FilePath -> Interval Sound -> (Interval Sound, [Text])
+toArgs :: ListenCutOptions -> FilePath -> Interval Sound -> (Interval Sound, [Text])
 toArgs options tmp inter =
   ( inter
   , -- keep ter interval for debugging
-    ["-y", "-ss", start, "-t", duration, "-i", options ^. in_file . packed]
+    ["-y", "-ss", start, "-t", duration, "-i", options ^. lc_fileio . in_file . packed]
     <> specifyTracks options
     <> [ Text.pack tmp
          <> "/"
@@ -46,7 +46,7 @@ toArgs options tmp inter =
 extractDir :: FilePath
 extractDir = "/extract"
 
-extract :: Options -> FilePath -> [Interval Sound] -> IO ()
+extract :: ListenCutOptions -> FilePath -> [Interval Sound] -> IO ()
 extract options tempDir intervals = do
   shelly $ mkdir_p exdir
   traverse_

@@ -39,7 +39,7 @@ data Interval e = Interval
   , interval_input_end   :: Text
   } deriving Show
 
-detectSoundInterval :: (MonadMask m, MonadUnliftIO m) => Options -> m [Interval Sound]
+detectSoundInterval :: (MonadMask m, MonadUnliftIO m) => ListenCutOptions -> m [Interval Sound]
 detectSoundInterval opts = do
   lines'' <- shelly $ detectShell opts
   let linesRes = do
@@ -92,16 +92,16 @@ zipped []                 = mempty
 zipped [_               ] = []
 zipped (one : two : rem') = (one, two) : zipped rem'
 
-detectSilence :: Options -> [Interval Silent] -> [Interval Sound]
+detectSilence :: ListenCutOptions -> [Interval Silent] -> [Interval Sound]
 detectSilence _ = coerce
 
-detectSound :: Options -> [Interval Silent] -> [Interval Sound]
+detectSound :: ListenCutOptions -> [Interval Silent] -> [Interval Sound]
 detectSound opts =
   --  -- TODO figure out why these durations get recorded as < 0
   reverse . snd . foldl' (flip (compare' opts)) (Interval 0 0 0 "" "", [])
 
 compare'
-  :: Options
+  :: ListenCutOptions
   -> Interval Silent
   -> (Interval Silent, [Interval Sound])
   -> (Interval Silent, [Interval Sound])
@@ -123,8 +123,8 @@ compare' opts current prev = (current, soundedInterval : snd prev)
   margin     = opts ^. detect_margin
 
 
-detectShell :: Options -> Sh [Text]
-detectShell opt' = ffmpeg (opt' ^. in_file . packed)
+detectShell :: ListenCutOptions -> Sh [Text]
+detectShell opt' = ffmpeg (opt' ^. lc_fileio . in_file . packed)
   ["-map"
   , voice_track_map opt'
   , "-filter:a"
@@ -179,7 +179,7 @@ getEnd line = read $ match2 ^. _3
 
 
 -- | Detect the speech on the mkv file
-detectSpeech :: Options -> Prelude.FilePath -> Prelude.FilePath -> Sh (Either ResultCode [WordFrame])
+detectSpeech :: ListenCutOptions -> Prelude.FilePath -> Prelude.FilePath -> Sh (Either ResultCode [WordFrame])
 detectSpeech options tempdir inputFile = do
   void $ ffmpeg inputFile $ (specifyTracks options) <> [
       Text.pack tmpMp3File

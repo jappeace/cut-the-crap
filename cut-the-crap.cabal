@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 81213021c86848175941e7f40ab1ee7fc9310bffc642ad3a10c268ecdbf49690
+-- hash: c383ec6c8197cf9eefdc35179daa8a65280918c5d535cab3d0bf398926c3e91d
 
 name:           cut-the-crap
 version:        1.3.0
@@ -29,7 +29,6 @@ library
       Cut.Ffmpeg
       Cut.Options
       Cut.SpeechRecognition
-      Cut.SplitVideo
   other-modules:
       Paths_cut_the_crap
   hs-source-dirs:
@@ -104,7 +103,6 @@ test-suite unit
       Cut.Ffmpeg
       Cut.Options
       Cut.SpeechRecognition
-      Cut.SplitVideo
       Paths_cut_the_crap
   hs-source-dirs:
       test

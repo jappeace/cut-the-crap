@@ -6,7 +6,7 @@ module Cut.Crap
   ( entryPoint
   , combineDir
   , makeSrt
-  , runCrap
+  , runListenCut
   , runEdit
   )
 where
@@ -21,12 +21,12 @@ import           Cut.CutVideo
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Cut.SpeechRecognition
-import           Data.Foldable                (foldl')
-import           Data.Foldable                (fold)
+import           Data.Foldable                (fold, foldl', traverse_)
 import           Data.Generics.Product.Fields
 import           Data.Maybe
 import           Data.Text                    (Text)
 import qualified Data.Text                    as Text
+import qualified Data.Text.IO                 as T
 import           Data.Text.Lens
 import           Data.Time
 import           GHC.Generics                 hiding (to)
@@ -34,13 +34,24 @@ import           Options.Applicative
 import           Shelly                       hiding (FilePath)
 import           System.IO.Temp
 
--- | `runCrap` by reading settings from CLI
+-- | reads settings from terminal and runs whatever command was
+--   given in program options
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
-entryPoint = runCrap =<< liftIO readSettings
+entryPoint = do
+  result <- liftIO readSettings
+  -- I'm mr meeseeks look at me!
+  sequence_ $ result ^? listen_cut_prism . to runListenCut
+          <|> result ^? gnerate_sub_prism . to runGenSubs
 
--- | Runs cut-the-crap with provided `Options`
-runCrap :: (MonadMask m, MonadUnliftIO m) => Options -> m ()
-runCrap options = do
+runGenSubs :: MonadIO m => FileIO -> m ()
+runGenSubs options = liftIO $ withTempDir options $ \tmp -> do
+    result <- shelly $ detectSpeech (set voice_track 1 simpleOptions) tmp $ options ^. in_file
+    print result
+    traverse_ (T.writeFile (options ^. out_file) . makeSrt) result
+
+-- | Runs cut-the-crap with provided `ListenCutOptions`
+runListenCut :: (MonadMask m, MonadUnliftIO m) => ListenCutOptions -> m ()
+runListenCut options = do
   liftIO $ putStr "started with options: "
   liftIO $ print options
 
@@ -53,30 +64,31 @@ runCrap options = do
       liftIO
         $ putStr
             "\n\nNo silence in input video detected. There is nothing to be cut so exiting.\n\n"
-    _ -> case options ^. work_dir of
-      Nothing ->
-        withTempDirectory "/tmp" "streamedit" $ liftIO . runEdit options parsed
-      Just x -> liftIO $ runEdit options parsed x
+    _ -> liftIO $ withTempDir (options ^. lc_fileio) $ runEdit options parsed
+
+withTempDir :: FileIO -> (FilePath -> IO ()) -> IO ()
+withTempDir filioOpts fun =
+  maybe (withTempDirectory "/tmp" "streamedit" fun) fun $ filioOpts ^. work_dir
 
 -- | Run editing on video from options with preprovided detections
 --   normally aquired throug `detect`
-runEdit :: Options -> [Interval Sound] -> FilePath -> IO ()
+runEdit :: ListenCutOptions -> [Interval Sound] -> FilePath -> IO ()
 runEdit options parsed tempDir = do
   extract options tempDir parsed
   shelly $ combineDir options tempDir
   getMusic options tempDir
 
-combineDir :: Options -> FilePath -> Sh ()
+combineDir :: ListenCutOptions -> FilePath -> Sh ()
 combineDir _ tempDir = do
   res <- lsT $ fromText $ Text.pack (tempDir <> extractDir)
   let paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
   writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths
   combine tempDir
 
-readSettings :: IO Options
+readSettings :: IO ProgramOptions
 readSettings = customExecParser (prefs showHelpOnError) $ info
-  (parseRecord <**> helper)
-  (fullDesc <> Options.Applicative.header "Cut the crap" <> progDesc
+  (parseProgram <**> helper)
+  (fullDesc <> header "Cut the crap" <> progDesc
     "Automated video extracting, can cut out silences"
   )
 
@@ -86,16 +98,16 @@ musicFile = "music.mp3"
 withMusicFile :: FilePath
 withMusicFile = "combined.mkv"
 
-getMusic :: Options -> FilePath -> IO ()
+getMusic :: ListenCutOptions -> FilePath -> IO ()
 getMusic opt' tempDir = do
   res <- case opt' ^. music_track of
     Nothing -> pure $ Text.pack combinedFile
     Just x  -> do
-      shelly $ extractMusicTrack x (opt' ^. in_file) tempDir
+      shelly $ extractMusicTrack x (opt' ^. lc_fileio . in_file) tempDir
       shelly $ mergeMusicAndVideo tempDir
       pure $ Text.pack (tempDir <> "/" <> withMusicFile)
   putStrLn "done get music"
-  shelly $ cp (fromText res) (opt' ^. out_file . packed . to fromText)
+  shelly $ cp (fromText res) (opt' ^. lc_fileio . out_file . packed . to fromText)
   pure ()
   where combinedFile = tempDir <> "/" <> combineOutput
 
