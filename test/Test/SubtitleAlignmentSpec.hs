@@ -31,11 +31,11 @@ import           Test.Hspec
 spec :: Spec
 spec = do
   describe "Emperical Speech recognition aligment for love2d vid" $ do
-    it "should have the first word on"
+    xit "should have the first word on"
       $ toDiffTime (toFrameOffset 18827) (toFrameOffset 18887)
       `shouldBe` 6
   describe "Emperical Speech recognition aligment for intro vid" $ do
-    it "should be just this"
+    xit "should be just this"
       $ toDiffTime (toFrameOffset 11645) (toFrameOffset 11852)
       `shouldBe` 3
 

@@ -3,7 +3,7 @@
 
 detect_result* detect_words(char* filepath){
     printf("\n\n\nusing from c %s, \n", filepath);
-    printf("size of: (worduh framuh %i), (word_frame* %i), (int %i), (detect_results %i), (detected_words %i), (result_code %i)",
+    printf("size of: (worduh framuh %lu), (word_frame* %lu), (int %lu), (detect_results %lu), (detected_words %lu), (result_code %lu)",
            sizeof(word_frame),
            sizeof(word_frame*),
            sizeof(int),
