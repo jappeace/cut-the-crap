@@ -1,10 +1,13 @@
 {-# LANGUAGE DataKinds     #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Cut.Lib
+-- | This is where it all started
+module Cut.Crap
   ( entryPoint
   , combineDir
   , makeSrt
+  , runCrap
+  , runEdit
   )
 where
 
@@ -30,21 +33,22 @@ import           GHC.Generics                 hiding (to)
 import           Options.Applicative
 import           Shelly                       hiding (FilePath)
 import           System.IO.Temp
+import           Text.Regex.TDFA              hiding (empty, extract)
 
+-- | `runCrap` by reading settings from CLI
 entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
-entryPoint =
-  catch main $ \exec -> liftIO (print (exceptionString, exec :: SomeException))
+entryPoint = runCrap =<< liftIO readSettings
 
-exceptionString :: String
-exceptionString = "Uncaught exception: "
-
-main :: (MonadMask m, MonadUnliftIO m) => m ()
-main = do
-  options <- liftIO readSettings
+-- | Runs cut-the-crap with provided `Options`
+runCrap :: (MonadMask m, MonadUnliftIO m) => Options -> m ()
+runCrap options = do
   liftIO $ putStr "started with options: "
   liftIO $ print options
 
-  parsed <- detectSoundInterval options
+  -- first figure out what's up in the vid
+  parsed <- detect options
+
+  -- then do stuff to it
   case parsed of
     [] ->
       liftIO
@@ -55,6 +59,8 @@ main = do
         withTempDirectory "/tmp" "streamedit" $ liftIO . runEdit options parsed
       Just x -> liftIO $ runEdit options parsed x
 
+-- | Run editing on video from options with preprovided detections
+--   normally aquired throug `detect`
 runEdit :: Options -> [Interval Sound] -> FilePath -> IO ()
 runEdit options parsed tempDir = do
   extract options tempDir parsed
@@ -62,15 +68,15 @@ runEdit options parsed tempDir = do
   getMusic options tempDir
 
 combineDir :: Options -> FilePath -> Sh ()
-combineDir _ tempDir = do
-  res <- lsT $ fromText $ Text.pack tempDir
+combineDir options tempDir = do
+  res <- lsT $ fromText $ Text.pack (tempDir <> extractDir)
   let paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
   writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths
   combine tempDir
 
 readSettings :: IO Options
 readSettings = customExecParser (prefs showHelpOnError) $ info
-  parseRecord
+  (parseRecord <**> helper)
   (fullDesc <> Options.Applicative.header "Cut the crap" <> progDesc
     "Automated video extracting, can cut out silences"
   )
@@ -204,4 +210,3 @@ formatSrt sentence = fold
   , "\n"
   , "\n"
   ]
-

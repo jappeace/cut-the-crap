@@ -18,6 +18,7 @@ import           Control.Monad.IO.Unlift
 import           Cut.Ffmpeg
 import           Cut.Options
 import           Cut.SpeechRecognition
+import           Data.Coerce
 import           Data.Foldable
 import           Data.Maybe
 import           Data.Text               (Text)
@@ -57,7 +58,8 @@ detectSoundInterval opts = do
 
   let linedUp        = zipped lines'
       parsed         = parse <$> linedUp
-      fancyResult    = detectSound opts parsed
+      detector       = if opts ^. cut_noise then detectSilence else detectSound
+      fancyResult    = detector opts parsed
       negativeResult = find ((0 >) . interval_duration) fancyResult
 
   liftIO $ putStrLn "-----------------------------------------"
@@ -89,6 +91,9 @@ zipped :: [Text] -> [(Text, Text)]
 zipped []                 = mempty
 zipped [_               ] = []
 zipped (one : two : rem') = (one, two) : zipped rem'
+
+detectSilence :: Options -> [Interval Silent] -> [Interval Sound]
+detectSilence _ = coerce
 
 detectSound :: Options -> [Interval Silent] -> [Interval Sound]
 detectSound opts =

@@ -7,6 +7,7 @@ module Cut.CutVideo
   , Sound
   , combine
   , combineOutput
+  , extractDir
   )
 where
 
@@ -21,6 +22,15 @@ import           Data.Text           (Text)
 import qualified Data.Text           as Text
 import           Data.Text.Lens
 import           Shelly              hiding (FilePath)
+import           Text.Printf         (printf)
+
+specifyTracks :: Options -> [Text]
+specifyTracks options =
+  [ "-map"
+  , "0:0"
+  , "-map"  -- then copy only the voice track
+  , "0:" <> options ^. voice_track . to show . packed
+  ]
 
 toArgs :: Options -> FilePath -> Interval Sound -> (Interval Sound, [Text])
 toArgs options tmp inter =
@@ -30,9 +40,7 @@ toArgs options tmp inter =
     <> specifyTracks options
     <> [ Text.pack tmp
          <> "/"
-         <> options
-         ^. out_file
-         .  packed
+         <> Text.pack (getOutFileName options)
          <> "-"
          <> fname
          <> ".mkv"
@@ -41,10 +49,14 @@ toArgs options tmp inter =
  where
   start    = floatToText $ interval_start inter
   duration = floatToText $ interval_duration inter
-  fname    = Text.pack $ show $ truncate $ interval_start inter * 100
+  fname    = Text.pack $ printf "%010d" (truncate $ interval_start inter * 100 :: Integer)
+
+extractDir :: FilePath
+extractDir = "/extract"
 
 extract :: Options -> FilePath -> [Interval Sound] -> IO ()
 extract options tempDir intervals = do
+  shelly $ mkdir_p exdir
   traverse_
       (\(inter, args) -> void $ catch (shelly $ ffmpeg' args) $ \exec -> do
         liftIO
@@ -52,9 +64,11 @@ extract options tempDir intervals = do
           )
         pure ["expection"]
       )
-    $   toArgs options tempDir
-    <$> intervals
+    $   toArgs options exdir <$> intervals
   liftIO $ putStrLn "finish extracting"
+
+  where
+    exdir = tempDir <> extractDir
 
 combineOutput :: FilePath
 combineOutput = "combined-output.mkv"

@@ -7,6 +7,11 @@ build_:
 haddock:
 	nix-shell --run "cabal new-haddock all"
 
+haddock-hackage:
+	cabal new-haddock all --haddock-for-hackage --haddock-option=--hyperlinked-source
+	echo "the hackage ui doesn't accept the default format, use command instead"
+	cabal upload -d --publish ./dist-newstyle/*-docs.tar.gz
+
 hpack:
 	nix-shell ./hpack-shell.nix --run "make update-cabal"
 

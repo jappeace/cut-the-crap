@@ -14,10 +14,12 @@ module Cut.Options
   , voice_track
   , music_track
   , silent_duration
+  , cut_noise
   , work_dir
   , simpleOptions
   , voice_track_map
   , specifyTracks
+  , getOutFileName
   )
 where
 
@@ -38,8 +40,12 @@ simpleOptions = Options { inFile         = "in.mkv"
                         , voiceTrack     = _Just # 2
                         , musicTrack     = Nothing
                         , silentDuration = _Just # def_duration
+                        , cutNoise       = def_cut_noise
                         , workDir        = Nothing
                         }
+
+getOutFileName :: Options -> FilePath
+getOutFileName = reverse . takeWhile ((/=) '/') . reverse . view out_file
 
 data Options = Options
   { inFile         :: FilePath
@@ -50,6 +56,7 @@ data Options = Options
   , detectMargin   :: Maybe Double
   , voiceTrack     :: Maybe Int
   , musicTrack     :: Maybe Int
+  , cutNoise       :: Bool
   , workDir        :: Maybe FilePath
   } deriving (Show, Generic)
 
@@ -65,8 +72,12 @@ def_seg_size = 20
 def_margin :: Double
 def_margin = 0.05
 
+def_cut_noise :: Bool
+def_cut_noise = False
+
 def_silent :: Double
 def_silent = 0.0001
+
 
 def_duration :: Double
 def_duration = 0.25
@@ -91,6 +102,9 @@ voice_track = field @"voiceTrack" . non def_voice
 
 music_track :: Lens' Options (Maybe Int)
 music_track = field @"musicTrack"
+
+cut_noise :: Lens' Options Bool
+cut_noise = field @"cutNoise"
 
 work_dir :: Lens' Options (Maybe FilePath)
 work_dir = field @"workDir"
@@ -145,6 +159,8 @@ parseRecord =
           )
     <*> optional
           (option auto (long "musicTrack" <> help "The track to integrate"))
+    <*> switch
+          (long "cutNoise" <> help "Whether to cut noise instead of silence")
     <*> optional
           (option
             str

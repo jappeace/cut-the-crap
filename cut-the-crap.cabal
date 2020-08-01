@@ -24,9 +24,9 @@ extra-source-files:
 library
   exposed-modules:
       Cut.Analyze
+      Cut.Crap
       Cut.CutVideo
       Cut.Ffmpeg
-      Cut.Lib
       Cut.Options
       Cut.SpeechRecognition
       Cut.SplitVideo
@@ -99,9 +99,9 @@ test-suite unit
       Test.SubtitleAlignmentSpec
       Test.TestSpec
       Cut.Analyze
+      Cut.Crap
       Cut.CutVideo
       Cut.Ffmpeg
-      Cut.Lib
       Cut.Options
       Cut.SpeechRecognition
       Cut.SplitVideo
