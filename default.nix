@@ -1,4 +1,4 @@
-{ pkgs ? import ./pin.nix, ... }:
+{ pkgs ? import ./nix/pin.nix, ... }:
 
 let
   ignore = import ./nix/gitignoreSource.nix { inherit (pkgs) lib; };

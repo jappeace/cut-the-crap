@@ -13,7 +13,7 @@ haddock-hackage:
 	cabal upload -d --publish ./dist-newstyle/*-docs.tar.gz
 
 hpack:
-	nix-shell ./hpack-shell.nix --run "make update-cabal"
+	nix-shell ./nix/hpack-shell.nix --run "make update-cabal"
 
 ghcid: clean hpack etags
 	nix-shell --run "make ghcid_"
@@ -69,7 +69,7 @@ brittany_:
 	$(shell set -x; for i in `fd hs`; do hlint --refactor --refactor-options=-i $$i; brittany --write-mode=inplace $$i; done)
 
 brittany:
-	nix-shell ./travis-shell.nix --run "make brittany_"
+	nix-shell ./nix/travis-shell.nix --run "make brittany_"
 
 ubuntu-release:
 	docker build -t ubuntu-release scripts
