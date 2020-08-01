@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 08b09429fe51925e641cb423204fc08004d168fc0e79a7dbc750ea69c9e350d4
+-- hash: 049daf60575f804858c61c7086f734c94914339b6e267e91c9eab7ea26f0dc6d
 
 name:           cut-the-crap
-version:        1.3.0
+version:        1.4.0
 synopsis:       Cuts out uninteresting parts of videos by detecting silences.
 description:    Cut the crap is an automatic video editing program for streamers. It can cut out uninteresting parts by detecting silences. This was inspired by [jumpcutter](https://github.com/carykh/jumpcutter), where this program can get better quality results by using an (optional) dedicated microphone track. This prevents cutting of [quieter consonants](https://youtu.be/DQ8orIurGxw?t=675) for example. Using ffmpeg more efficiently also produces faster results and is less error prone.
 category:       video
@@ -28,12 +28,21 @@ library
       Cut.CutVideo
       Cut.Ffmpeg
       Cut.Options
+      Cut.SpeechRecognition
   other-modules:
       Paths_cut_the_crap
   hs-source-dirs:
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
+  cc-options: -DMODELDIR="/nix/store/ljgpkp7a6b1jnixz4d68xx96kdh31pxb-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  include-dirs:
+      includes
+  c-sources:
+      includes/speech_recognition.c
+  pkgconfig-depends:
+      pocketsphinx
+    , sphinxbase
   build-depends:
       base >=4.7 && <5
     , exceptions
@@ -45,6 +54,7 @@ library
     , system-filepath
     , temporary
     , text
+    , time
     , unliftio-core
   default-language: Haskell2010
 
@@ -56,6 +66,14 @@ executable cut-the-crap
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
+  cc-options: -DMODELDIR="/nix/store/ljgpkp7a6b1jnixz4d68xx96kdh31pxb-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  include-dirs:
+      includes
+  c-sources:
+      includes/speech_recognition.c
+  pkgconfig-depends:
+      pocketsphinx
+    , sphinxbase
   build-depends:
       base >=4.7 && <5
     , cut-the-crap
@@ -68,6 +86,7 @@ executable cut-the-crap
     , system-filepath
     , temporary
     , text
+    , time
     , unliftio-core
   default-language: Haskell2010
 
@@ -76,30 +95,43 @@ test-suite unit
   main-is: Spec.hs
   other-modules:
       Test.MatchLineSpec
+      Test.SubtitleAlignmentSpec
       Test.TestSpec
       Cut.Analyze
       Cut.Crap
       Cut.CutVideo
       Cut.Ffmpeg
       Cut.Options
+      Cut.SpeechRecognition
       Paths_cut_the_crap
   hs-source-dirs:
       test
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
+  cc-options: -DMODELDIR="/nix/store/ljgpkp7a6b1jnixz4d68xx96kdh31pxb-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  include-dirs:
+      includes
+  c-sources:
+      includes/speech_recognition.c
+  pkgconfig-depends:
+      pocketsphinx
+    , sphinxbase
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
     , exceptions
     , generic-lens
     , hspec
     , hspec-core
     , lens
     , optparse-applicative
+    , quickcheck-classes
     , regex-tdfa
     , shelly
     , system-filepath
     , temporary
     , text
+    , time
     , unliftio-core
   default-language: Haskell2010

@@ -6,5 +6,6 @@ pkgs.mkShell{
     buildInputs = [
         pkgs.cabal2nix 
         pkgs.haskellPackages.hpack
+        pkgs.haskellPackages.c2hs
     ];
 }

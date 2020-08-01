@@ -1,5 +1,5 @@
 name:                cut-the-crap
-version:             1.3.0
+version:             1.4.0
 license:             MIT
 category:            video
 synopsis:            Cuts out uninteresting parts of videos by detecting silences. 
@@ -67,6 +67,7 @@ dependencies:
 - temporary
 - regex-tdfa
 - system-filepath
+- time
 
 library:
   source-dirs: src
@@ -92,3 +93,12 @@ tests:
     dependencies:
     - hspec
     - hspec-core
+    - QuickCheck
+    - quickcheck-classes
+
+c-sources: includes/speech_recognition.c
+include-dirs: includes
+cc-options: -DMODELDIR="REPLACED_MODEL" 
+pkg-config-dependencies: 
+  - pocketsphinx
+  - sphinxbase

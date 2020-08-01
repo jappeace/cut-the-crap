@@ -1,5 +1,5 @@
-let 
-pinnedPkgs = 
+let
+pinnedPkgs =
     (builtins.fetchGit {
     # Descriptive name to make the store path easier to identify
     name = "nixos-pin-24.07.20202";

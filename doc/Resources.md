@@ -65,6 +65,9 @@ The models are pre-trained.
 
 https://cmusphinx.github.io/wiki/tutorialpocketsphinx/#decoding-a-file-stream
 
+### Audio format
+If you want to create your own version of it: it needs to be a single-channel (monaural), little-endian, unheadered 16-bit signed PCM audio file sampled at 16000 Hz.
+
 ### Models
 https://sourceforge.net/projects/cmusphinx/files/Acoustic%20and%20Language%20Models/
 

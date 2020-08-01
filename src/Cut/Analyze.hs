@@ -1,5 +1,5 @@
 module Cut.Analyze
-  ( detect
+  ( detectSoundInterval
   , Interval(..)
   , Sound
   , Silent
@@ -7,6 +7,7 @@ module Cut.Analyze
   , getEnd
   , getDuration
   , takeOnlyLines
+  , detectSpeech
   )
 where
 
@@ -16,15 +17,16 @@ import           Control.Monad.Catch
 import           Control.Monad.IO.Unlift
 import           Cut.Ffmpeg
 import           Cut.Options
+import           Cut.SpeechRecognition
+import           Data.Coerce
 import           Data.Foldable
 import           Data.Maybe
-import           Data.Coerce
-import           Data.Text                      ( Text )
-import qualified Data.Text                     as Text
-import qualified Data.Text.IO                  as Text
+import           Data.Text               (Text)
+import qualified Data.Text               as Text
+import qualified Data.Text.IO            as Text
 import           Data.Text.Lens
-import           Shelly                  hiding ( find )
-import           Text.Regex.TDFA         hiding ( empty )
+import           Shelly                  hiding (find)
+import           Text.Regex.TDFA         hiding (empty)
 
 data Silent
 data Sound
@@ -37,8 +39,8 @@ data Interval e = Interval
   , interval_input_end   :: Text
   } deriving Show
 
-detect :: (MonadMask m, MonadUnliftIO m) => Options -> m [Interval Sound]
-detect opts = do
+detectSoundInterval :: (MonadMask m, MonadUnliftIO m) => ListenCutOptions -> m [Interval Sound]
+detectSoundInterval opts = do
   lines'' <- shelly $ detectShell opts
   let linesRes = do
         line <- lines''
@@ -90,16 +92,16 @@ zipped []                 = mempty
 zipped [_               ] = []
 zipped (one : two : rem') = (one, two) : zipped rem'
 
-detectSilence :: Options -> [Interval Silent] -> [Interval Sound]
+detectSilence :: ListenCutOptions -> [Interval Silent] -> [Interval Sound]
 detectSilence _ = coerce
 
-detectSound :: Options -> [Interval Silent] -> [Interval Sound]
+detectSound :: ListenCutOptions -> [Interval Silent] -> [Interval Sound]
 detectSound opts =
   --  -- TODO figure out why these durations get recorded as < 0
   reverse . snd . foldl' (flip (compare' opts)) (Interval 0 0 0 "" "", [])
 
 compare'
-  :: Options
+  :: ListenCutOptions
   -> Interval Silent
   -> (Interval Silent, [Interval Sound])
   -> (Interval Silent, [Interval Sound])
@@ -121,12 +123,10 @@ compare' opts current prev = (current, soundedInterval : snd prev)
   margin     = opts ^. detect_margin
 
 
-detectShell :: Options -> Sh [Text]
-detectShell opt' = ffmpeg
-  [ "-i"
-  , opt' ^. in_file . packed
-  , "-map"
-  , "0:" <> opt' ^. voice_track . to show . packed
+detectShell :: ListenCutOptions -> Sh [Text]
+detectShell opt' = ffmpeg (opt' ^. lc_fileio . in_file . packed)
+  ["-map"
+  , voice_track_map opt'
   , "-filter:a"
                  -- , "silencedetect=noise=-30dB:d=0.5"
   , "silencedetect=noise="
@@ -176,3 +176,18 @@ getEnd line = read $ match2 ^. _3
   match1 = str =~ pipe
   match2 :: (String, String, String)
   match2 = (match1 ^. _1) =~ startMatch
+
+
+-- | Detect the speech on the mkv file
+detectSpeech :: ListenCutOptions -> Prelude.FilePath -> Prelude.FilePath -> Sh (Either ResultCode [WordFrame])
+detectSpeech options tempdir inputFile = do
+  void $ ffmpeg inputFile $ (specifyTracks options) <> [
+      Text.pack tmpMp3File
+    ]
+  void $ ffmpeg tmpMp3File [
+    "-f", "s16le", "-acodec", "pcm_s16le", "-filter:a", "aresample=resampler=soxr:osr=16000", "-ac", "1", Text.pack tmpRawFile
+    ]
+  liftIO $ speechAnalyses tmpRawFile
+  where
+    tmpMp3File = tempdir <> "/" <> "speechdetect.mp3"
+    tmpRawFile = tempdir <> "/" <> "speechdetect.raw"

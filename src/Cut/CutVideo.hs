@@ -24,19 +24,11 @@ import           Data.Text.Lens
 import           Shelly              hiding (FilePath)
 import           Text.Printf         (printf)
 
-specifyTracks :: Options -> [Text]
-specifyTracks options =
-  [ "-map"
-  , "0:0"
-  , "-map"  -- then copy only the voice track
-  , "0:" <> options ^. voice_track . to show . packed
-  ]
-
-toArgs :: Options -> FilePath -> Interval Sound -> (Interval Sound, [Text])
+toArgs :: ListenCutOptions -> FilePath -> Interval Sound -> (Interval Sound, [Text])
 toArgs options tmp inter =
   ( inter
   , -- keep ter interval for debugging
-    ["-y", "-ss", start, "-t", duration, "-i", options ^. in_file . packed]
+    ["-y", "-ss", start, "-t", duration, "-i", options ^. lc_fileio . in_file . packed]
     <> specifyTracks options
     <> [ Text.pack tmp
          <> "/"
@@ -54,11 +46,11 @@ toArgs options tmp inter =
 extractDir :: FilePath
 extractDir = "/extract"
 
-extract :: Options -> FilePath -> [Interval Sound] -> IO ()
+extract :: ListenCutOptions -> FilePath -> [Interval Sound] -> IO ()
 extract options tempDir intervals = do
   shelly $ mkdir_p exdir
   traverse_
-      (\(inter, args) -> void $ catch (shelly $ ffmpeg args) $ \exec -> do
+      (\(inter, args) -> void $ catch (shelly $ ffmpeg' args) $ \exec -> do
         liftIO
           (print ("expection during edit: ", exec :: SomeException, args, inter)
           )
@@ -75,7 +67,7 @@ combineOutput = "combined-output.mkv"
 
 combine :: FilePath -> Sh ()
 combine tempDir = do
-  output' <- ffmpeg args
+  output' <- ffmpeg' args
   liftIO $ print ("output", output')
  where -- https://stackoverflow.com/questions/7333232/how-to-concatenate-two-mp4-files-using-ffmpeg
   args =

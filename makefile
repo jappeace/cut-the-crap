@@ -1,6 +1,8 @@
 OPTIMIZATION=-O0
 build: 
-	nix-shell --run "cabal new-build all -j --ghc-options $(OPTIMIZATION)"
+	nix-shell --run "make build_"
+build_: 
+	cabal new-build all -j --ghc-options $(OPTIMIZATION)
 
 haddock:
 	nix-shell --run "cabal new-haddock all"
@@ -14,7 +16,10 @@ hpack:
 	nix-shell ./hpack-shell.nix --run "make update-cabal"
 
 ghcid: clean hpack etags
-	nix-shell --run "ghcid -s \"import Main\" -c \"cabal new-repl\" -T \"main\" test:unit"
+	nix-shell --run "make ghcid_"
+
+ghcid_:
+	ghcid -s "import Main" -c "cabal new-repl" -T "main" test:unit
 
 ghci:
 	nix-shell --run "cabal new-repl test:unit"
@@ -23,7 +28,9 @@ etags:
 	nix-shell --run "hasktags  -e ./src"
 
 update-cabal:
+	cat package.yaml.template | sed s,REPLACED_MODEL,"$(MODEL)",g > package.yaml
 	hpack --force ./
+	rm package.yaml
 	cabal2nix . > dependencies.nix
 
 enter:
@@ -65,7 +72,15 @@ brittany_:
 brittany:
 	nix-shell ./travis-shell.nix --run "make brittany_"
 
-
 ubuntu-release:
 	docker build -t ubuntu-release scripts
 	docker run -v ~/projects/cut-the-crap:/home/jappie -t ubuntu-release
+
+MODEL=$(shell nix-shell --run "pkg-config --variable=modeldir pocketsphinx")
+sphinx:
+	gcc -o run-sphinx.bin main.c includes/speech_recognition.c \
+            -Iincludes \
+	    -DMODELDIR="\"$(MODEL)\"" \
+	    $(shell pkg-config --cflags --libs pocketsphinx sphinxbase)
+
+.PHONY: sphinx
