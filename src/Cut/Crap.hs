@@ -8,6 +8,7 @@ module Cut.Crap
   , makeSrt
   , runListenCut
   , runEdit
+  , runGenSubs
   )
 where
 
