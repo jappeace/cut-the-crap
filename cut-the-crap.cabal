@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a0c6ac1fd99eb8e19baba9636314c467414eefef1802afae2e4a74767b3b63a7
+-- hash: 460c4ab2daa37b762effdcec95bf2957aa7f9a24e28ad1a544215ac47db9da3a
 
 name:           cut-the-crap
 version:        1.4.1
@@ -20,6 +20,7 @@ build-type:     Simple
 extra-source-files:
     Readme.md
     LICENSE
+    Changelog.md
 
 library
   exposed-modules:

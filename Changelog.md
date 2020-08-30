@@ -6,6 +6,16 @@
 - Add seperate CI target
 - Change overlay to be a copy of nixpkgs
 
+### Known issues
+
+It's unlikely the subtitle generation
+will be able to find the model dir:
+
+https://github.com/jappeace/cut-the-crap/issues/45
+
+But this release at least fixes building,
+so that editing works again.
+
 ## Version 1.4.0 - 2020.08.01
 - Add prototype buggy subtitle generation feature
 
