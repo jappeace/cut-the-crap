@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 049daf60575f804858c61c7086f734c94914339b6e267e91c9eab7ea26f0dc6d
+-- hash: a0c6ac1fd99eb8e19baba9636314c467414eefef1802afae2e4a74767b3b63a7
 
 name:           cut-the-crap
-version:        1.4.0
+version:        1.4.1
 synopsis:       Cuts out uninteresting parts of videos by detecting silences.
 description:    Cut the crap is an automatic video editing program for streamers. It can cut out uninteresting parts by detecting silences. This was inspired by [jumpcutter](https://github.com/carykh/jumpcutter), where this program can get better quality results by using an (optional) dedicated microphone track. This prevents cutting of [quieter consonants](https://youtu.be/DQ8orIurGxw?t=675) for example. Using ffmpeg more efficiently also produces faster results and is less error prone.
 category:       video
@@ -35,11 +35,12 @@ library
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/ljgpkp7a6b1jnixz4d68xx96kdh31pxb-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/zr5cjjdqvv1vwixb0k5gg455n99cfhl8-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
       includes/speech_recognition.c
+      includes/speech_recognition.h
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
@@ -66,11 +67,12 @@ executable cut-the-crap
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
-  cc-options: -DMODELDIR="/nix/store/ljgpkp7a6b1jnixz4d68xx96kdh31pxb-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/zr5cjjdqvv1vwixb0k5gg455n99cfhl8-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
       includes/speech_recognition.c
+      includes/speech_recognition.h
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
@@ -109,11 +111,12 @@ test-suite unit
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/ljgpkp7a6b1jnixz4d68xx96kdh31pxb-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/zr5cjjdqvv1vwixb0k5gg455n99cfhl8-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
       includes/speech_recognition.c
+      includes/speech_recognition.h
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase

@@ -1,4 +1,4 @@
-{ pkgs ? import ./pin.nix }:
+{ pkgs ? import ./pin.nix {}}:
 
 # Tools we need for testing if the source code is sane.
 # Not neccisarly needed for the project

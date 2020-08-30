@@ -1,13 +1,6 @@
-let
-pinnedPkgs =
-    (builtins.fetchGit {
+import (builtins.fetchGit {
     # Descriptive name to make the store path easier to identify
-    name = "nixos-pin-24.07.20202";
+    name = "nixos-pin-30.08.2020";
     url = https://github.com/nixos/nixpkgs/;
-    rev = "dbacb52ad85216c25567978f7f968c8856b5e686";
-    }) ;
-in
-import pinnedPkgs {
-    # since I also use this for clients I don't want to have to care
-    config.allowUnfree = true; # took me too long to figure out
-}
+    rev = "b317137894f6569fe3d5285fcede2f654021114e";
+    })

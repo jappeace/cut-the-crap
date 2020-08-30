@@ -2,7 +2,7 @@
 language: nix
 script:
   - cat /etc/nix/nix.conf # had some issues with this, kindoff important so always cat this is good
-  - nix-build
+  - nix-build nix/ci.nix
   - echo "Wait 4 cachix"
   - sleep 10
   - echo "Done, eat pi"

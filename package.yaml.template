@@ -1,5 +1,5 @@
 name:                cut-the-crap
-version:             1.4.0
+version:             1.4.1
 license:             MIT
 category:            video
 synopsis:            Cuts out uninteresting parts of videos by detecting silences. 
@@ -96,7 +96,9 @@ tests:
     - QuickCheck
     - quickcheck-classes
 
-c-sources: includes/speech_recognition.c
+c-sources:
+    - includes/speech_recognition.c
+    - includes/speech_recognition.h
 include-dirs: includes
 cc-options: -DMODELDIR="REPLACED_MODEL" 
 pkg-config-dependencies: 
