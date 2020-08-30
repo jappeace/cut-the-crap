@@ -1,0 +1,21 @@
+# Change log for cut-the-crap
+
+## Version 1.4.1 - 2020.08.01
+- Add changelog
+- Try fix nixpkgs and hackage build.
+- Add seperate CI target
+- Change overlay to be a copy of nixpkgs
+
+## Version 1.4.0 - 2020.08.01
+- Add prototype buggy subtitle generation feature
+
+## Version 1.3.0 - 2020.07.24
+- Fix more bugs.
+- Remove redundant code
+
+## Version 1.2.0 - 2020.07.23
+- Fix bugs.
+- Better UX
+
+## Version 1.0.0 - 2019.12.23 
+- Initial release.
