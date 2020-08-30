@@ -5,5 +5,5 @@ let
 in
   import (builtins.fetchTarball {
     url = "https://github.com/${owner}/${repo}/archive/${rev}.tar.gz";
-    sha256 = "sha256:0fc5bgv9syfcblp23y05kkfnpgh3gssz6vn24frs8dzw39algk2z";
+    sha256 = "sha256:1npnx0h6bd0d7ql93ka7azhj40zgjp815fw2r6smg8ch9p7mzdlx";
   })
