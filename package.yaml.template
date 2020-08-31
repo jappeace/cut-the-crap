@@ -1,5 +1,5 @@
 name:                cut-the-crap
-version:             1.4.1
+version:             1.4.2
 license:             MIT
 category:            video
 synopsis:            Cuts out uninteresting parts of videos by detecting silences. 
@@ -105,3 +105,5 @@ cc-options: -DMODELDIR="REPLACED_MODEL"
 pkg-config-dependencies: 
   - pocketsphinx
   - sphinxbase
+
+build-tools: c2hs

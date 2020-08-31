@@ -1,6 +1,9 @@
 # Change log for cut-the-crap
 
-## Version 1.4.1 - 2020.08.01
+## Version 1.4.2 - 2020.08.31
+- add c2hs to build tools so we don't need to modify nixpkgs
+
+## Version 1.4.1 - 2020.08.30
 - Add changelog
 - Try fix nixpkgs and hackage build.
 - Add seperate CI target
