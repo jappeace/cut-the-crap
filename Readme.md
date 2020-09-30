@@ -34,7 +34,7 @@ which will not be chopped up.
 Install the [nix package](https://nixos.org/download.html) manager.
 
 ```shell
-git clone git@github.com:jappeace/cut-the-crap.git
+git clone https://github.com/jappeace/cut-the-crap
 cd cut-the-crap
 nix-build .
 result/bin/cut-the-crap
