@@ -37,11 +37,11 @@ import           System.IO.Temp
 
 -- | reads settings from terminal and runs whatever command was
 --   given in program options
-entryPoint :: (MonadMask m, MonadUnliftIO m) => m ()
+entryPoint :: MonadMask m => MonadUnliftIO m => m ()
 entryPoint = do
   result <- liftIO readSettings
   -- I'm mr meeseeks look at me!
-  sequence_ $ result ^? listen_cut_prism . to runListenCut
+  sequence_ $ result ^? listen_cut_prism . to (void . runListenCut)
           <|> result ^? gnerate_sub_prism . to runGenSubs
 
 runGenSubs :: MonadIO m => FileIO -> m ()
@@ -51,7 +51,7 @@ runGenSubs options = liftIO $ withTempDir options $ \tmp -> do
     traverse_ (T.writeFile (options ^. out_file) . makeSrt) result
 
 -- | Runs cut-the-crap with provided `ListenCutOptions`
-runListenCut :: (MonadMask m, MonadUnliftIO m) => ListenCutOptions -> m ()
+runListenCut :: MonadMask m => MonadUnliftIO m => ListenCutOptions -> m [Interval Sound]
 runListenCut options = do
   liftIO $ putStr "started with options: "
   liftIO $ print options
@@ -60,7 +60,7 @@ runListenCut options = do
   parsed <- detectSoundInterval options
 
   -- then do stuff to it
-  case parsed of
+  parsed <$ case parsed of
     [] ->
       liftIO
         $ putStr
