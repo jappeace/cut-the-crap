@@ -14,6 +14,7 @@ let
         pkgs.pkg-config
         pkgs.cabal2nix 
         pkgs.haskellPackages.hpack
+        pkgs.haskellPackages.c2hs
         ];
     });
 in 
