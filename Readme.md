@@ -30,9 +30,15 @@ which will not be chopped up.
 
 # Install
 
+## From source
+
++ git clone git@github.com:jappeace/cut-the-crap.git
++ cd cut-the-crap
++ nix-build .
++ `result/bin/cut-the-crap`
+
 ## Nix/Nixos
-+ Apply [overlay](https://nixos.wiki/wiki/Overlays) found [here](https://github.com/jappeace/cut-the-crap/tree/master/overlay).
-+ Run `nix-env -iA cut-the-crap` or add to systemPackages.
++ Run `nix-env -iA nixos.haskellPackages.cut-the-crap` or add to systemPackages.
 + simply run `cut-the-crap` to display usage instructions.
 
 ## Ubuntu
