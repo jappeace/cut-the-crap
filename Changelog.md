@@ -1,5 +1,10 @@
 # Change log for cut-the-crap
 
+## Version 1.4.3 - tba
+
+- Better install instructions
+- `defaut.nix` in project root now links to ffmpeg
+
 ## Version 1.4.2 - 2020.08.31
 - add c2hs to build tools so we don't need to modify nixpkgs
 
