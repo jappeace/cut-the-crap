@@ -41,8 +41,12 @@ result/bin/cut-the-crap
 ```
 
 ## Nix/Nixos
+
 + Run `nix-env -iA nixos.haskellPackages.cut-the-crap` or add to systemPackages.
 + simply run `cut-the-crap` to display usage instructions.
+
+This only works for nixpkgs that have cut-the-crap >= 1.4.2 or =< 1.3
+There were some build issues with 1.4.0 and 1.4.1 (now fixed)
 
 ## Ubuntu
 Download the .deb file from the [release page](https://github.com/jappeace/cut-the-crap/releases).
