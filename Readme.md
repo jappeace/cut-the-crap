@@ -31,11 +31,14 @@ which will not be chopped up.
 # Install
 
 ## From source
+Install the [nix package](https://nixos.org/download.html) manager.
 
-+ git clone git@github.com:jappeace/cut-the-crap.git
-+ cd cut-the-crap
-+ nix-build .
-+ `result/bin/cut-the-crap`
+```shell
+git clone git@github.com:jappeace/cut-the-crap.git
+cd cut-the-crap
+nix-build .
+result/bin/cut-the-crap
+```
 
 ## Nix/Nixos
 + Run `nix-env -iA nixos.haskellPackages.cut-the-crap` or add to systemPackages.
