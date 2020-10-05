@@ -51,6 +51,7 @@ detectSoundInterval opts = do
   liftIO $ putStrLn "-----------------actual lines-----------------"
   liftIO $ putStrLn "-----------------------------------------"
   liftIO $ Text.putStrLn $ Text.unlines lines'
+
   liftIO $ putStrLn "-----------------------------------------"
   liftIO $ putStrLn "-----------------filtered lines-----------------"
   liftIO $ putStrLn "-----------------------------------------"

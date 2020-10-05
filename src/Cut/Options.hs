@@ -24,23 +24,26 @@ module Cut.Options
   , getOutFileName
   , gnerate_sub_prism
   , listen_cut_prism
+  , input_src_remote
+  , input_src_local_file
   )
 where
 
-import           Control.Lens
+import           Control.Lens hiding (argument)
 import           Data.Generics.Product.Fields
 import           Data.Generics.Sum
 import qualified Data.Text                    as Text
 import           Data.Text.Lens
 import           GHC.Generics                 hiding (to)
 import           Options.Applicative
+import Network.URI
 
 simpleFileIO :: FileIO
-simpleFileIO = FileIO  { fi_inFile         = "in.mkv"                      , fi_outFile        = "out.mkv"
+simpleFileIO = FileIO  { fi_inFile         = LocalFile "in.mkv"                      , fi_outFile        = "out.mkv"
                        , fi_workDir        = Nothing
                         }
 
-in_file :: Lens' FileIO FilePath
+in_file :: Traversal' FileIO InputSource
 in_file = field @"fi_inFile"
 
 out_file :: Lens' FileIO FilePath
@@ -65,8 +68,8 @@ getOutFileName :: ListenCutOptions -> FilePath
 getOutFileName = reverse . takeWhile ('/' /=) . reverse . view (lc_fileio . out_file)
 
 -- | Deals with having an input file and a target output file
-data FileIO = FileIO
-              { fi_inFile  :: FilePath
+data FileIO a = FileIO
+              { fi_inFile  :: a
               , fi_outFile :: FilePath
               , fi_workDir :: Maybe FilePath -- ^ for consistency (or debugging) we may want to specify this.
               }
@@ -74,7 +77,7 @@ data FileIO = FileIO
 
 -- | Cut out by listening to sound options
 data ListenCutOptions = ListenCutOptions
-                { lc_fileIO         :: FileIO
+                { lc_fileIO         :: FileIO InputSource
                 , lc_segmentSize    :: Maybe Int
                 , lc_silentTreshold :: Maybe Double
                 , lc_silentDuration :: Maybe Double
@@ -86,7 +89,7 @@ data ListenCutOptions = ListenCutOptions
   deriving (Show, Generic)
 
 data ProgramOptions = ListenCut ListenCutOptions
-                    | GenerateSubtitles FileIO
+                    | GenerateSubtitles (FileIO InputSource)
   deriving (Show, Generic)
 
 listen_cut_prism :: Prism' ProgramOptions ListenCutOptions
@@ -148,10 +151,26 @@ specifyTracks options =
   , voice_track_map options
   ]
 
+data InputSource = LocalFile FilePath
+                 | Remote URI
+                 deriving (Show, Generic)
+
+input_src_local_file :: Prism' InputSource FilePath
+input_src_local_file = _Ctor @"LocalFile"
+
+input_src_remote :: Prism' InputSource URI
+input_src_remote = _Ctor @"Remote"
+
+readFileSource :: ReadM InputSource
+readFileSource = eitherReader $
+  \x ->
+    maybe (Left "unlikely error") Right $
+    (Remote <$> parseURI x) <|> Just (LocalFile x)
+
 parseFile :: Parser FileIO
 parseFile = FileIO
-    <$> option str (long "inFile" <> help "The input video")
-    <*> option str (long "outFile" <> help "The output name without format")
+    <$> argument readFileSource (metavar "INPUT" <> help "The input video, either a file or a uri")
+    <*> argument str (metavar "OUTPUT_FILE" <> help "The output name without format")
     <*> optional
           (option
             str

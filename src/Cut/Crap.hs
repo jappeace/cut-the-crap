@@ -35,11 +35,20 @@ import           Options.Applicative
 import           Shelly                       hiding (FilePath)
 import           System.IO.Temp
 
+runYoutubeDL :: URI -> IO FilePath
+runYoutubeDL x = pure ()
+
+downloadIfNeccisary :: FileIO InputSource -> IO (FileIO FilePath)
+downloadIfNeccisary x = do
+  x ^? input_src_remote . to runYoutubeDL
+  pure x
+
 -- | reads settings from terminal and runs whatever command was
 --   given in program options
 entryPoint :: MonadMask m => MonadUnliftIO m => m ()
 entryPoint = do
   result <- liftIO readSettings
+  betterRresult <- doDownloadIfNeccisary result
   -- I'm mr meeseeks look at me!
   sequence_ $ result ^? listen_cut_prism . to (void . runListenCut)
           <|> result ^? gnerate_sub_prism . to runGenSubs

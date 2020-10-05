@@ -5,7 +5,7 @@ let
   # https://github.com/NixOS/nixpkgs/blob/dbacb52ad8/pkgs/development/haskell-modules/make-package-set.nix#L216
 
   cut-the-crap = pkgs.haskellPackages.callCabal2nix "cut-the-crap" (ignore.gitignoreSource ./.) {};
-  path = pkgs.stdenv.lib.makeBinPath [ pkgs.ffmpeg ];
+  path = pkgs.stdenv.lib.makeBinPath [ pkgs.ffmpeg pkgs.youtube-dl ];
   hlib = pkgs.haskell.lib;
 in
 # https://github.com/NixOS/nixpkgs/blob/dbacb52ad8/pkgs/development/haskell-modules/generic-builder.nix#L13
