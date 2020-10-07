@@ -15,7 +15,7 @@ import           Control.Lens
 import           Control.Monad
 import           Control.Monad.Catch
 import           Control.Monad.IO.Unlift
-import           Cut.Ffmpeg
+import           Cut.Shell
 import           Cut.Options
 import           Cut.SpeechRecognition
 import           Data.Coerce

@@ -15,7 +15,7 @@ import           Control.Lens
 import           Control.Monad
 import           Control.Monad.Catch
 import           Cut.Analyze
-import           Cut.Ffmpeg
+import           Cut.Shell
 import           Cut.Options
 import           Data.Foldable
 import           Data.Text           (Text)

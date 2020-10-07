@@ -10,7 +10,7 @@ module Cut.Options
   , specifyTracks
   , getOutFileName
   -- * Program options
-  , ProgramOptions
+  , ProgramOptions(..)
   , gnerate_sub_prism
   , listen_cut_prism
   -- * fileio, deal with input output files
@@ -84,7 +84,7 @@ data FileIO a = FileIO
               , fi_outFile :: FilePath
               , fi_workDir :: Maybe FilePath -- ^ for consistency (or debugging) we may want to specify this.
               }
-  deriving (Show, Generic, Functor, Applicative)
+  deriving (Show, Generic)
 
 type ListenCutOptions = ListenCutOptionsT FilePath
 
@@ -99,26 +99,17 @@ data ListenCutOptionsT a = ListenCutOptions
                 , lc_musicTrack     :: Maybe Int
                 , lc_cutNoise       :: Bool
                 }
-  deriving (Show, Generic, Functor, Applicative)
+  deriving (Show, Generic)
 
 data ProgramOptions a = ListenCut (ListenCutOptionsT a)
                     | GenerateSubtitles (FileIO a)
-  deriving (Show, Generic, Functor, Applicative)
+  deriving (Show, Generic)
 
--- type Prism s t a b = forall p f. (Choice p, Applicative f) => p a (f b) -> p s (f t)
--- prism :: (b -> t) -> (s -> Either t a) -> Prism s t a b
-listen_cut_prism :: Prism (ProgramOptions a) (ProgramOptions b) (ListenCutOptionsT a) (ListenCutOptionsT b)
-listen_cut_prism = prism ListenCut (\case
-  GenerateSubtitles b -> Left $ GenerateSubtitles b
-  ListenCut x -> Right x
-  )
+listen_cut_prism :: Prism' (ProgramOptions a) (ListenCutOptionsT a)
+listen_cut_prism = _Ctor @"ListenCut"
 
-gnerate_sub_prism :: Prism (ProgramOptions a)  (ProgramOptions b) (FileIO a) (FileIO b)
-gnerate_sub_prism =
-  prism GenerateSubtitles (\case
-    ListenCut b -> Left $ ListenCut b
-    GenerateSubtitles x -> Right x
-  )
+gnerate_sub_prism :: Prism' (ProgramOptions a) (FileIO a)
+gnerate_sub_prism = _Ctor @"GenerateSubtitles"
 
 def_seg_size :: Int
 def_seg_size = 20
@@ -138,7 +129,7 @@ def_duration = 0.25
 def_voice :: Int
 def_voice = 1
 
-lc_fileio :: Lens' (ListenCutOptionsT a) (FileIO a)
+lc_fileio :: Lens (ListenCutOptionsT a) (ListenCutOptionsT b) (FileIO a) (FileIO b)
 lc_fileio = field @"lc_fileIO"
 
 seg_size :: Lens' (ListenCutOptionsT a) Int
