@@ -34,26 +34,44 @@ import           GHC.Generics                 hiding (to)
 import           Options.Applicative
 import           Shelly                       hiding (FilePath)
 import           System.IO.Temp
+import Network.URI(URI)
 
 runYoutubeDL :: URI -> IO FilePath
-runYoutubeDL x = pure ()
+runYoutubeDL x = pure []
 
+-- TODO
 downloadIfNeccisary :: FileIO InputSource -> IO (FileIO FilePath)
 downloadIfNeccisary x = do
-  x ^? input_src_remote . to runYoutubeDL
-  pure x
+  result <- sequence $ fmap sequence $ runYoutube
+                    <|> alreadyLocal
+  case sequence result of
+    Nothing -> error $ "Couldn't find " <> show x
+    Just x -> pure x
+  where
+    runYoutube :: FileIO (Maybe (IO FilePath))
+    runYoutube = in_file %~ (fmap runYoutubeDL . preview input_src_remote) $ x
+
+    alreadyLocal :: FileIO (Maybe (IO FilePath))
+    alreadyLocal = pure $ preview (in_file . input_src_local_file . to pure) x
 
 -- | reads settings from terminal and runs whatever command was
 --   given in program options
 entryPoint :: MonadMask m => MonadUnliftIO m => m ()
 entryPoint = do
   result <- liftIO readSettings
-  betterRresult <- doDownloadIfNeccisary result
-  -- I'm mr meeseeks look at me!
-  sequence_ $ result ^? listen_cut_prism . to (void . runListenCut)
-          <|> result ^? gnerate_sub_prism . to runGenSubs
+  let
+    ddd :: ProgramOptions InputSource -> ProgramOptions (IO FilePath)
+    ddd = ((foldr failing ignored
+            [ gnerate_sub_prism
+            , listen_cut_prism . lc_fileio
+            ]) %~ downloadIfNeccisary)
 
-runGenSubs :: MonadIO m => FileIO -> m ()
+  -- I'm mr meeseeks look at me!
+  -- sequence_ $ betterResult ^? listen_cut_prism . to (void . runListenCut)
+  --         <|> betterResult ^? gnerate_sub_prism . to runGenSubs
+  pure ()
+
+runGenSubs :: MonadIO m => FileIO FilePath -> m ()
 runGenSubs options = liftIO $ withTempDir options $ \tmp -> do
     result <- shelly $ detectSpeech (set voice_track 1 simpleOptions) tmp $ options ^. in_file
     print result
@@ -76,7 +94,7 @@ runListenCut options = do
             "\n\nNo silence in input video detected. There is nothing to be cut so exiting.\n\n"
     _ -> liftIO $ withTempDir (options ^. lc_fileio) $ runEdit options parsed
 
-withTempDir :: FileIO -> (FilePath -> IO ()) -> IO ()
+withTempDir :: FileIO FilePath -> (FilePath -> IO ()) -> IO ()
 withTempDir filioOpts fun =
   maybe (withTempDirectory "/tmp" "streamedit" fun) fun $ filioOpts ^. work_dir
 
@@ -95,7 +113,7 @@ combineDir _ tempDir = do
   writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths
   combine tempDir
 
-readSettings :: IO ProgramOptions
+readSettings :: IO (ProgramOptions InputSource)
 readSettings = customExecParser (prefs showHelpOnError) $ info
   (parseProgram <**> helper)
   (fullDesc <> header "Cut the crap" <> progDesc

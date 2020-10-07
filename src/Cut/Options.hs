@@ -1,15 +1,27 @@
 {-# LANGUAGE DataKinds        #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators    #-}
+{-# LANGUAGE DeriveAnyClass #-}
 
+-- | This module defines which options exists, and provides
+--   functions for parsing cli options.
 module Cut.Options
-  ( ProgramOptions
+  ( parseProgram
+  , specifyTracks
+  , getOutFileName
+  -- * Program options
+  , ProgramOptions
+  , gnerate_sub_prism
+  , listen_cut_prism
+  -- * fileio, deal with input output files
   , FileIO
-  , ListenCutOptions
-  , parseProgram
   , lc_fileio
   , in_file
   , out_file
+  , work_dir
+  -- * listen cut, options for video editing by audio
+  , ListenCutOptionsT
+  , ListenCutOptions
   , seg_size
   , silent_treshold
   , detect_margin
@@ -17,15 +29,13 @@ module Cut.Options
   , music_track
   , silent_duration
   , cut_noise
-  , work_dir
-  , simpleOptions
   , voice_track_map
-  , specifyTracks
-  , getOutFileName
-  , gnerate_sub_prism
-  , listen_cut_prism
+  -- * input source prisms
+  , InputSource
   , input_src_remote
   , input_src_local_file
+  -- * defaults
+  , simpleOptions
   )
 where
 
@@ -38,21 +48,22 @@ import           GHC.Generics                 hiding (to)
 import           Options.Applicative
 import Network.URI
 
-simpleFileIO :: FileIO
+simpleFileIO :: (FileIO InputSource)
 simpleFileIO = FileIO  { fi_inFile         = LocalFile "in.mkv"                      , fi_outFile        = "out.mkv"
                        , fi_workDir        = Nothing
                         }
 
-in_file :: Traversal' FileIO InputSource
+-- type Lens s t a b = forall f. Functor f => (a -> f b) -> s -> f t
+in_file :: Lens (FileIO a) (FileIO b) a b
 in_file = field @"fi_inFile"
 
-out_file :: Lens' FileIO FilePath
+out_file :: Lens' (FileIO a) FilePath
 out_file = field @"fi_outFile"
 
-work_dir :: Lens' FileIO (Maybe FilePath)
+work_dir :: Lens' (FileIO a) (Maybe FilePath)
 work_dir = field @"fi_workDir"
 
-simpleOptions :: ListenCutOptions
+simpleOptions :: ListenCutOptionsT InputSource
 simpleOptions = ListenCutOptions
                         { lc_fileIO = simpleFileIO
                         , lc_segmentSize    = _Just # def_seg_size
@@ -64,7 +75,7 @@ simpleOptions = ListenCutOptions
                         , lc_cutNoise       = def_cut_noise
                         }
 
-getOutFileName :: ListenCutOptions -> FilePath
+getOutFileName :: ListenCutOptionsT a -> FilePath
 getOutFileName = reverse . takeWhile ('/' /=) . reverse . view (lc_fileio . out_file)
 
 -- | Deals with having an input file and a target output file
@@ -73,11 +84,13 @@ data FileIO a = FileIO
               , fi_outFile :: FilePath
               , fi_workDir :: Maybe FilePath -- ^ for consistency (or debugging) we may want to specify this.
               }
-  deriving (Show, Generic)
+  deriving (Show, Generic, Functor, Applicative)
+
+type ListenCutOptions = ListenCutOptionsT FilePath
 
 -- | Cut out by listening to sound options
-data ListenCutOptions = ListenCutOptions
-                { lc_fileIO         :: FileIO InputSource
+data ListenCutOptionsT a = ListenCutOptions
+                { lc_fileIO         :: FileIO a
                 , lc_segmentSize    :: Maybe Int
                 , lc_silentTreshold :: Maybe Double
                 , lc_silentDuration :: Maybe Double
@@ -86,17 +99,26 @@ data ListenCutOptions = ListenCutOptions
                 , lc_musicTrack     :: Maybe Int
                 , lc_cutNoise       :: Bool
                 }
-  deriving (Show, Generic)
+  deriving (Show, Generic, Functor, Applicative)
 
-data ProgramOptions = ListenCut ListenCutOptions
-                    | GenerateSubtitles (FileIO InputSource)
-  deriving (Show, Generic)
+data ProgramOptions a = ListenCut (ListenCutOptionsT a)
+                    | GenerateSubtitles (FileIO a)
+  deriving (Show, Generic, Functor, Applicative)
 
-listen_cut_prism :: Prism' ProgramOptions ListenCutOptions
-listen_cut_prism = _Ctor @"ListenCut"
+-- type Prism s t a b = forall p f. (Choice p, Applicative f) => p a (f b) -> p s (f t)
+-- prism :: (b -> t) -> (s -> Either t a) -> Prism s t a b
+listen_cut_prism :: Prism (ProgramOptions a) (ProgramOptions b) (ListenCutOptionsT a) (ListenCutOptionsT b)
+listen_cut_prism = prism ListenCut (\case
+  GenerateSubtitles b -> Left $ GenerateSubtitles b
+  ListenCut x -> Right x
+  )
 
-gnerate_sub_prism :: Prism' ProgramOptions FileIO
-gnerate_sub_prism = _Ctor @"GenerateSubtitles"
+gnerate_sub_prism :: Prism (ProgramOptions a)  (ProgramOptions b) (FileIO a) (FileIO b)
+gnerate_sub_prism =
+  prism GenerateSubtitles (\case
+    ListenCut b -> Left $ ListenCut b
+    GenerateSubtitles x -> Right x
+  )
 
 def_seg_size :: Int
 def_seg_size = 20
@@ -116,34 +138,34 @@ def_duration = 0.25
 def_voice :: Int
 def_voice = 1
 
-lc_fileio :: Lens' ListenCutOptions FileIO
+lc_fileio :: Lens' (ListenCutOptionsT a) (FileIO a)
 lc_fileio = field @"lc_fileIO"
 
-seg_size :: Lens' ListenCutOptions Int
+seg_size :: Lens' (ListenCutOptionsT a) Int
 seg_size = field @"lc_segmentSize" . non def_seg_size
 
-detect_margin :: Lens' ListenCutOptions Double
+detect_margin :: Lens' (ListenCutOptionsT a) Double
 detect_margin = field @"lc_detectMargin" . non def_margin
 
-silent_treshold :: Lens' ListenCutOptions Double
+silent_treshold :: Lens' (ListenCutOptionsT a) Double
 silent_treshold = field @"lc_silentTreshold" . non def_silent
 
-silent_duration :: Lens' ListenCutOptions Double
+silent_duration :: Lens' (ListenCutOptionsT a) Double
 silent_duration = field @"lc_silentDuration" . non def_duration
 
-voice_track :: Lens' ListenCutOptions Int
+voice_track :: Lens' (ListenCutOptionsT a) Int
 voice_track = field @"lc_voiceTrack" . non def_voice
 
-music_track :: Lens' ListenCutOptions (Maybe Int)
+music_track :: Lens' (ListenCutOptionsT a) (Maybe Int)
 music_track = field @"lc_musicTrack"
 
-cut_noise :: Lens' ListenCutOptions Bool
+cut_noise :: Lens' (ListenCutOptionsT a) Bool
 cut_noise = field @"lc_cutNoise"
 
-voice_track_map :: ListenCutOptions -> Text.Text
+voice_track_map :: (ListenCutOptionsT a) -> Text.Text
 voice_track_map = mappend "0:" . view (voice_track . to show . packed)
 
-specifyTracks :: ListenCutOptions -> [Text.Text]
+specifyTracks :: (ListenCutOptionsT a) -> [Text.Text]
 specifyTracks options =
   [ "-map"
   , "0:0"
@@ -167,7 +189,7 @@ readFileSource = eitherReader $
     maybe (Left "unlikely error") Right $
     (Remote <$> parseURI x) <|> Just (LocalFile x)
 
-parseFile :: Parser FileIO
+parseFile :: Parser (FileIO InputSource)
 parseFile = FileIO
     <$> argument readFileSource (metavar "INPUT" <> help "The input video, either a file or a uri")
     <*> argument str (metavar "OUTPUT_FILE" <> help "The output name without format")
@@ -180,14 +202,14 @@ parseFile = FileIO
             )
           )
 
-parseProgram :: Parser ProgramOptions
+parseProgram :: Parser (ProgramOptions InputSource)
 parseProgram =
   subparser $
     command "listen" (info (ListenCut <$> parseSound) $ progDesc "Cut out by listening to sound options. We listen for silences and cut out the parts that are silenced.")
     <>
     command "subtitles" (info (GenerateSubtitles <$> parseFile) $ progDesc "Generate subtiles for a video. This is an intermediate (but usefull) feature developed for recognizing human speech vs background noise.")
 
-parseSound :: Parser ListenCutOptions
+parseSound :: Parser (ListenCutOptionsT InputSource)
 parseSound = ListenCutOptions
     <$> parseFile
     <*> optional
