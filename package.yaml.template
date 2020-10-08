@@ -20,6 +20,7 @@ extra-source-files:
 - Readme.md
 - LICENSE
 - Changelog.md
+- includes
 
 ghc-options:
     - -Wall
