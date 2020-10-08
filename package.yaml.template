@@ -20,6 +20,7 @@ extra-source-files:
 - Readme.md
 - LICENSE
 - Changelog.md
+- includes
 
 ghc-options:
     - -Wall
@@ -69,6 +70,8 @@ dependencies:
 - regex-tdfa
 - system-filepath
 - time
+- network-uri
+- random
 
 library:
   source-dirs: src

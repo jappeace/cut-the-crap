@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds     #-}
 {-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 -- | This is where it all started
 module Cut.Crap
@@ -12,6 +13,7 @@ module Cut.Crap
   )
 where
 
+import           Cut.Shell
 import           Control.Lens
 import           Control.Monad
 import           Control.Monad.Catch
@@ -19,7 +21,6 @@ import           Control.Monad.IO.Class
 import           Control.Monad.IO.Unlift
 import           Cut.Analyze
 import           Cut.CutVideo
-import           Cut.Ffmpeg
 import           Cut.Options
 import           Cut.SpeechRecognition
 import           Data.Foldable                (fold, foldl', traverse_)
@@ -34,19 +35,61 @@ import           GHC.Generics                 hiding (to)
 import           Options.Applicative
 import           Shelly                       hiding (FilePath)
 import           System.IO.Temp
+import Network.URI(URI)
+import System.Random
+
+runYoutubeDL :: FileIO a -> URI -> IO FilePath
+runYoutubeDL opts x = do
+
+  inputNumbers :: [Int] <- replicateM 3 randomIO
+  let inputChars :: String
+      inputChars = (join $ show <$> inputNumbers) <> ".mkv"
+      filePath :: String
+      filePath = fromMaybe inputChars $ opts ^. work_dir
+  void $ shelly $ youtube_dl x filePath
+  pure filePath
+
+
+
+downloadIfNeccisary :: FileIO InputSource -> IO (FileIO FilePath)
+downloadIfNeccisary x = do
+  result <- sequence $ (runYoutube <|> alreadyLocal)
+  case result of
+    Nothing -> error $ "Couldn't find " <> show x
+    Just y -> pure $ x & in_file .~ y
+  where
+    runYoutube :: Maybe (IO FilePath)
+    runYoutube = x ^? in_file . input_src_remote . to (runYoutubeDL x)
+
+    alreadyLocal :: Maybe (IO FilePath)
+    alreadyLocal = preview (in_file . input_src_local_file . to pure) x
+
+downloadCutifNeccisary :: ListenCutOptionsT InputSource -> IO (ListenCutOptionsT FilePath)
+downloadCutifNeccisary cut = repackRes
+      where
+        downloadRes :: IO (FileIO FilePath)
+        downloadRes =  downloadIfNeccisary $ cut ^. lc_fileio
+        repackRes :: IO (ListenCutOptionsT (FilePath))
+        repackRes = downloadRes <&> \y -> lc_fileio .~ y $ cut
 
 -- | reads settings from terminal and runs whatever command was
 --   given in program options
 entryPoint :: MonadMask m => MonadUnliftIO m => m ()
 entryPoint = do
   result <- liftIO readSettings
-  -- I'm mr meeseeks look at me!
-  sequence_ $ result ^? listen_cut_prism . to (void . runListenCut)
-          <|> result ^? gnerate_sub_prism . to runGenSubs
+  betterResult <-  liftIO $ case  result of
+    ListenCut cut -> ListenCut <$> downloadCutifNeccisary cut
+    GenerateSubtitles x -> GenerateSubtitles <$> downloadIfNeccisary x
 
-runGenSubs :: MonadIO m => FileIO -> m ()
+  -- I'm mr meeseeks look at me!
+  sequence_ $ betterResult ^? listen_cut_prism . to (void . runListenCut)
+           <|> betterResult ^? gnerate_sub_prism . to runGenSubs
+  pure ()
+
+runGenSubs :: MonadIO m => FileIO FilePath -> m ()
 runGenSubs options = liftIO $ withTempDir options $ \tmp -> do
-    result <- shelly $ detectSpeech (set voice_track 1 simpleOptions) tmp $ options ^. in_file
+    betterOptions <- downloadCutifNeccisary simpleOptions
+    result <- shelly $ detectSpeech (set voice_track 1 betterOptions) tmp $ options ^. in_file
     print result
     traverse_ (T.writeFile (options ^. out_file) . makeSrt) result
 
@@ -67,7 +110,7 @@ runListenCut options = do
             "\n\nNo silence in input video detected. There is nothing to be cut so exiting.\n\n"
     _ -> liftIO $ withTempDir (options ^. lc_fileio) $ runEdit options parsed
 
-withTempDir :: FileIO -> (FilePath -> IO ()) -> IO ()
+withTempDir :: FileIO FilePath -> (FilePath -> IO ()) -> IO ()
 withTempDir filioOpts fun =
   maybe (withTempDirectory "/tmp" "streamedit" fun) fun $ filioOpts ^. work_dir
 
@@ -86,7 +129,7 @@ combineDir _ tempDir = do
   writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths
   combine tempDir
 
-readSettings :: IO ProgramOptions
+readSettings :: IO (ProgramOptions InputSource)
 readSettings = customExecParser (prefs showHelpOnError) $ info
   (parseProgram <**> helper)
   (fullDesc <> header "Cut the crap" <> progDesc

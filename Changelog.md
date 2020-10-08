@@ -5,6 +5,8 @@
 - Better install instructions
 - `defaut.nix` in project root now links to ffmpeg
 - return parse result from `runListenCut`
+- Make input file and output file positional
+- Add support for parsing uri and downloading automatically
 
 ## Version 1.4.2 - 2020.08.31
 - add c2hs to build tools so we don't need to modify nixpkgs
