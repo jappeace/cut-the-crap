@@ -1,6 +1,6 @@
 # Change log for cut-the-crap
 
-## Version 1.5.0 - tba
+## Version 2.0.0 - 2020.10.09
 
 - Better install instructions
 - `defaut.nix` in project root now links to ffmpeg
