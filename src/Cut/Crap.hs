@@ -37,13 +37,15 @@ import           Shelly                       hiding (FilePath)
 import           System.IO.Temp
 import Network.URI(URI)
 import System.Random
+import Data.Word
 
 runYoutubeDL :: FileIO a -> URI -> IO FilePath
 runYoutubeDL opts x = do
 
-  inputNumbers :: [Int] <- replicateM 3 randomIO
+  inputNumbers :: Word32 <- randomIO
   let inputChars :: String
-      inputChars = (join $ show <$> inputNumbers) <> ".mkv"
+      -- youtube-dl doesn't do .mkv (not supported)
+      inputChars = (show inputNumbers) <> ".mp4"
       filePath :: String
       filePath = fromMaybe inputChars $ opts ^. work_dir
   void $ shelly $ youtube_dl x filePath
