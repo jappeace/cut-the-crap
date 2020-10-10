@@ -2,6 +2,7 @@
 # upgrade version
 
 At the moment in package.yaml.template
+Run hpack
 
 # Record changes in changelog.md
 
@@ -16,9 +17,4 @@ Goto releases make new draft release.
 
 In here you can just paste what you wrote in the chagnelog
 
-# Make debian image
-
-This is broken at the moment due to the pocketsphinx dependency.
-We'll fix it once it works.
-
-make ubuntu-release
+## Add static build to the release page

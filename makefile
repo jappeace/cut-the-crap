@@ -71,9 +71,14 @@ brittany_:
 brittany:
 	nix-shell ./nix/travis-shell.nix --run "make brittany_"
 
+# this doesn't really work well, we need to keep updating everything
+# according to how ubuntu builds. It's too much work for me
 ubuntu-release:
 	docker build -t ubuntu-release scripts
 	docker run -v ~/projects/cut-the-crap:/home/jappie -t ubuntu-release
+
+static-linked-build:
+	nix-build --no-link
 
 MODEL=$(shell nix-shell --run "pkg-config --variable=modeldir pocketsphinx")
 sphinx:

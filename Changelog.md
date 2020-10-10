@@ -1,5 +1,13 @@
 # Change log for cut-the-crap
 
+## Version 2.1.0 - TBA
+
++ Expose download functions
++ Automatic cleanup of downloaded files
++ nix: Move upstream patch to separate file and let default.nix depend on that
++ Add static executable support
++ Drop support for Ubuntu
+
 ## Version 2.0.0 - 2020.10.09
 
 - Better install instructions

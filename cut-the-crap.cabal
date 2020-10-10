@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0f25306419959045fb637431751e1f2ae5212ba5c47b5ccc91dca4436a8a7943
+-- hash: 4e93a451b78b61a8a2f91ef1b31846561506876405f66e30a6862a00a414f389
 
 name:           cut-the-crap
-version:        2.0.0
+version:        2.1.0
 synopsis:       Cuts out uninteresting parts of videos by detecting silences.
 description:    Cut the crap is an automatic video editing program for streamers. It can cut out uninteresting parts by detecting silences. This was inspired by [jumpcutter](https://github.com/carykh/jumpcutter), where this program can get better quality results by using an (optional) dedicated microphone track. This prevents cutting of [quieter consonants](https://youtu.be/DQ8orIurGxw?t=675) for example. Using ffmpeg more efficiently also produces faster results and is less error prone.
 category:       video
@@ -27,6 +27,7 @@ library
       Cut.Analyze
       Cut.Crap
       Cut.CutVideo
+      Cut.Download
       Cut.Options
       Cut.Shell
       Cut.SpeechRecognition
@@ -36,7 +37,7 @@ library
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/zr5cjjdqvv1vwixb0k5gg455n99cfhl8-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR=""
   include-dirs:
       includes
   c-sources:
@@ -48,7 +49,7 @@ library
   build-tools:
       c2hs
   build-depends:
-      base >=4.7 && <5
+      base >=4.7 && <4.15
     , exceptions
     , generic-lens
     , lens
@@ -72,7 +73,7 @@ executable cut-the-crap
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
-  cc-options: -DMODELDIR="/nix/store/zr5cjjdqvv1vwixb0k5gg455n99cfhl8-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR=""
   include-dirs:
       includes
   c-sources:
@@ -84,7 +85,7 @@ executable cut-the-crap
   build-tools:
       c2hs
   build-depends:
-      base >=4.7 && <5
+      base >=4.7 && <4.15
     , cut-the-crap
     , exceptions
     , generic-lens
@@ -111,6 +112,7 @@ test-suite unit
       Cut.Analyze
       Cut.Crap
       Cut.CutVideo
+      Cut.Download
       Cut.Options
       Cut.Shell
       Cut.SpeechRecognition
@@ -120,7 +122,7 @@ test-suite unit
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/zr5cjjdqvv1vwixb0k5gg455n99cfhl8-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR=""
   include-dirs:
       includes
   c-sources:
@@ -133,7 +135,7 @@ test-suite unit
       c2hs
   build-depends:
       QuickCheck
-    , base >=4.7 && <5
+    , base >=4.7 && <4.15
     , exceptions
     , generic-lens
     , hspec

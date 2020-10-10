@@ -35,65 +35,23 @@ import           GHC.Generics                 hiding (to)
 import           Options.Applicative
 import           Shelly                       hiding (FilePath)
 import           System.IO.Temp
-import Network.URI(URI)
-import System.Random
-import Data.Word
-
-runYoutubeDL :: FileIO a -> URI -> IO FilePath
-runYoutubeDL opts x = do
-
-  inputNumbers :: Word32 <- randomIO
-  let inputChars :: String
-      -- youtube-dl doesn't do .mkv (not supported)
-      inputChars = (show inputNumbers) <> ".mp4"
-      filePath :: String
-      filePath = fromMaybe inputChars $ opts ^. work_dir
-  void $ shelly $ youtube_dl x filePath
-  pure filePath
-
-
-
-downloadIfNeccisary :: FileIO InputSource -> IO (FileIO FilePath)
-downloadIfNeccisary x = do
-  result <- sequence $ (runYoutube <|> alreadyLocal)
-  case result of
-    Nothing -> error $ "Couldn't find " <> show x
-    Just y -> pure $ x & in_file .~ y
-  where
-    runYoutube :: Maybe (IO FilePath)
-    runYoutube = x ^? in_file . input_src_remote . to (runYoutubeDL x)
-
-    alreadyLocal :: Maybe (IO FilePath)
-    alreadyLocal = preview (in_file . input_src_local_file . to pure) x
-
-downloadCutifNeccisary :: ListenCutOptionsT InputSource -> IO (ListenCutOptionsT FilePath)
-downloadCutifNeccisary cut = repackRes
-      where
-        downloadRes :: IO (FileIO FilePath)
-        downloadRes =  downloadIfNeccisary $ cut ^. lc_fileio
-        repackRes :: IO (ListenCutOptionsT (FilePath))
-        repackRes = downloadRes <&> \y -> lc_fileio .~ y $ cut
+import Cut.Download
 
 -- | reads settings from terminal and runs whatever command was
 --   given in program options
 entryPoint :: MonadMask m => MonadUnliftIO m => m ()
 entryPoint = do
   result <- liftIO readSettings
-  betterResult <-  liftIO $ case  result of
-    ListenCut cut -> ListenCut <$> downloadCutifNeccisary cut
-    GenerateSubtitles x -> GenerateSubtitles <$> downloadIfNeccisary x
-
-  -- I'm mr meeseeks look at me!
-  sequence_ $ betterResult ^? listen_cut_prism . to (void . runListenCut)
-           <|> betterResult ^? gnerate_sub_prism . to runGenSubs
-  pure ()
+  case  result of
+    ListenCut cut -> downloadCutifNeccisary cut $ void . runListenCut
+    GenerateSubtitles x -> downloadIfNeccisary x runGenSubs
 
 runGenSubs :: MonadIO m => FileIO FilePath -> m ()
 runGenSubs options = liftIO $ withTempDir options $ \tmp -> do
-    betterOptions <- downloadCutifNeccisary simpleOptions
-    result <- shelly $ detectSpeech (set voice_track 1 betterOptions) tmp $ options ^. in_file
-    print result
-    traverse_ (T.writeFile (options ^. out_file) . makeSrt) result
+    downloadCutifNeccisary simpleOptions $ \betterOptions -> do
+      result <- shelly $ detectSpeech (set voice_track 1 betterOptions) tmp $ options ^. in_file
+      print result
+      traverse_ (T.writeFile (options ^. out_file) . makeSrt) result
 
 -- | Runs cut-the-crap with provided `ListenCutOptions`
 runListenCut :: MonadMask m => MonadUnliftIO m => ListenCutOptions -> m [Interval Sound]

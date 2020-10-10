@@ -30,7 +30,7 @@ which will not be chopped up.
 
 # Install
 
-## From source
+## From source 
 Install the [nix package](https://nixos.org/download.html) manager.
 
 ```shell
@@ -48,19 +48,17 @@ result/bin/cut-the-crap
 This only works for nixpkgs that have cut-the-crap >= 1.4.2 or =< 1.3
 There were some build issues with 1.4.0 and 1.4.1 (now fixed)
 
-## Ubuntu
-Download the .deb file from the [release page](https://github.com/jappeace/cut-the-crap/releases).
-Install with:
+## Static build (other linux)
+Download the executable from the [release page](https://github.com/jappeace/cut-the-crap/releases).
 
-```shell
-apt install ffmpeg
-dpkg -i ./cut-the-crap_1.0.0_amd64.deb 
+install ffmpeg and youtube-dl, for example:
+
+```
+apt install ffmpeg youtube-dl
 ```
 
-Execute with:
-```shell
-cut-the-crap
-```
+Now you can run the executable.
+
 # Usage notes
 
 ## Noise gate
