@@ -1,28 +1,26 @@
-{-# LANGUAGE DataKinds     #-}
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE DataKinds           #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeOperators       #-}
 
 -- | Deal with downloading and the cli options involved
 module Cut.Download
   ( downloadIfNeccisary
   , downloadCutifNeccisary
-  , runYoutubeDL
   )
 where
 
-import           Cut.Shell
 import           Control.Lens
 import           Control.Monad
 import           Control.Monad.Catch
 import           Control.Monad.IO.Class
 import           Cut.Options
-import           Data.Foldable                (traverse_)
-import           Data.Maybe
+import           Cut.Shell
+import           Data.Foldable          (traverse_)
+import           Data.Word
+import           Network.URI            (URI)
 import           Options.Applicative
-import           Shelly                       hiding (FilePath)
-import Network.URI(URI)
-import System.Random
-import Data.Word
+import           Shelly                 hiding (FilePath)
+import           System.Random
 
 -- | Downloads a URI to the filepath returned
 runYoutubeDL :: FileIO a -> URI -> IO FilePath
@@ -43,7 +41,7 @@ aquireFilePath x = do
   result <- sequence $ (runYoutube <|> alreadyLocal)
   case result of
     Nothing -> error $ "Couldn't find " <> show x
-    Just y -> pure $ x & in_file .~ y
+    Just y  -> pure $ x & in_file .~ y
   where
     runYoutube :: Maybe (IO FilePath)
     runYoutube = x ^? in_file . input_src_remote . to (runYoutubeDL x)
