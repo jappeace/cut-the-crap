@@ -7,6 +7,11 @@
 + nix: Move upstream patch to separate file and let default.nix depend on that
 + Add static executable support
 + Drop support for Ubuntu
++ Add default output argument (convenience for debugging)
++ Fix development shell to use nix cabal dependencies
++ All shell commands run through same function
++ Add better help docs for input format
++ Set the merge format for youtube dl to always be mkv to prevent issue (fixing the file not found bug)
 
 ## Version 2.0.0 - 2020.10.09
 
