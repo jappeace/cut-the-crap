@@ -99,7 +99,7 @@ In my own setup I have track 1 for combining all audio, track 2 for just the mic
 Then I can use:
 
 ```shell
-    cut-the-crap ./recordFromObs.mkv ./someOut.mkv --voiceTrack 2 --musicTrack 3
+    cut-the-crap listen ./recordFromObs.mkv ./someOut.mkv --voiceTrack 2 --musicTrack 3
 ```
 
 So we throw away track 1, we use track 2 for silence detection, and track 3 get's mixed in after cutting is complete.
