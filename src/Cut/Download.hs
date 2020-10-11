@@ -32,11 +32,11 @@ runYoutubeDL opts x = do
   inputNumbers :: Word32 <- randomIO
   let inputChars :: String
       -- youtube-dl doesn't do .mkv (not supported)
-      inputChars = show inputNumbers <> ".mp4"
+      inputChars = show inputNumbers
       filePath :: String
-      filePath = fromMaybe inputChars $ opts ^. work_dir
+      filePath = maybe inputChars (flip (</>) inputChars) $ opts ^. work_dir
   void $ shelly $ youtube_dl x filePath
-  pure filePath
+  pure (filePath <> ".mkv") -- because 'youtube_dl' sets merge-output-format
 
 aquireFilePath :: FileIO InputSource -> IO (FileIO FilePath)
 aquireFilePath x = do
