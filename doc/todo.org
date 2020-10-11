@@ -1,6 +1,3 @@
 
 
-* TODO See how well youtube-dl mp4 format works with cutting out sounds
-  Maybe we can test this on older vids?
-  
 * TODO that hammer vid bothers me

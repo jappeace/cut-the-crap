@@ -1,16 +1,28 @@
 # Change log for cut-the-crap
 
-## Version 2.1.0 - TBA
+## Version 2.1.0 - 2020.10.11
 
-+ Expose download functions
 + Automatic cleanup of downloaded files
-+ nix: Move upstream patch to separate file and let default.nix depend on that
+  This is less annoying and also useful for the hosted version.
 + Add static executable support
-+ Drop support for Ubuntu
+  This works for all linux versions, and allows us to drop ubuntu package support.
 + Add default output argument (convenience for debugging)
-+ Fix development shell to use nix cabal dependencies
 + All shell commands run through same function
+  This allowed me to improve logging, which better shows what goes on.
 + Add better help docs for input format
+  We tell give hints on how to convert to mkv format.
+
+### Cleanup
+
++ nix: Move upstream patch to separate file and let default.nix depend on that
++ Expose download functions
++ Drop support for Ubuntu
++ Delete segmentsize options which was unused.
+
+### Bug fixes
+
++ Fix development shell to use nix cabal dependencies
++ Better default options that work with most videos.
 + Set the merge format for youtube dl to always be mkv to prevent issue (fixing the file not found bug)
 
 ## Version 2.0.0 - 2020.10.09
