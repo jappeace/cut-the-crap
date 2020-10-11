@@ -16,6 +16,7 @@
 + Add better help docs for input format
   We tell give hints on how to convert to mkv format.
 + Add default use case docs in readme.
++ Fix up readme docs with new cli
 
 ### Cleanup
 
