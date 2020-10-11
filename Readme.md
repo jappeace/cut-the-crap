@@ -49,6 +49,10 @@ This only works for nixpkgs that have cut-the-crap >= 1.4.2 or =< 1.3
 There were some build issues with 1.4.0 and 1.4.1 (now fixed)
 
 ## Static build (other linux)
+
+Contact [me](mailto:jappieklooster@hotmail.com)
+if you want this, currently it appears to be broken.
+
 Download the executable from the [release page](https://github.com/jappeace/cut-the-crap/releases).
 
 install ffmpeg and youtube-dl, for example:

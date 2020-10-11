@@ -61,8 +61,8 @@ clean: clean-work-dir
 .PHONY: test run_
 
 sdist: hpack
-	make run-in-shell RUN="cabal sdist"
 	make static-linked-build
+	make run-in-shell RUN="cabal sdist"
 
 brittany_:
 	$(shell set -x; for i in `fd hs`; do hlint --refactor --refactor-options=-i $$i; brittany --write-mode=inplace $$i; done)
