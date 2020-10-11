@@ -61,6 +61,31 @@ Now you can run the executable.
 
 # Usage notes
 
+Up to date help is available in the program itself:
+```
+cut-the-crap
+```
+
+Run the program:
+
+```
+cut-the-crap listen https://www.youtube.com/watch?v=_PB6Hdi4R7M
+```
+
+It works both with youtube or twitch videos (VODS).
+The program simply passes the URL to [youtube-dl](https://github.com/ytdl-org/youtube-dl).
+
+We can also run it on a local file of course:
+```
+cut-the-crap listen somelocalfile.mkv
+```
+
+There is also a work in progress subtitle generation:
+```
+cut-the-crap subtitles https://www.youtube.com/watch?v=_PB6Hdi4R7M
+```
+
+
 ## Noise gate
 Make sure to record with a noise gate on your microphone.
 This will cut out background buzzing and allow you to use a more aggressive
@@ -74,7 +99,7 @@ In my own setup I have track 1 for combining all audio, track 2 for just the mic
 Then I can use:
 
 ```shell
-    cut-the-crap --inputFile ./recordFromObs.mkv --outputFile ./someOut.mkv --voiceTrack 2 --musicTrack 3
+    cut-the-crap ./recordFromObs.mkv ./someOut.mkv --voiceTrack 2 --musicTrack 3
 ```
 
 So we throw away track 1, we use track 2 for silence detection, and track 3 get's mixed in after cutting is complete.

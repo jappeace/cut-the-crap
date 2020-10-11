@@ -46,9 +46,7 @@ clean-work-dir:
 
 runDebug: clean-work-dir
 	cabal new-run cut-the-crap --ghc-options $(OPTIMIZATION) -- \
-		--inFile ./input.mkv \
-		--outFile out.mkv \
-		--voiceTrack 1 \
+		./input.mkv \
 		--workDir $(WORK)
 
 runMusic: 

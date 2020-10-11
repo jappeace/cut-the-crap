@@ -7,15 +7,19 @@
 + Add static executable support
   This works for all linux versions, and allows us to drop ubuntu package support.
 + Add default output argument (convenience for debugging)
++ Expose download functions
+
+### Docs
+
 + All shell commands run through same function
   This allowed me to improve logging, which better shows what goes on.
 + Add better help docs for input format
   We tell give hints on how to convert to mkv format.
++ Add default use case docs in readme.
 
 ### Cleanup
 
 + nix: Move upstream patch to separate file and let default.nix depend on that
-+ Expose download functions
 + Drop support for Ubuntu
 + Delete segmentsize options which was unused.
 
