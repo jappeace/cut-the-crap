@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1e53cf8a33ea6d51825f52c3ba03f78a95655a38cc32028a5c83dad9d6ed390a
+-- hash: 0dd6cfe3264701af80744a3551c166d30654f0fc1a2344dc64739b2094637f1e
 
 name:           cut-the-crap
 version:        2.1.0
@@ -46,6 +46,8 @@ library
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
+  build-tools:
+      c2hs
   build-depends:
       base >=4.7 && <4.15
     , exceptions
@@ -80,6 +82,8 @@ executable cut-the-crap
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
+  build-tools:
+      c2hs
   build-depends:
       base >=4.7 && <4.15
     , cut-the-crap
@@ -127,6 +131,8 @@ test-suite unit
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
+  build-tools:
+      c2hs
   build-depends:
       QuickCheck
     , base >=4.7 && <4.15

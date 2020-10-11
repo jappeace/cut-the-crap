@@ -32,8 +32,8 @@ floatToText = Text.pack . flip (showFFloat (Just 10)) ""
 
 run :: FilePath -> [Text] -> Sh [Text]
 run command args = do
-  time <- liftIO getCurrentTime
-  let format = formatTime defaultTimeLocale "%F %T" time
+  time' <- liftIO getCurrentTime
+  let format = formatTime defaultTimeLocale "%F %T" time'
   liftIO $ putStrLn "--- "
   liftIO $ printf "%s: %s %s" format command (Text.unwords args)
   liftIO $ putStrLn "   " -- flush

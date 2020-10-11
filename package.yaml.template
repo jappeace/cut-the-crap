@@ -109,3 +109,4 @@ pkg-config-dependencies:
   - sphinxbase
 
 build-tools-depends: c2hs
+build-tools: c2hs
