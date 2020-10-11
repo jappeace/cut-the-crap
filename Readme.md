@@ -52,6 +52,7 @@ There were some build issues with 1.4.0 and 1.4.1 (now fixed)
 
 Contact [me](mailto:jappieklooster@hotmail.com)
 if you want this, currently it appears to be broken.
+Or simply add an issue.
 
 Download the executable from the [release page](https://github.com/jappeace/cut-the-crap/releases).
 
