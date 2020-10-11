@@ -1,5 +1,9 @@
 # Change log for cut-the-crap
 
+## Version 2.1.1 - 2020.10.11
+
++ add build-tools: c2hs to fix nix build
+
 ## Version 2.1.0 - 2020.10.11
 
 + Automatic cleanup of downloaded files
