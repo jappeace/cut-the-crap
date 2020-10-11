@@ -108,4 +108,4 @@ pkg-config-dependencies:
   - pocketsphinx
   - sphinxbase
 
-build-tools: c2hs
+build-tools-depends: c2hs

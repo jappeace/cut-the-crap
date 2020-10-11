@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4e93a451b78b61a8a2f91ef1b31846561506876405f66e30a6862a00a414f389
+-- hash: 1e53cf8a33ea6d51825f52c3ba03f78a95655a38cc32028a5c83dad9d6ed390a
 
 name:           cut-the-crap
 version:        2.1.0
@@ -37,7 +37,7 @@ library
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR=""
+  cc-options: -DMODELDIR="/nix/store/g91f3fkm432n552p2wmkg5rywhw39k3g-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -46,8 +46,6 @@ library
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
-  build-tools:
-      c2hs
   build-depends:
       base >=4.7 && <4.15
     , exceptions
@@ -73,7 +71,7 @@ executable cut-the-crap
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
-  cc-options: -DMODELDIR=""
+  cc-options: -DMODELDIR="/nix/store/g91f3fkm432n552p2wmkg5rywhw39k3g-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -82,8 +80,6 @@ executable cut-the-crap
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
-  build-tools:
-      c2hs
   build-depends:
       base >=4.7 && <4.15
     , cut-the-crap
@@ -122,7 +118,7 @@ test-suite unit
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR=""
+  cc-options: -DMODELDIR="/nix/store/g91f3fkm432n552p2wmkg5rywhw39k3g-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -131,8 +127,6 @@ test-suite unit
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
-  build-tools:
-      c2hs
   build-depends:
       QuickCheck
     , base >=4.7 && <4.15

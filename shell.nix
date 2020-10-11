@@ -5,11 +5,11 @@
     inherit config;
 } }:
 
-pkgs.haskell.packages.${config.compiler}.shellFor {
+#  https://input-output-hk.github.io/haskell.nix/tutorials/development/
+pkgs.haskellPackages.shellFor {
   packages = ps : [ ps.cut-the-crap ];
   buildInputs = [
         pkgs.ghcid
-        pkgs.cabal-install
         pkgs.haskellPackages.hasktags
         pkgs.ffmpeg
         pkgs.hlint
