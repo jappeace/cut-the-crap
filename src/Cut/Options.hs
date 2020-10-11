@@ -22,7 +22,6 @@ module Cut.Options
   -- * listen cut, options for video editing by audio
   , ListenCutOptionsT
   , ListenCutOptions
-  , seg_size
   , silent_treshold
   , detect_margin
   , voice_track
@@ -66,10 +65,9 @@ work_dir = field @"fi_workDir"
 simpleOptions :: ListenCutOptionsT InputSource
 simpleOptions = ListenCutOptions
                         { lc_fileIO = simpleFileIO
-                        , lc_segmentSize    = _Just # def_seg_size
                         , lc_silentTreshold = _Just # def_silent
                         , lc_detectMargin   = _Just # def_margin
-                        , lc_voiceTrack     = _Just # 2
+                        , lc_voiceTrack     = _Just # def_voice_track
                         , lc_musicTrack     = Nothing
                         , lc_silentDuration = _Just # def_duration
                         , lc_cutNoise       = def_cut_noise
@@ -91,7 +89,6 @@ type ListenCutOptions = ListenCutOptionsT FilePath
 -- | Cut out by listening to sound options
 data ListenCutOptionsT a = ListenCutOptions
                 { lc_fileIO         :: FileIO a
-                , lc_segmentSize    :: Maybe Int
                 , lc_silentTreshold :: Maybe Double
                 , lc_silentDuration :: Maybe Double
                 , lc_detectMargin   :: Maybe Double
@@ -111,8 +108,8 @@ listen_cut_prism = _Ctor @"ListenCut"
 gnerate_sub_prism :: Prism' (ProgramOptions a) (FileIO a)
 gnerate_sub_prism = _Ctor @"GenerateSubtitles"
 
-def_seg_size :: Int
-def_seg_size = 20
+def_voice_track :: Int
+def_voice_track = 1
 
 def_margin :: Double
 def_margin = 0.05
@@ -121,7 +118,7 @@ def_cut_noise :: Bool
 def_cut_noise = False
 
 def_silent :: Double
-def_silent = 0.0001
+def_silent = 0.075
 
 def_duration :: Double
 def_duration = 0.25
@@ -131,9 +128,6 @@ def_voice = 1
 
 lc_fileio :: Lens (ListenCutOptionsT a) (ListenCutOptionsT b) (FileIO a) (FileIO b)
 lc_fileio = field @"lc_fileIO"
-
-seg_size :: Lens' (ListenCutOptionsT a) Int
-seg_size = field @"lc_segmentSize" . non def_seg_size
 
 detect_margin :: Lens' (ListenCutOptionsT a) Double
 detect_margin = field @"lc_detectMargin" . non def_margin
@@ -206,14 +200,10 @@ parseSound = ListenCutOptions
     <*> optional
           (option
             auto
-            (long "segmentSize" <> help "The size of video segments in minutes")
-          )
-    <*> optional
-          (option
-            auto
             (  long "silentTreshold"
             <> help
-                 "The treshold for determining intersting sections, closer to zero is detects more audio (n: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
+                 "The treshold for determining intersting sections, closer to zero is detects more audio (n: https://ffmpeg.org/ffmpeg-filters.html#silencedetect), you may wish to tweak this variable a bit depending on your mic."
+            <> value def_silent <> showDefault
             )
           )
     <*> optional
@@ -232,7 +222,7 @@ parseSound = ListenCutOptions
     <*> optional
           (option
             auto
-            (long "voiceTrack" <> help "The track to detect the silences upon")
+            (long "voiceTrack" <> help "The track to detect the silences upon" <> value def_voice_track <> showDefault)
           )
     <*> optional
           (option auto (long "musicTrack" <> help "The track to integrate"))
