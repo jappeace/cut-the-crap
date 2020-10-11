@@ -182,8 +182,8 @@ readFileSource = eitherReader $
 
 parseFile :: Parser (FileIO InputSource)
 parseFile = FileIO
-    <$> argument readFileSource (metavar "INPUT" <> help "The input video, either a file or a uri")
-    <*> argument str (metavar "OUTPUT_FILE" <> help "The output name without format")
+    <$> argument readFileSource (metavar "INPUT" <> help "The input video, either a file or a uri. This program has tested best with the mkv container type, you can use ffmpeg to convert containers, for example \"ffmpeg -i input.mp4 output.mkv\", see https://opensource.com/article/17/6/ffmpeg-convert-media-file-formats")
+    <*> argument str (metavar "OUTPUT_FILE" <> help "The output name without format" <> value "out.mkv" <> showDefault)
     <*> optional
           (option
             str
