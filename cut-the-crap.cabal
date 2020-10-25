@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7811f884fa7c13030c8834974b9ca9c52d2ace79b2c596732c3f50f0f877aa5c
+-- hash: c3f60850d94ae523038a24b71330b73d18c372692fd7875e335c27f9e9a4a30e
 
 name:           cut-the-crap
 version:        2.1.1
@@ -37,7 +37,7 @@ library
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/g91f3fkm432n552p2wmkg5rywhw39k3g-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/a9l7d7j0abmfybxq64xv3zfwvgssycy7-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -52,6 +52,7 @@ library
       base >=4.7 && <4.15
     , exceptions
     , generic-lens
+    , gogol-youtube <0.6.0
     , lens
     , network-uri
     , optparse-applicative
@@ -73,7 +74,7 @@ executable cut-the-crap
       app
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
-  cc-options: -DMODELDIR="/nix/store/g91f3fkm432n552p2wmkg5rywhw39k3g-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/a9l7d7j0abmfybxq64xv3zfwvgssycy7-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -89,6 +90,7 @@ executable cut-the-crap
     , cut-the-crap
     , exceptions
     , generic-lens
+    , gogol-youtube <0.6.0
     , lens
     , network-uri
     , optparse-applicative
@@ -122,7 +124,7 @@ test-suite unit
       src
   default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/g91f3fkm432n552p2wmkg5rywhw39k3g-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/a9l7d7j0abmfybxq64xv3zfwvgssycy7-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -138,6 +140,7 @@ test-suite unit
     , base >=4.7 && <4.15
     , exceptions
     , generic-lens
+    , gogol-youtube <0.6.0
     , hspec
     , hspec-core
     , lens
