@@ -1,6 +1,3 @@
 
 * TODO that hammer vid bothers me
 
-
-* TODO Fix that bug with twitch download (#51)
-* TODO Test out the bundle
