@@ -34,8 +34,8 @@ runYoutubeDL opts x = do
       filePath :: String
       filePath = maybe inputChars (flip (</>) inputChars) $ opts ^. work_dir
       resultPath = filePath <> ".mkv"
-  void $ shelly $ do
-    youtube_dl x filePath
+  shelly $ do
+    void $ youtube_dl x filePath
     -- (#52): fix bug where youtube-dl doesn't always create .mkv file output
     out <- test_f filePath
     when out $ mv filePath resultPath
