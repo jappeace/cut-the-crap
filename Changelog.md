@@ -1,5 +1,10 @@
 # Change log for cut-the-crap
 
+## Version 2.1.2 - 2020.10.11
+
+Fix bug where youtube-dl sometimes doesn't write .mkv files
+for certain websites, such as twitch (#52).
+
 ## Version 2.1.1 - 2020.10.11
 
 + add build-tools: c2hs to fix nix build
