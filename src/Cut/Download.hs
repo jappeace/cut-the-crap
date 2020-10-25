@@ -33,8 +33,13 @@ runYoutubeDL opts x = do
       inputChars = show inputNumbers
       filePath :: String
       filePath = maybe inputChars (flip (</>) inputChars) $ opts ^. work_dir
-  void $ shelly $ youtube_dl x filePath
-  pure (filePath <> ".mkv") -- because 'youtube_dl' sets merge-output-format
+      resultPath = filePath <> ".mkv"
+  void $ shelly $ do
+    youtube_dl x filePath
+    -- (#52): fix bug where youtube-dl doesn't always create .mkv file output
+    out <- test_f filePath
+    when out $ mv filePath resultPath
+  pure resultPath -- because 'youtube_dl' sets merge-output-format
 
 aquireFilePath :: FileIO InputSource -> IO (FileIO FilePath)
 aquireFilePath x = do
