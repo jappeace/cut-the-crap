@@ -49,10 +49,11 @@ Including runtime dependencies such as ffmpeg and youtube-dl.
 
 Download the executable from the [release page](https://github.com/jappeace/cut-the-crap/releases).
 
-Releases of this kind take a week to build because we rely on the
+Releases of this kind trail the main release by a week because we rely on the
 hackage release being merged into nixpkgs.
 At the moment this appears to happen every Friday.
 This approach guarantees nix reproducibility without having to install nix.
+Under the hood we use [nix-bundle](https://github.com/matthewbauer/nix-bundle) for this.
 
 ## Nix/Nixos
 
