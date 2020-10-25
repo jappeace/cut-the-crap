@@ -1,6 +1,6 @@
 # Change log for cut-the-crap
 
-## Version 2.1.2 - 2020.10.11
+## Version 2.1.2 - 2020.10.25
 
 Fix bug where youtube-dl sometimes doesn't write .mkv files
 for certain websites, such as twitch (#52).
