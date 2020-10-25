@@ -40,6 +40,20 @@ nix-build .
 result/bin/cut-the-crap
 ```
 
+## Bundle build (staticly linked bundled with runtime deps)
+
+From version 2.1.1 and onwards these nix bundles will be attached to releases on the [release page](https://github.com/jappeace/cut-the-crap/releases).
+These should work on any Linux distribution.
+The cost is that they are large files however (500mb+) because everything is bundled within.
+Including runtime dependencies such as ffmpeg and youtube-dl.
+
+Download the executable from the [release page](https://github.com/jappeace/cut-the-crap/releases).
+
+Releases of this kind take a week to build because we rely on the
+hackage release being merged into nixpkgs.
+At the moment this appears to happen every Friday.
+This approach guarantees nix reproducibility without having to install nix.
+
 ## Nix/Nixos
 
 + Run `nix-env -iA nixos.haskellPackages.cut-the-crap` or add to systemPackages.
@@ -48,21 +62,6 @@ result/bin/cut-the-crap
 This only works for nixpkgs that have cut-the-crap >= 1.4.2 or =< 1.3
 There were some build issues with 1.4.0 and 1.4.1 (now fixed)
 
-## Static build (other linux)
-
-Contact [me](mailto:jappieklooster@hotmail.com)
-if you want this, currently it appears to be broken.
-Or simply add an issue.
-
-Download the executable from the [release page](https://github.com/jappeace/cut-the-crap/releases).
-
-install ffmpeg and youtube-dl, for example:
-
-```
-apt install ffmpeg youtube-dl
-```
-
-Now you can run the executable.
 
 # Usage notes
 
