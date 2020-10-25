@@ -16,7 +16,7 @@ hpack:
 	nix-shell ./nix/hpack-shell.nix --run "make update-cabal"
 
 bundle:
-	nix-bundle haskellPackages.cut-the-crap cut-the-crap
+	nix-bundle haskellPackages.cut-the-crap /bin/cut-the-crap
 
 ghcid: clean hpack etags
 	nix-shell --run "make ghcid_"
