@@ -33,7 +33,7 @@ import           Data.Text.Lens
 import           Data.Time
 import           GHC.Generics                 hiding (to)
 import           Options.Applicative
-import           Shelly                       hiding (FilePath)
+import           Shelly                       hiding (FilePath, shelly)
 import           System.IO.Temp
 import Cut.Download
 

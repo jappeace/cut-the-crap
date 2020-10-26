@@ -25,7 +25,7 @@ import           Data.Text               (Text)
 import qualified Data.Text               as Text
 import qualified Data.Text.IO            as Text
 import           Data.Text.Lens
-import           Shelly                  hiding (find)
+import           Shelly                  hiding (find, shelly)
 import           Text.Regex.TDFA         hiding (empty)
 
 data Silent

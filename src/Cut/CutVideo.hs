@@ -21,7 +21,7 @@ import           Data.Foldable
 import           Data.Text           (Text)
 import qualified Data.Text           as Text
 import           Data.Text.Lens
-import           Shelly              hiding (FilePath)
+import           Shelly              hiding (FilePath, shelly)
 import           Text.Printf         (printf)
 
 toArgs :: ListenCutOptions -> FilePath -> Interval Sound -> (Interval Sound, [Text])

@@ -1,5 +1,10 @@
 # Change log for cut-the-crap
 
+## Version 2.2.0 - TBA
+
++ Add wrapper for shelly that always flushes stdout
+  This should make the log more consistent
+
 ## Version 2.1.2 - 2020.10.25
 
 Fix bug where youtube-dl sometimes doesn't write .mkv files

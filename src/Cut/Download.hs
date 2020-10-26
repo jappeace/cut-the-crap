@@ -19,7 +19,7 @@ import           Data.Foldable          (traverse_)
 import           Data.Word
 import           Network.URI            (URI)
 import           Options.Applicative
-import           Shelly                 hiding (FilePath)
+import           Shelly                 hiding (FilePath, shelly)
 import           System.Random
 
 -- | Downloads a URI to the filepath returned
