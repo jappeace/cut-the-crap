@@ -66,7 +66,7 @@ simpleOptions :: ListenCutOptionsT InputSource
 simpleOptions = ListenCutOptions
                         { lc_fileIO = simpleFileIO
                         , lc_silentTreshold = _Just # def_silent
-                        , lc_detectMargin   = _Just # def_margin
+                        , lc_detectMargin   = _Just # def_detect_margin
                         , lc_voiceTrack     = _Just # def_voice_track
                         , lc_musicTrack     = Nothing
                         , lc_silentDuration = _Just # def_duration
@@ -111,8 +111,8 @@ gnerate_sub_prism = _Ctor @"GenerateSubtitles"
 def_voice_track :: Int
 def_voice_track = 1
 
-def_margin :: Double
-def_margin = 0.05
+def_detect_margin :: Double
+def_detect_margin = def_duration / 2
 
 def_cut_noise :: Bool
 def_cut_noise = False
@@ -121,7 +121,7 @@ def_silent :: Double
 def_silent = 0.075
 
 def_duration :: Double
-def_duration = 0.25
+def_duration = 0.5
 
 def_voice :: Int
 def_voice = 1
@@ -130,7 +130,7 @@ lc_fileio :: Lens (ListenCutOptionsT a) (ListenCutOptionsT b) (FileIO a) (FileIO
 lc_fileio = field @"lc_fileIO"
 
 detect_margin :: Lens' (ListenCutOptionsT a) Double
-detect_margin = field @"lc_detectMargin" . non def_margin
+detect_margin = field @"lc_detectMargin" . non def_detect_margin
 
 silent_treshold :: Lens' (ListenCutOptionsT a) Double
 silent_treshold = field @"lc_silentTreshold" . non def_silent
@@ -211,20 +211,24 @@ parseSound = ListenCutOptions
             auto
             (  long "silentDuration"
             <> help
-                 "The duration before soemthing can be considered a silence (d: https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
+                 "The duration before something can be considered a silence (https://ffmpeg.org/ffmpeg-filters.html#silencedetect)"
+            <> value def_duration <> showDefault
             )
           )
     <*> optional
           (option
             auto
-            (long "detectMargin" <> help "Margin seconds around detection")
+            (long "detectMargin" <> help "Margin seconds around detection"
+            <> value def_detect_margin <> showDefault
+            )
           )
     <*> optional
           (option
             auto
-            (long "voiceTrack" <> help "The track to detect the silences upon" <> value def_voice_track <> showDefault)
+            (long "voiceTrack" <> help "The track to detect the silences upon"
+             <> value def_voice_track <> showDefault)
           )
     <*> optional
           (option auto (long "musicTrack" <> help "The track to integrate"))
     <*> switch
-          (long "cutNoise" <> help "Whether to cut noise instead of silence")
+          (long "cutNoise" <> help "Do the opposite: Cut noise instead of silence")
