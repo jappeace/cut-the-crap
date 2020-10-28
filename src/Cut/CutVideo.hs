@@ -1,13 +1,15 @@
 {-# OPTIONS_GHC -Wno-type-defaults #-}
 
+-- | Extract sounded parts, and combine again
 module Cut.CutVideo
   ( extract
+  , extractDir
   , Interval(..)
   , Silent
   , Sound
   , combine
   , combineOutput
-  , extractDir
+  , combineDir
   )
 where
 
@@ -24,24 +26,28 @@ import           Data.Text.Lens
 import           Shelly              hiding (FilePath, shelly)
 import           Text.Printf         (printf)
 
+-- | convert a sounded interval into a filename where we write the temporary extracted file in
+toFileName :: ListenCutOptions -> FilePath -> Interval Sound -> FilePath
+toFileName options tmp inter = tmp
+         </> getOutFileName options
+         <> "-"
+         <> fname
+         <> ".mkv"
+  where
+      fname    = printf "%010d" (truncate $ interval_start inter * 100 :: Integer)
+
 toArgs :: ListenCutOptions -> FilePath -> Interval Sound -> (Interval Sound, [Text])
 toArgs options tmp inter =
   ( inter
   , -- keep ter interval for debugging
     ["-y", "-ss", start, "-t", duration, "-i", options ^. lc_fileio . in_file . packed]
     <> specifyTracks options
-    <> [ Text.pack tmp
-         <> "/"
-         <> Text.pack (getOutFileName options)
-         <> "-"
-         <> fname
-         <> ".mkv"
+    <> [ Text.pack $ toFileName options tmp inter
        ]
   )
  where
   start    = floatToText $ interval_start inter
   duration = floatToText $ interval_duration inter
-  fname    = Text.pack $ printf "%010d" (truncate $ interval_start inter * 100 :: Integer)
 
 extractDir :: FilePath
 extractDir = "/extract"
@@ -82,3 +88,12 @@ combine tempDir = do
     , "copy"
     , Text.pack $ tempDir <> "/" <> combineOutput
     ]
+
+combineDir :: ListenCutOptions -> FilePath -> [Interval Sound] -> Sh ()
+combineDir options tempDir intervals = do
+  let paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
+  writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths
+  combine tempDir
+  where
+    res = Text.pack . toFileName options exdir <$> intervals
+    exdir = tempDir <> extractDir

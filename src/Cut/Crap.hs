@@ -79,15 +79,8 @@ withTempDir filioOpts fun =
 runEdit :: ListenCutOptions -> [Interval Sound] -> FilePath -> IO ()
 runEdit options parsed tempDir = do
   extract options tempDir parsed
-  shelly $ combineDir options tempDir
+  shelly $ combineDir options tempDir parsed
   getMusic options tempDir
-
-combineDir :: ListenCutOptions -> FilePath -> Sh ()
-combineDir _ tempDir = do
-  res <- lsT $ fromText $ Text.pack (tempDir <> extractDir)
-  let paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
-  writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths
-  combine tempDir
 
 readSettings :: IO (ProgramOptions InputSource)
 readSettings = customExecParser (prefs showHelpOnError) $ info
