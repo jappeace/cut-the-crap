@@ -1,5 +1,5 @@
 name:                cut-the-crap
-version:             2.1.2
+version:             2.2.0
 license:             MIT
 category:            video
 synopsis:            Cuts out uninteresting parts of videos by detecting silences. 

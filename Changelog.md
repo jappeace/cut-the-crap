@@ -1,9 +1,13 @@
 # Change log for cut-the-crap
 
-## Version 2.2.0 - TBA
+## Version 2.2.0 - 2020.10.28
 
 + Add wrapper for shelly that always flushes stdout
   This should make the log more consistent
++ Fix scrambling bug.
+  Previously we used the file system to organize fragment order,
+  now we use the silence detection list instead.
+  This is much more robust
 
 ## Version 2.1.2 - 2020.10.25
 
