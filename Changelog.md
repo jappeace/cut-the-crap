@@ -1,5 +1,15 @@
 # Change log for cut-the-crap
 
+## Version 2.3.0 - TBA
+
++ Hide extractDir from cutvideo
+  this is just a string, so shouldn't matter.
++ Better default options.
+  The result is cut much less aggressive making it more watchable.
+  These defaults are also used on [videocut.org](https://videocut.org/)
++ Improve CLI docs on various options.
++ Fix bug where setting a relative workdir breaks the program.
+
 ## Version 2.2.0 - 2020.10.28
 
 + Add wrapper for shelly that always flushes stdout

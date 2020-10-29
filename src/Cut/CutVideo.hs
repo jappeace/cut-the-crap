@@ -3,7 +3,6 @@
 -- | Extract sounded parts, and combine again
 module Cut.CutVideo
   ( extract
-  , extractDir
   , Interval(..)
   , Silent
   , Sound
@@ -50,7 +49,7 @@ toArgs options tmp inter =
   duration = floatToText $ interval_duration inter
 
 extractDir :: FilePath
-extractDir = "/extract"
+extractDir = "extract"
 
 extract :: ListenCutOptions -> FilePath -> [Interval Sound] -> IO ()
 extract options tempDir intervals = do
@@ -63,10 +62,10 @@ extract options tempDir intervals = do
         pure ["expection"]
       )
     $   toArgs options exdir <$> intervals
-  liftIO $ putStrLn "finish extracting"
+  liftIO $ putStrLn "finished extracting"
 
   where
-    exdir = tempDir <> extractDir
+    exdir = tempDir </> extractDir
 
 combineOutput :: FilePath
 combineOutput = "combined-output.mkv"
@@ -86,14 +85,18 @@ combine tempDir = do
     , Text.pack (tempDir <> "/input.txt")
     , "-c"
     , "copy"
-    , Text.pack $ tempDir <> "/" <> combineOutput
+    , Text.pack $ tempDir </> combineOutput
     ]
 
 combineDir :: ListenCutOptions -> FilePath -> [Interval Sound] -> Sh ()
 combineDir options tempDir intervals = do
+  liftIO $ putStrLn "start combining the dir"
   let paths = Text.unlines $ flip (<>) "'" . ("file '" <>) <$> res
   writefile (fromText $ Text.pack $ tempDir <> "/input.txt") paths
   combine tempDir
   where
     res = Text.pack . toFileName options exdir <$> intervals
-    exdir = tempDir <> extractDir
+    -- for relative dirs ffmpeg doesn't accept prepending of tempdir
+    exdir = if hasWorkDir then extractDir else tempDir </> extractDir
+    hasWorkDir :: Bool
+    hasWorkDir = has (lc_fileio . work_dir . _Just) options
