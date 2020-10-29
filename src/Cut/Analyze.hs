@@ -57,10 +57,13 @@ detectSoundInterval opts = do
   liftIO $ putStrLn "-----------------------------------------"
   liftIO $ Text.putStrLn $ Text.unlines (linesRes ^.. traversed . _Left)
 
-  let linedUp        = zipped lines'
+  let linedUp        :: [(Text, Text)]
+      linedUp        = zipped lines'
+      parsed         :: [Interval Silent]
       parsed         = parse <$> linedUp
-      detector       = if opts ^. cut_noise then detectSilence else detectSound
+      fancyResult    :: [Interval Sound]
       fancyResult    = detector opts parsed
+      negativeResult :: Maybe (Interval Sound)
       negativeResult = find ((0 >) . interval_duration) fancyResult
 
   liftIO $ putStrLn "-----------------------------------------"
@@ -79,6 +82,10 @@ detectSoundInterval opts = do
       liftIO $ print negativeResult
       error "Found negative durations"
     else pure fancyResult
+
+  where
+      detector       :: ListenCutOptions -> [Interval Silent] -> [Interval Sound]
+      detector       = if opts ^. cut_noise then detectSilence else detectSound
 
 takeOnlyLines :: Text -> Bool
 takeOnlyLines matchWith = matches
