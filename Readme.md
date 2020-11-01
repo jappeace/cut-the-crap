@@ -204,3 +204,8 @@ These are listed in no particular order:
 + [Auto editor](https://github.com/WyattBlue/auto-editor)
 + https://www.kapwing.com/tools/mute-video
 + https://www.videomaker.com/forum/topic/how-to-remove-silence-from-a-video-automatically
+
+Auto editor seems actively maintained and packed with features.
+It's target audience is different, whereas I wish to host this project on
+[videocut.org](https://videocut.org/) and make it available to everyone,
+auto editor is to be a command line tool.
