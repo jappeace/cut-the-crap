@@ -1,5 +1,9 @@
 # Change log for cut-the-crap
 
+## Version 2.3.1 - TBA
+
++ Fix ssl cert check failure for the bundle. We disable it.
+
 ## Version 2.3.0 - 2020.11.01
 
 + Hide extractDir from cutvideo
