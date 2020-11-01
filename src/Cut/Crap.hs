@@ -36,6 +36,9 @@ import           Options.Applicative
 import           Shelly                       hiding (FilePath, shelly)
 import           System.IO.Temp
 import Cut.Download
+import Paths_cut_the_crap (version)
+import Data.Version (showVersion)
+import Text.Printf
 
 -- | reads settings from terminal and runs whatever command was
 --   given in program options
@@ -85,9 +88,13 @@ runEdit options parsed tempDir = do
 readSettings :: IO (ProgramOptions InputSource)
 readSettings = customExecParser (prefs showHelpOnError) $ info
   (parseProgram <**> helper)
-  (fullDesc <> header "Cut the crap" <> progDesc
+  (fullDesc <> header (printf "Cut the crap %s" curretVersion) <> progDesc
     "Automated video extracting, can cut out silences"
   )
+
+
+curretVersion :: String
+curretVersion = showVersion version
 
 musicFile :: FilePath
 musicFile = "music.mp3"

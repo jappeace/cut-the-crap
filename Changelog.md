@@ -1,6 +1,6 @@
 # Change log for cut-the-crap
 
-## Version 2.3.0 - TBA
+## Version 2.3.0 - 2020.11.01
 
 + Hide extractDir from cutvideo
   this is just a string, so shouldn't matter.
@@ -9,6 +9,9 @@
   These defaults are also used on [videocut.org](https://videocut.org/)
 + Improve CLI docs on various options.
 + Fix bug where setting a relative workdir breaks the program.
++ Add better bundle support which now isn't depended on nixpkgs
+  releases.
++ Add version to help output.
 
 ## Version 2.2.0 - 2020.10.28
 
