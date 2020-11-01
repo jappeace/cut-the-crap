@@ -59,4 +59,5 @@ youtube_dl uri path' = run "youtube-dl" args
     args = [Text.pack $ show uri
            , "-o", Text.pack path'
            , "--merge-output-format", "mkv"
+           , "--no-check-certificate"
            ]
