@@ -193,3 +193,14 @@ Scipy throws an exception complaining the wav is to big.
 Since this program doesn't use scipy it doesn't have that issue.
 
 It also appears like jumpcutter is unmaintained.
+
+# Alternatives
+This idea is obviously not new,
+considering ffmpeg has first class support for it.
+These are listed in no particular order:
+
++ [jumpcutter](https://github.com/carykh/jumpcutter)
++ [jumpcutter laumans fork](https://github.com/Lamaun/jumpcutter)
++ [Auto editor](https://github.com/WyattBlue/auto-editor)
++ https://www.kapwing.com/tools/mute-video
++ https://www.videomaker.com/forum/topic/how-to-remove-silence-from-a-video-automatically
