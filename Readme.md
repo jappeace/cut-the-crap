@@ -41,19 +41,12 @@ result/bin/cut-the-crap
 ```
 
 ## Bundle build (staticly linked bundled with runtime deps)
-
 From version 2.1.1 and onwards these nix bundles will be attached to releases on the [release page](https://github.com/jappeace/cut-the-crap/releases).
 These should work on any Linux distribution.
-The cost is that they are large files however (500mb+) because everything is bundled within.
-Including runtime dependencies such as ffmpeg and youtube-dl.
-
 Download the executable from the [release page](https://github.com/jappeace/cut-the-crap/releases).
 
-Releases of this kind trail the main release by a week because we rely on the
-hackage release being merged into nixpkgs.
-At the moment this appears to happen every Friday.
-This approach guarantees nix reproducibility without having to install nix.
 Under the hood we use [nix-bundle](https://github.com/matthewbauer/nix-bundle) for this.
+These are so large because everything from libc to youtube-dl are packaged within.
 
 ## Nix/Nixos
 
