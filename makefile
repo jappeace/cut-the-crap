@@ -7,7 +7,7 @@ build_:
 haddock:
 	nix-shell --run "cabal new-haddock all"
 
-haddock-hackage:
+haddock-hackage: clean
 	cabal new-haddock all --haddock-for-hackage --haddock-option=--hyperlinked-source
 	echo "the hackage ui doesn't accept the default format, use command instead"
 	cabal upload -d --publish ./dist-newstyle/*-docs.tar.gz
@@ -18,6 +18,7 @@ hpack:
 bundle:
 	rm -f result
 	nix-build nix/bundle.nix
+	mv result cut-the-crap
 
 ghcid: clean hpack etags
 	nix-shell --run "make ghcid_"
@@ -64,8 +65,10 @@ clean: clean-work-dir
 
 .PHONY: test run_
 
-sdist: hpack bundle
+sdist: hpack
+	nix-build nix/ci.nix
 	make run-in-shell RUN="cabal sdist"
+	make bundle
 
 brittany_:
 	$(shell set -x; for i in `fd hs`; do hlint --refactor --refactor-options=-i $$i; brittany --write-mode=inplace $$i; done)
