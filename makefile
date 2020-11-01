@@ -16,6 +16,7 @@ hpack:
 	nix-shell ./nix/hpack-shell.nix --run "make update-cabal"
 
 bundle:
+	rm -f result
 	nix-build nix/bundle.nix
 
 ghcid: clean hpack etags
@@ -63,8 +64,7 @@ clean: clean-work-dir
 
 .PHONY: test run_
 
-sdist: hpack
-	make static-linked-build
+sdist: hpack bundle
 	make run-in-shell RUN="cabal sdist"
 
 brittany_:
