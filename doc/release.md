@@ -6,6 +6,8 @@ Run hpack
 
 # Record changes in changelog.md
 
+# Commit
+
 # Upload to hackage
 
 make sdist

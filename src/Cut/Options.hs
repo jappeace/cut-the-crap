@@ -43,7 +43,7 @@ import           Data.Generics.Product.Fields
 import           Data.Generics.Sum
 import qualified Data.Text                    as Text
 import           Data.Text.Lens
-import           GHC.Generics                 hiding (to)
+import           GHC.Generics                 (Generic)
 import           Options.Applicative
 import Network.URI
 

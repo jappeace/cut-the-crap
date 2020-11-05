@@ -1,3 +1,5 @@
+{-# LANGUAGE DataKinds #-}
+
 module Cut.Analyze
   ( detectSoundInterval
   , Interval(..)
@@ -27,17 +29,24 @@ import qualified Data.Text.IO            as Text
 import           Data.Text.Lens
 import           Shelly                  hiding (find, shelly)
 import           Text.Regex.TDFA         hiding (empty)
+import           GHC.Generics                 (Generic)
 
 data Silent
 data Sound
 
-data Interval e = Interval
+-- | I think we can only detect silence with ffmpeg, so we flip the
+--  silent to sounded intervals, and :
+-- if x indicates silence:
+-- silence: xxx___xxx__xxxx____xxxxx__xx
+-- sounded: ___xxx___xx____xxxx_____xx__
+data Interval e =
+  Interval
   { interval_start       :: Double
   , interval_end         :: Double
   , interval_duration    :: Double
   , interval_input_start :: Text
   , interval_input_end   :: Text
-  } deriving Show
+  } deriving (Show, Generic)
 
 detectSoundInterval :: (MonadMask m, MonadUnliftIO m) => ListenCutOptions -> m [Interval Sound]
 detectSoundInterval opts = do
@@ -76,6 +85,11 @@ detectSoundInterval opts = do
   liftIO $ putStrLn "-----------------------------------------"
   liftIO $ traverse_ print parsed
 
+  liftIO $ putStrLn "-----------------------------------------"
+  liftIO $ putStrLn "-----------------sounds-----------------"
+  liftIO $ putStrLn "-----------------------------------------"
+  liftIO $ traverse_ print fancyResult
+
   if isJust negativeResult
     then do
       liftIO $ traverse_ print fancyResult
@@ -103,21 +117,33 @@ zipped (one : two : rem') = (one, two) : zipped rem'
 detectSilence :: ListenCutOptions -> [Interval Silent] -> [Interval Sound]
 detectSilence _ = coerce
 
-detectSound :: ListenCutOptions -> [Interval Silent] -> [Interval Sound]
-detectSound opts =
-  --  -- TODO figure out why these durations get recorded as < 0
-  reverse . snd . foldl' (flip (compare' opts)) (Interval 0 0 0 "" "", [])
+-- TODO: we can't process videos that are longer then a week.
+finalSound :: Interval Silent
+finalSound = Interval week (week+1) 1 "" ""
+  where
+    week = day * 7
+    day = 60*60*24
 
-compare'
+detectSound :: ListenCutOptions -> [Interval Silent] -> [Interval Sound]
+detectSound opts silences =
+  reverse $ snd $ fun soundedParts finalSound
+  where
+    soundedParts :: (Interval Silent, [Interval Sound])
+    soundedParts = foldl' fun (Interval 0 0 0 "" "", []) silences
+
+    fun = flip $ silentIntoSounded opts
+
+
+silentIntoSounded
   :: ListenCutOptions
   -> Interval Silent
   -> (Interval Silent, [Interval Sound])
   -> (Interval Silent, [Interval Sound])
-compare' opts current prev = (current, soundedInterval : snd prev)
+silentIntoSounded opts current prev = (current, soundedInterval : snd prev)
  where
   soundedInterval = Interval
-    { interval_start       = interval_end $ fst prev
-    , interval_end         = interval_start current - margin
+    { interval_start       = soundStart
+    , interval_end         = soundEnd - margin
     , interval_duration    = (soundEnd - soundStart) + margin
     , interval_input_start =
       interval_input_start (fst prev) <> "," <> interval_input_end (fst prev)
