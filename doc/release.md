@@ -11,6 +11,7 @@ Run hpack
 # Upload to hackage
 
 make sdist
+do upload by hand
 make haddock-hackage
 
 

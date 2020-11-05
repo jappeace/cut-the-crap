@@ -67,8 +67,8 @@ clean: clean-work-dir
 
 sdist: hpack
 	nix-build nix/ci.nix
-	make run-in-shell RUN="cabal sdist"
 	make bundle
+	make run-in-shell RUN="cabal sdist"
 
 brittany_:
 	$(shell set -x; for i in `fd hs`; do hlint --refactor --refactor-options=-i $$i; brittany --write-mode=inplace $$i; done)
