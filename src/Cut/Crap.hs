@@ -113,13 +113,16 @@ getMusic opt' tempDir = do
       echo "done getting music"
       pure $ Text.pack (tempDir </> withMusicFile)
   workdir <- pwd
+  echo "---"
   echo $ Text.pack $  printf "writing '%s' to '%s' in working dir '%s'" res outfile workdir
-  when (workdir == "/") $ echo "If this working dir is wrong try an absolute path as OUTPUT_FILE"
+  when (isOutRelative && workdir == "/") $ echo "If this working dir is wrong try an absolute path as OUTPUT_FILE"
   cp (fromText res) (fromText $ Text.pack outfile)
   where
     combinedFile = tempDir </> combineOutput
     outfile :: FilePath
     outfile = opt' ^. lc_fileio . out_file
+
+    isOutRelative = take 1 outfile /= "/"
 
 
 extractMusicTrack :: Int -> FilePath -> FilePath -> Sh ()
