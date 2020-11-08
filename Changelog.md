@@ -4,6 +4,8 @@
 
 + Better logging of output file writing
 + Better explanation of subtitles
++ Tell the user to use an absolute path if the workdir happens to be "/"
+  (This happens with nix-bundle releases).
 
 ## Version 2.3.1 - 2020.11.05
 

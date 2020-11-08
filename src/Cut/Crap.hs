@@ -113,7 +113,8 @@ getMusic opt' tempDir = do
       echo "done getting music"
       pure $ Text.pack (tempDir </> withMusicFile)
   workdir <- pwd
-  echo $ Text.pack $  printf "writing %s to %s in working dir %s" res outfile workdir
+  echo $ Text.pack $  printf "writing '%s' to '%s' in working dir '%s'" res outfile workdir
+  when (workdir == "/") $ echo "If this working dir is wrong try an absolute path as OUTPUT_FILE"
   cp (fromText res) (fromText $ Text.pack outfile)
   where
     combinedFile = tempDir </> combineOutput
