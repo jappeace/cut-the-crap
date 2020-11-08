@@ -6,6 +6,9 @@
 + Better explanation of subtitles
 + Tell the user to use an absolute path if the workdir happens to be "/"
   (This happens with nix-bundle releases).
++ Lower default silence treshold to 0.0125.
+  This makes the result much more audible for presentations.
+  Probably won't work great if there is music.
 
 ## Version 2.3.1 - 2020.11.05
 
