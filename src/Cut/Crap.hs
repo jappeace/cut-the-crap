@@ -82,8 +82,9 @@ withTempDir filioOpts fun =
 runEdit :: ListenCutOptions -> [Interval Sound] -> FilePath -> IO ()
 runEdit options parsed tempDir = do
   extract options tempDir parsed
-  shelly $ combineDir options tempDir parsed
-  getMusic options tempDir
+  shelly $ do
+    combineDir options tempDir parsed
+    getMusic options tempDir
 
 readSettings :: IO (ProgramOptions InputSource)
 readSettings = customExecParser (prefs showHelpOnError) $ info
@@ -102,18 +103,23 @@ musicFile = "music.mp3"
 withMusicFile :: FilePath
 withMusicFile = "combined.mkv"
 
-getMusic :: ListenCutOptions -> FilePath -> IO ()
+getMusic :: ListenCutOptions -> FilePath -> Sh ()
 getMusic opt' tempDir = do
   res <- case opt' ^. music_track of
     Nothing -> pure $ Text.pack combinedFile
     Just x  -> do
-      shelly $ extractMusicTrack x (opt' ^. lc_fileio . in_file) tempDir
-      shelly $ mergeMusicAndVideo tempDir
-      pure $ Text.pack (tempDir <> "/" <> withMusicFile)
-  putStrLn "done get music"
-  shelly $ cp (fromText res) (opt' ^. lc_fileio . out_file . packed . to fromText)
-  pure ()
-  where combinedFile = tempDir <> "/" <> combineOutput
+      extractMusicTrack x (opt' ^. lc_fileio . in_file) tempDir
+      mergeMusicAndVideo tempDir
+      echo "done getting music"
+      pure $ Text.pack (tempDir </> withMusicFile)
+  workdir <- pwd
+  echo $ Text.pack $  printf "writing %s to %s in working dir %s" res outfile workdir
+  cp (fromText res) (fromText $ Text.pack outfile)
+  where
+    combinedFile = tempDir </> combineOutput
+    outfile :: FilePath
+    outfile = opt' ^. lc_fileio . out_file
+
 
 extractMusicTrack :: Int -> FilePath -> FilePath -> Sh ()
 extractMusicTrack musicTrack inputFile tempDir = void $ ffmpeg inputFile args

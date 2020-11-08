@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 557a97d6569976501592fb79ffc6d8141f2fd410ba6d31c394c1f408e2058021
+-- hash: 8772a728247d8ec6862ec7e66154b21620bb60f3d5d883660e0edafea6dbacf7
 
 name:           cut-the-crap
-version:        2.3.1
+version:        2.3.2
 synopsis:       Cuts out uninteresting parts of videos by detecting silences.
 description:    Cut the crap is an automatic video editing program for streamers. It can cut out uninteresting parts by detecting silences. This was inspired by [jumpcutter](https://github.com/carykh/jumpcutter), where this program can get better quality results by using an (optional) dedicated microphone track. This prevents cutting of [quieter consonants](https://youtu.be/DQ8orIurGxw?t=675) for example. Using ffmpeg more efficiently also produces faster results and is less error prone.
 category:       video

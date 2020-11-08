@@ -1,5 +1,9 @@
 # Change log for cut-the-crap
 
+## Version 2.3.2 - TBA
+
++ Better logging of output file writing
+
 ## Version 2.3.1 - 2020.11.05
 
 + Fix ssl cert check failure for the bundle. We disable it.
