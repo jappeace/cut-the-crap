@@ -3,6 +3,7 @@
 ## Version 2.3.2 - TBA
 
 + Better logging of output file writing
++ Better explanation of subtitles
 
 ## Version 2.3.1 - 2020.11.05
 

@@ -88,7 +88,7 @@ runEdit options parsed tempDir = do
 
 readSettings :: IO (ProgramOptions InputSource)
 readSettings = customExecParser (prefs showHelpOnError) $ info
-  (parseProgram <**> helper)
+  (helper <*> parseProgram)
   (fullDesc <> header (printf "Cut the crap %s" curretVersion) <> progDesc
     "Automated video extracting, can cut out silences"
   )

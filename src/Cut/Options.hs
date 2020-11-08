@@ -192,7 +192,7 @@ parseProgram =
   subparser $
     command "listen" (info (ListenCut <$> parseSound) $ progDesc "Cut out by listening to sound options. We listen for silences and cut out the parts that are silenced.")
     <>
-    command "subtitles" (info (GenerateSubtitles <$> parseFile) $ progDesc "Generate subtiles for a video. This is an intermediate (but usefull) feature developed for recognizing human speech vs background noise.")
+    command "subtitles" (info (GenerateSubtitles <$> parseFile) $ progDesc "[alpha] Generate subtitles for a video. This is an intermediate step towards developing human speech detection and background noise.")
 
 parseSound :: Parser (ListenCutOptionsT InputSource)
 parseSound = ListenCutOptions
