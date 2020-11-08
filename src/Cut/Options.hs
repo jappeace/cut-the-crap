@@ -118,7 +118,7 @@ def_cut_noise :: Bool
 def_cut_noise = False
 
 def_silent :: Double
-def_silent = 0.075
+def_silent = 0.0125
 
 def_duration :: Double
 def_duration = 0.5
