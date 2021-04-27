@@ -82,6 +82,8 @@ ubuntu-release:
 	docker build -t ubuntu-release scripts
 	docker run -v ~/projects/cut-the-crap:/home/jappie -t ubuntu-release
 
+# only works with this: https://github.com/nh2/static-haskell-nix
+# in other words, it doesn't work without musl
 static-linked-build:
 	nix-build --no-link
 
