@@ -38,6 +38,8 @@ data CSettings = MkCSettings {
 defSettings :: CSettings
 defSettings = MkCSettings 2000000
 
+-- | this will fork out a thread that is already tracked by CState,
+--   it also has the untrack handler attached.
 forkTracked :: CState -> IO () -> IO ThreadId
 forkTracked state io =
   mask $ \restore -> mdo -- if you want to fork..
