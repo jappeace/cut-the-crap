@@ -4,15 +4,29 @@
 --   don't just kill the main thread, kill every other registered thread as well.
 -- https://ro-che.info/articles/2014-07-30-bracket
 module CtrlC
-  ( sigKillThese
+  ( withKillThese
   , CSettings(..)
   , defSettings
+  , forkTracked
+  , track
+  , untrack
   , installSignalHandlers
   , SignalException(..)
   )
 where
 
 import qualified Data.Set as Set
+import Data.Foldable
+import Control.Exception
+import Data.Set(Set)
+import Control.Monad.STM
+import Control.Concurrent.STM.TVar
+import Control.Concurrent
+import System.Timeout
+import Data.Typeable (Typeable)
+import System.Posix.Signals
+import System.Mem.Weak (deRefWeak)
+import Control.Monad(void)
 
 data CState = MkCState {
   ccsTrackedThreads :: TVar (Set ThreadId) -- excluding the main thread
@@ -28,12 +42,10 @@ forkTracked :: CState -> IO () -> IO ThreadId
 forkTracked state io =
   mask $ \restore -> mdo -- if you want to fork..
     tid <- restore $ forkIO $ do -- restore the subthread
-        io
-        atomically $ untrack state tid
+        io `finally` do
+          atomically $ untrack state tid
     atomically $ track state tid -- but we need to not except here
     pure tid
-
-  
 
 track :: CState -> ThreadId -> STM ()
 track state tid =
@@ -41,6 +53,8 @@ track state tid =
   where
     tvar = ccsTrackedThreads state
 
+-- | This is used as adhoc cleanup as well.
+--   all tracked threads should call this when they're done cleaning up
 untrack :: CState -> ThreadId -> STM ()
 untrack state tid =
   modifyTVar tvar (Set.delete tid)
@@ -60,12 +74,12 @@ withKillThese settings fun = do
   installSignalHandlers
   threads <- newTVarIO mempty
   mask $ \restore -> do
-    restore (fun $ MkCstate {
+    restore (fun $ MkCState {
       ccsTrackedThreads = threads
       }) `finally` do
         threadSet <- readTVarIO threads
         traverse_ killThread threadSet
-        _mres <- timeout (csTimeout settings) $ waitTillClean threads
+        void $ timeout (csTimeout settings) $ waitTillClean threads
 
 waitTillClean :: TVar (Set ThreadId) -> IO ()
 waitTillClean x = do
