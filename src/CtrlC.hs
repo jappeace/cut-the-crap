@@ -1,5 +1,6 @@
 {-# LANGUAGE RecursiveDo #-}
 
+-- TODO write a test for this: https://ro-che.info/articles/2014-07-30-bracket#bracket-in-non-main-threads
 -- | Deal with ctrl c events nicely.
 --   don't just kill the main thread, kill every other registered thread as well.
 -- https://ro-che.info/articles/2014-07-30-bracket
