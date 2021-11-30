@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8772a728247d8ec6862ec7e66154b21620bb60f3d5d883660e0edafea6dbacf7
+-- hash: 972751f5406007456ce5fb504f9b54d2fc8506d8c8103b903de36ce68d73cfff
 
 name:           cut-the-crap
 version:        2.3.2
@@ -24,6 +24,7 @@ extra-source-files:
 
 library
   exposed-modules:
+      CtrlC
       Cut.Analyze
       Cut.Crap
       Cut.CutVideo
@@ -46,10 +47,9 @@ library
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
-  build-tools:
-      c2hs
   build-depends:
       base >=4.7 && <4.15
+    , containers
     , exceptions
     , generic-lens
     , lens
@@ -58,10 +58,12 @@ library
     , random
     , regex-tdfa
     , shelly
+    , stm
     , system-filepath
     , temporary
     , text
     , time
+    , unix
     , unliftio-core
   default-language: Haskell2010
 
@@ -82,10 +84,9 @@ executable cut-the-crap
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
-  build-tools:
-      c2hs
   build-depends:
       base >=4.7 && <4.15
+    , containers
     , cut-the-crap
     , exceptions
     , generic-lens
@@ -95,10 +96,12 @@ executable cut-the-crap
     , random
     , regex-tdfa
     , shelly
+    , stm
     , system-filepath
     , temporary
     , text
     , time
+    , unix
     , unliftio-core
   default-language: Haskell2010
 
@@ -109,6 +112,7 @@ test-suite unit
       Test.MatchLineSpec
       Test.SubtitleAlignmentSpec
       Test.TestSpec
+      CtrlC
       Cut.Analyze
       Cut.Crap
       Cut.CutVideo
@@ -131,11 +135,10 @@ test-suite unit
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
-  build-tools:
-      c2hs
   build-depends:
       QuickCheck
     , base >=4.7 && <4.15
+    , containers
     , exceptions
     , generic-lens
     , hspec
@@ -147,9 +150,11 @@ test-suite unit
     , random
     , regex-tdfa
     , shelly
+    , stm
     , system-filepath
     , temporary
     , text
     , time
+    , unix
     , unliftio-core
   default-language: Haskell2010
