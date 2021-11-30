@@ -71,6 +71,9 @@ dependencies:
 - time
 - network-uri
 - random
+- containers
+- stm
+- unix
 # - gogol-youtube < 0.6.0
 
 library:
@@ -109,5 +112,5 @@ pkg-config-dependencies:
   - pocketsphinx
   - sphinxbase
 
-build-tools-depends: c2hs
-build-tools: c2hs
+# build-tools-depends: c2hs
+# build-tools: c2hs
