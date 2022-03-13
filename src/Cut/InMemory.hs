@@ -28,23 +28,20 @@ defaultSettings = MkMemSettings
   }
 
 readFfmpeg :: InMemSettings -> IO ()
-readFfmpeg MkMemSettings{..} = do
-  -- avFormatContext :: AVFormatContext <- Decode.openFile imsInFile
-  -- (containerIx, avCodecContext, avCodec, avStream) <- Decode.findVideoStream avFormatContext
-  (frame, cleanup) <- Decode.frameReader avPixFmtRgb32 (File imsInFile)
-
-  _writer :: Maybe (AVPixelFormat,
-                   V2 CInt, -- ^ resolution
-                   Vector CUChar -- ^ pixel data
-                  ) -> IO ()
-    <- Encode.frameWriter defaultParams imsWidth imsHeight imsOutFile -- >>>
+readFfmpeg MkMemSettings{..} =
+  withWriter defaultParams imsOutFile $ \writer ->
   readFrames avPixFmtRgb32 imsInFile $ \(avframe, time) -> do
+    pure ()
 
-
-  writer Nothing
-
-  pure ()
-
+withWriter ::  EncodingParams -> FilePath -> (
+  ( AVPixelFormat
+  , V2 CInt -- ^ resolution
+  , Vector CUChar -- ^ pixel data
+  ) -> IO ()
+  ) -> IO ()
+withWriter params path fun = do
+  bracket (Encode.frameWriter params path)
+          (\writer -> writer Nothing) $ fun . Just
 
 -- | steps trough all frames and performs cleanup
 readFrames ::  AVPixelFormat -> FilePath -> ((AVFrame, Double) -> IO ()) -> IO ()
