@@ -18,6 +18,7 @@ pkgs.haskellPackages.shellFor {
         pkgs.cabal2nix
         pkgs.haskellPackages.hpack
         pkgs.haskellPackages.c2hs
+        pkgs.cabal-install
         ];
   exactDeps = true;
   NIX_PATH="nixpkgs=${pkgs.path}:.";

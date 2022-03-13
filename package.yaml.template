@@ -72,6 +72,7 @@ dependencies:
 - network-uri
 - random
 # - gogol-youtube < 0.6.0
+- ffmpeg-light
 
 library:
   source-dirs: src
