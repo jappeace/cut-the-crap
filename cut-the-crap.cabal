@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.2.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1add9cfa5ab40b8c8cfa97b8f6fc0b196c79ccceb139357a10f66a04cc2567f4
+-- hash: 5ffe2d8f389bc777e758bbc2e6e3b6ffb5757d1f1d65f83785d723b16686e757
 
 name:           cut-the-crap
 version:        2.3.3
@@ -28,6 +28,7 @@ library
       Cut.Crap
       Cut.CutVideo
       Cut.Download
+      Cut.InMemory
       Cut.Options
       Cut.Shell
       Cut.SpeechRecognition
@@ -35,9 +36,28 @@ library
       Paths_cut_the_crap
   hs-source-dirs:
       src
-  default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
+  default-extensions:
+      EmptyCase
+      FlexibleContexts
+      FlexibleInstances
+      InstanceSigs
+      MultiParamTypeClasses
+      LambdaCase
+      MultiWayIf
+      NamedFieldPuns
+      TupleSections
+      DeriveFoldable
+      DeriveFunctor
+      DeriveGeneric
+      DeriveLift
+      DeriveTraversable
+      DerivingStrategies
+      GeneralizedNewtypeDeriving
+      StandaloneDeriving
+      OverloadedStrings
+      TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/a9l7d7j0abmfybxq64xv3zfwvgssycy7-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/m6x1x0q5zdldmjh1n94xvarzx4src5mf-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -46,13 +66,13 @@ library
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
-  build-tools:
-      c2hs
   build-depends:
       base >=4.7 && <5
     , exceptions
+    , ffmpeg-light
     , generic-lens
     , lens
+    , mtl
     , network-uri
     , optparse-applicative
     , random
@@ -62,7 +82,9 @@ library
     , temporary
     , text
     , time
+    , unliftio
     , unliftio-core
+    , vector
   default-language: Haskell2010
 
 executable cut-the-crap
@@ -71,9 +93,28 @@ executable cut-the-crap
       Paths_cut_the_crap
   hs-source-dirs:
       app
-  default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
+  default-extensions:
+      EmptyCase
+      FlexibleContexts
+      FlexibleInstances
+      InstanceSigs
+      MultiParamTypeClasses
+      LambdaCase
+      MultiWayIf
+      NamedFieldPuns
+      TupleSections
+      DeriveFoldable
+      DeriveFunctor
+      DeriveGeneric
+      DeriveLift
+      DeriveTraversable
+      DerivingStrategies
+      GeneralizedNewtypeDeriving
+      StandaloneDeriving
+      OverloadedStrings
+      TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities -threaded -rtsopts -with-rtsopts=-N
-  cc-options: -DMODELDIR="/nix/store/a9l7d7j0abmfybxq64xv3zfwvgssycy7-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/m6x1x0q5zdldmjh1n94xvarzx4src5mf-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -82,14 +123,14 @@ executable cut-the-crap
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
-  build-tools:
-      c2hs
   build-depends:
       base >=4.7 && <5
     , cut-the-crap
     , exceptions
+    , ffmpeg-light
     , generic-lens
     , lens
+    , mtl
     , network-uri
     , optparse-applicative
     , random
@@ -99,7 +140,9 @@ executable cut-the-crap
     , temporary
     , text
     , time
+    , unliftio
     , unliftio-core
+    , vector
   default-language: Haskell2010
 
 test-suite unit
@@ -113,6 +156,7 @@ test-suite unit
       Cut.Crap
       Cut.CutVideo
       Cut.Download
+      Cut.InMemory
       Cut.Options
       Cut.Shell
       Cut.SpeechRecognition
@@ -120,9 +164,28 @@ test-suite unit
   hs-source-dirs:
       test
       src
-  default-extensions: EmptyCase FlexibleContexts FlexibleInstances InstanceSigs MultiParamTypeClasses LambdaCase MultiWayIf NamedFieldPuns TupleSections DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies GeneralizedNewtypeDeriving StandaloneDeriving OverloadedStrings TypeApplications
+  default-extensions:
+      EmptyCase
+      FlexibleContexts
+      FlexibleInstances
+      InstanceSigs
+      MultiParamTypeClasses
+      LambdaCase
+      MultiWayIf
+      NamedFieldPuns
+      TupleSections
+      DeriveFoldable
+      DeriveFunctor
+      DeriveGeneric
+      DeriveLift
+      DeriveTraversable
+      DerivingStrategies
+      GeneralizedNewtypeDeriving
+      StandaloneDeriving
+      OverloadedStrings
+      TypeApplications
   ghc-options: -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints -Wincomplete-record-updates -Widentities
-  cc-options: -DMODELDIR="/nix/store/a9l7d7j0abmfybxq64xv3zfwvgssycy7-pocketsphinx-5prealpha/share/pocketsphinx/model"
+  cc-options: -DMODELDIR="/nix/store/m6x1x0q5zdldmjh1n94xvarzx4src5mf-pocketsphinx-5prealpha/share/pocketsphinx/model"
   include-dirs:
       includes
   c-sources:
@@ -131,16 +194,16 @@ test-suite unit
   pkgconfig-depends:
       pocketsphinx
     , sphinxbase
-  build-tools:
-      c2hs
   build-depends:
       QuickCheck
     , base >=4.7 && <5
     , exceptions
+    , ffmpeg-light
     , generic-lens
     , hspec
     , hspec-core
     , lens
+    , mtl
     , network-uri
     , optparse-applicative
     , quickcheck-classes
@@ -151,5 +214,7 @@ test-suite unit
     , temporary
     , text
     , time
+    , unliftio
     , unliftio-core
+    , vector
   default-language: Haskell2010

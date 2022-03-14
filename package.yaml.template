@@ -73,6 +73,9 @@ dependencies:
 - random
 # - gogol-youtube < 0.6.0
 - ffmpeg-light
+- vector
+- unliftio
+- mtl
 
 library:
   source-dirs: src
@@ -109,6 +112,3 @@ cc-options: -DMODELDIR="REPLACED_MODEL"
 pkg-config-dependencies: 
   - pocketsphinx
   - sphinxbase
-
-build-tools-depends: c2hs
-build-tools: c2hs

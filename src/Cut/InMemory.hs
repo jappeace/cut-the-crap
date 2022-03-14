@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds     #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE RecordWildCards #-}
 
 -- | Links to ffmpeg-light allowing us to do analysis in memory.
 --   this is a lot faster.
@@ -9,8 +10,17 @@ module Cut.InMemory
   )
 where
 
+import Control.Monad.Except
+import UnliftIO.Exception
 import qualified Codec.FFmpeg.Decode as Decode
 import qualified Codec.FFmpeg.Encode as Encode
+import Codec.FFmpeg.Encode(EncodingParams)
+import Foreign.C.Types
+import Codec.FFmpeg.Enums
+import Data.Vector.Storable (Vector)
+import Codec.FFmpeg.Types(AVFrame, InputSource(..))
+import Codec.FFmpeg.Internal.Linear(V2(..))
+
 
 data InMemSettings = MkMemSettings
   { imsInFile :: FilePath
@@ -29,11 +39,11 @@ defaultSettings = MkMemSettings
 
 readFfmpeg :: InMemSettings -> IO ()
 readFfmpeg MkMemSettings{..} =
-  withWriter defaultParams imsOutFile $ \writer ->
+  withWriter Encode.defaultParams imsOutFile $ \writer ->
   readFrames avPixFmtRgb32 imsInFile $ \(avframe, time) -> do
     pure ()
 
-withWriter ::  EncodingParams -> FilePath -> (
+withWriter :: EncodingParams -> FilePath -> (
   ( AVPixelFormat
   , V2 CInt -- ^ resolution
   , Vector CUChar -- ^ pixel data
@@ -46,11 +56,14 @@ withWriter params path fun = do
 -- | steps trough all frames and performs cleanup
 readFrames ::  AVPixelFormat -> FilePath -> ((AVFrame, Double) -> IO ()) -> IO ()
 readFrames pxfmt path fun = do
-  (readCmd, cleanup) <- Decode.frameReader avPixFmtRgb32 (File imsInFile)
-  loop
-  where
-    loop = do
-      mFrame <- readCmd
-      case mFrame  of
-        Just frame -> (fun frame `finally` cleanup) >> loop
-        Nothing -> pure ()
+  res <- runExceptT $ Decode.frameReaderTime avPixFmtRgb32 (File path)
+  case res of
+    Left str -> error str
+    Right (readCmd, cleanup) -> do
+          let
+            loop = do
+              mFrame <- readCmd
+              case mFrame  of
+                Just frame -> (fun frame >> loop) `finally` cleanup
+                Nothing -> pure ()
+          loop
