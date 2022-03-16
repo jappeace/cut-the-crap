@@ -37,21 +37,38 @@ defaultSettings = MkMemSettings
   , imsHeight = 1920
   }
 
-readFfmpeg :: InMemSettings -> IO ()
-readFfmpeg MkMemSettings{..} =
-  withWriter Encode.defaultParams imsOutFile $ \writer ->
-  readFrames avPixFmtRgb32 imsInFile $ \(avframe, time) -> do
-    pure ()
+readffmpeg :: InMemSettings -> IO ()
+readffmpeg MkMemSettings{..} =
+  withWriter (Encode.defaultParams imsWidth imsHeight) imsOutFile $ \writer -> do
+    readFrames avPixFmtRgb32 imsInFile $ \(avframe, time) -> do
+      pure ()
 
-withWriter :: EncodingParams -> FilePath -> (
-  ( AVPixelFormat
-  , V2 CInt -- ^ resolution
-  , Vector CUChar -- ^ pixel data
-  ) -> IO ()
+withWriter :: EncodingParams -> FilePath ->
+  (
+    ( AVPixelFormat
+    , V2 CInt -- ^ resolution
+    , Vector CUChar -- ^ pixel data
+    ) -> IO ()
   ) -> IO ()
 withWriter params path fun = do
   bracket (Encode.frameWriter params path)
-          (\writer -> writer Nothing) $ fun . Just
+          (\writer -> writer Nothing) $ innerBracket fun
+
+innerBracket :: (
+    ( AVPixelFormat
+    , V2 CInt -- ^ resolution
+    , Vector CUChar -- ^ pixel data
+    ) -> IO ()
+  )
+  ->
+  (
+    Maybe ( AVPixelFormat
+    , V2 CInt -- ^ resolution
+    , Vector CUChar -- ^ pixel data
+    ) -> IO ()
+  )
+  -> IO ()
+innerBracket fun writer = pure ()
 
 -- | steps trough all frames and performs cleanup
 readFrames ::  AVPixelFormat -> FilePath -> ((AVFrame, Double) -> IO ()) -> IO ()
