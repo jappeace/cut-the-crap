@@ -1,0 +1,36 @@
+-- https://downloads.haskell.org/ghc/latest/docs/html/users_guide/ghci.html#ghci-commands
+
+:set -i./src:./test
+:set -fobject-code
+:set -O0
+:set -j4
+:set +s
+:set -Wall
+:set -Wincomplete-uni-patterns
+:set -Wincomplete-record-updates
+:set -Widentities
+:set -Wredundant-constraints
+:set -Wcpp-undef
+:set -Werror=incomplete-patterns
+:set -fwarn-tabs
+:set -Wpartial-fields
+
+:set -XEmptyCase
+:set -XFlexibleContexts
+:set -XFlexibleInstances
+:set -XInstanceSigs
+:set -XMultiParamTypeClasses
+:set -XLambdaCase
+:set -XMultiWayIf
+:set -XNamedFieldPuns
+:set -XTupleSections
+:set -XDeriveFoldable
+:set -XDeriveFunctor
+:set -XDeriveGeneric
+:set -XDeriveLift
+:set -XDeriveTraversable
+:set -XDerivingStrategies
+:set -XGeneralizedNewtypeDeriving
+:set -XStandaloneDeriving
+:set -XOverloadedStrings
+:set -XTypeApplications
