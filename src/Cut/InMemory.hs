@@ -48,7 +48,7 @@ readffmpeg :: InMemSettings -> IO ()
 readffmpeg MkMemSettings{..} = do
   initFFmpeg
   setLogLevel avLogInfo
-  withWriter (Encode.defaultParams imsWidth imsHeight) imsOutFile $ \writer -> do
+  cleanup <- withWriter (Encode.defaultParams imsWidth imsHeight) imsOutFile $ \writer -> do
     readFrames imsInFile $ \(avframe, time) -> do
       pxfmt <-  getPixelFormat avframe
       vec <- runExceptT $ Tagged.frameToVectorExceptT avframe
@@ -56,20 +56,21 @@ readffmpeg MkMemSettings{..} = do
       case vec of
         Right v -> writer (pxfmt,V2 imsWidth imsHeight,v)
         Left errs -> error $ "oh noes, died at " <> show (time, errs) <> " , for some reason, maybeT squashed everything :(  "
+  cleanup
 
 withWriter :: EncodingParams -> FilePath ->
   (
     (( AVPixelFormat
     , V2 CInt -- ^ resolution
     , Vector CUChar -- ^ pixel data
-    ) -> IO ()) -> IO ()
-  ) -> IO ()
+    ) -> IO ()) -> IO a
+  ) -> IO a
 withWriter params path fun = do
   bracket (Encode.videoWriter params path)
           (\writer -> writer Nothing) $ \writer -> (fun (writer . Just))
 
 -- | steps trough all frames and performs cleanup
-readFrames ::  FilePath -> ((AVFrame, Double) -> IO ()) -> IO ()
+readFrames ::  FilePath -> ((AVFrame, Double) -> IO ()) -> IO (IO ())
 readFrames path fun = do
   res <- runExceptT $ Decode.frameReaderTime avPixFmtRgba (File path)
   case res of
@@ -81,4 +82,4 @@ readFrames path fun = do
               case mFrame  of
                 Just frame -> (fun frame >> loop)
                 Nothing -> pure ()
-          loop
+          cleanup <$ loop
