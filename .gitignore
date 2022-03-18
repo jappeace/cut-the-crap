@@ -23,3 +23,6 @@ package.yaml
 *.chs.h
 src/Cut/SphinxBindings.hs
 *.srt
+
+*.hi
+*.o
