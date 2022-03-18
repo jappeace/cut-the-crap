@@ -12,6 +12,7 @@ module Cut.InMemory
   )
 where
 
+import qualified Cut.InMemory.Tagged as Tagged
 import Control.Monad.Except
 import UnliftIO.Exception
 import qualified Codec.FFmpeg.Decode as Decode
@@ -23,6 +24,9 @@ import Codec.FFmpeg.Enums
 import Data.Vector.Storable (Vector)
 import Codec.FFmpeg.Types(AVFrame, InputSource(..), getPixelFormat)
 import Codec.FFmpeg.Internal.Linear(V2(..))
+import Codec.FFmpeg(initFFmpeg,  setLogLevel)
+import qualified Codec.FFmpeg.Common as Common
+
 
 
 data InMemSettings = MkMemSettings
@@ -41,14 +45,17 @@ defaultSettings = MkMemSettings
   }
 
 readffmpeg :: InMemSettings -> IO ()
-readffmpeg MkMemSettings{..} =
+readffmpeg MkMemSettings{..} = do
+  initFFmpeg
+  setLogLevel avLogInfo
   withWriter (Encode.defaultParams imsWidth imsHeight) imsOutFile $ \writer -> do
     readFrames imsInFile $ \(avframe, time) -> do
-      vec <- Juicy.frameToVector avframe
+      pxfmt <-  getPixelFormat avframe
+      vec <- runExceptT $ Tagged.frameToVectorExceptT avframe
       pxfmt <- getPixelFormat avframe
       case vec of
-        Just v -> writer (pxfmt,V2 imsWidth imsHeight,v)
-        Nothing -> error $ "oh noes, died at " <> show time <> " , for some reason, maybeT squashed everything :(  "
+        Right v -> writer (pxfmt,V2 imsWidth imsHeight,v)
+        Left errs -> error $ "oh noes, died at " <> show (time, errs) <> " , for some reason, maybeT squashed everything :(  "
 
 withWriter :: EncodingParams -> FilePath ->
   (
@@ -64,7 +71,7 @@ withWriter params path fun = do
 -- | steps trough all frames and performs cleanup
 readFrames ::  FilePath -> ((AVFrame, Double) -> IO ()) -> IO ()
 readFrames path fun = do
-  res <- runExceptT $ Decode.frameReaderTime avPixFmtRgb32 (File path)
+  res <- runExceptT $ Decode.frameReaderTime avPixFmtRgba (File path)
   case res of
     Left str -> error str
     Right (readCmd, cleanup) -> do
@@ -72,6 +79,6 @@ readFrames path fun = do
             loop = do
               mFrame <- readCmd
               case mFrame  of
-                Just frame -> (fun frame >> loop) `finally` cleanup
+                Just frame -> (fun frame >> loop)
                 Nothing -> pure ()
           loop

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5ffe2d8f389bc777e758bbc2e6e3b6ffb5757d1f1d65f83785d723b16686e757
+-- hash: 5f278e42fa7d84989a40ce1af51a2dd5fec32b0980ce06feea4ce42d23a55cb0
 
 name:           cut-the-crap
 version:        2.3.3
@@ -29,6 +29,7 @@ library
       Cut.CutVideo
       Cut.Download
       Cut.InMemory
+      Cut.InMemory.Tagged
       Cut.Options
       Cut.Shell
       Cut.SpeechRecognition
@@ -157,6 +158,7 @@ test-suite unit
       Cut.CutVideo
       Cut.Download
       Cut.InMemory
+      Cut.InMemory.Tagged
       Cut.Options
       Cut.Shell
       Cut.SpeechRecognition

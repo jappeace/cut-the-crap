@@ -8,6 +8,7 @@
 #  https://input-output-hk.github.io/haskell.nix/tutorials/development/
 pkgs.haskellPackages.shellFor {
   packages = ps : [ ps.cut-the-crap ];
+  withHoogle = true;
   buildInputs = [
         pkgs.ghcid
         pkgs.haskellPackages.hasktags
