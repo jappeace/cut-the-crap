@@ -27,8 +27,6 @@ import Codec.FFmpeg.Internal.Linear(V2(..))
 import Codec.FFmpeg(initFFmpeg,  setLogLevel)
 import qualified Codec.FFmpeg.Common as Common
 
-
-
 data InMemSettings = MkMemSettings
   { imsInFile :: FilePath
   , imsOutFile :: FilePath
@@ -40,7 +38,7 @@ defaultSettings :: InMemSettings
 defaultSettings = MkMemSettings
   { imsInFile = "in.mp4"
   , imsOutFile = "out.mkv"
-  , imsWidth  = 1080
+  , imsWidth  = 1080 -- TODO read from input
   , imsHeight = 1920
   }
 
@@ -48,7 +46,7 @@ readffmpeg :: InMemSettings -> IO ()
 readffmpeg MkMemSettings{..} = do
   initFFmpeg
   setLogLevel avLogInfo
-  cleanup <- withWriter (Encode.defaultParams imsWidth imsHeight) imsOutFile $ \writer -> do
+  withWriter (Encode.defaultParams imsWidth imsHeight) imsOutFile $ \writer -> do
     readFrames imsInFile $ \(avframe, time) -> do
       pxfmt <-  getPixelFormat avframe
       vec <- runExceptT $ Tagged.frameToVectorExceptT avframe
@@ -56,30 +54,37 @@ readffmpeg MkMemSettings{..} = do
       case vec of
         Right v -> writer (pxfmt,V2 imsWidth imsHeight,v)
         Left errs -> error $ "oh noes, died at " <> show (time, errs) <> " , for some reason, maybeT squashed everything :(  "
-  cleanup
 
 withWriter :: EncodingParams -> FilePath ->
   (
     (( AVPixelFormat
     , V2 CInt -- ^ resolution
     , Vector CUChar -- ^ pixel data
-    ) -> IO ()) -> IO a
-  ) -> IO a
+    ) -> IO ()) -> IO ()
+  ) -> IO ()
 withWriter params path fun = do
   bracket (Encode.videoWriter params path)
           (\writer -> writer Nothing) $ \writer -> (fun (writer . Just))
 
+peakFrame :: FilePath -> ((AVFrame, Double) -> IO a) -> IO a
+peakFrame x = do
+  res <- runExceptT $ Decode.frameReaderTime avPixFmtRgba (File path)
+  case res of
+    Left str -> error str
+    Right (readCmd, cleanup) -> readCmd
+
 -- | steps trough all frames and performs cleanup
-readFrames ::  FilePath -> ((AVFrame, Double) -> IO ()) -> IO (IO ())
+readFrames ::  FilePath -> ((AVFrame, Double) -> IO ()) -> IO ()
 readFrames path fun = do
   res <- runExceptT $ Decode.frameReaderTime avPixFmtRgba (File path)
   case res of
     Left str -> error str
-    Right (readCmd, cleanup) -> do
+    Right (readCmd, cleanup) ->
           let
             loop = do
               mFrame <- readCmd
               case mFrame  of
-                Just frame -> (fun frame >> loop)
+                Just frame -> (fun frame >> loop) `finally` cleanup
                 Nothing -> pure ()
-          cleanup <$ loop
+          in
+          loop
